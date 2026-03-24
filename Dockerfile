@@ -11,13 +11,13 @@ RUN npm install
 COPY . .
 
 # Install expo-cli and build web
-RUN npx expo export:web
+RUN npx expo export --platform web
 
 # Stage 2: Serve
 FROM nginx:alpine
 
 # Copy static files to nginx
-COPY --from=build /app/web-build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # Copy custom nginx config if needed or use default
 EXPOSE 80
