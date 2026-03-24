@@ -1,9 +1,4 @@
-import express from 'express';
-import cors from 'cors';
-import path from 'path';
-import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
-import { getInstallmentDueDate, calculateTotalInterest, calculateDailyInterest } from '../lib/financials';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 const app = express();
@@ -31,12 +26,13 @@ app.post('/api/mobile/auth/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user || user.password !== password) { // In production use bcrypt
+    if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
     res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (e) {
+    console.error('Login error:', e);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });

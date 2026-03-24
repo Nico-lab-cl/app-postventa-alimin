@@ -1,7 +1,7 @@
-# Stage 1: Build
-FROM node:20-alpine AS build
+# Stage 1:# Build stage
+FROM node:20-slim AS build
 WORKDIR /app
-RUN apk add --no-cache openssl libc6-compat
+RUN apt-get update && apt-get install -y openssl python3 make g++ && rm -rf /var/lib/apt/lists/*
 COPY package*.json ./
 RUN npm install
 COPY . .
@@ -11,9 +11,9 @@ RUN npx expo export --platform web
 RUN npx tsc -p tsconfig.server.json
 
 # Production stage
-FROM node:20-alpine
+FROM node:20-slim
 WORKDIR /app
-RUN apk add --no-cache openssl libc6-compat
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/dist-server ./dist-server
 COPY --from=build /app/node_modules ./node_modules
