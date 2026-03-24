@@ -1,0 +1,94 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Lot {
+  id                      Int       @id @default(autoincrement())
+  number                  String?
+  stage                   Int?
+  area_m2                 Float?
+  price_total_clp         Int?
+  reservation_amount_clp  Int?
+  status                  String    @default("available") // available, reserved, sold
+  cuotas                  Int?
+  pie                     Int?
+  valor_cuota             Int?
+  last_installment_amount Int?
+  updated_at              DateTime? @updatedAt
+
+  // Relations
+  reservations Reservation[]
+  receipts     PaymentReceipt[]
+}
+
+model Reservation {
+  id         String    @id @default(uuid())
+  lot_id     Int
+  name       String
+  last_name  String?
+  email      String
+  phone      String
+  rut        String?
+  pipeline_stage        String  @default("RESERVA_PAGADA")
+  notes                 String?
+  pie                   Int?      @default(0)
+  extra_paid_amount     Int?      @default(0)
+  pending_amount        Int?      @default(0)
+  pie_status        String? @default("PENDING") // PENDING, PAID
+  installments_paid Int?    @default(0)
+  created_at DateTime  @default(now())
+  
+  // Financial Tracking
+  is_legacy                      Boolean   @default(false)
+  legacy_installment_start_date  DateTime? 
+  legacy_debt_start_date         DateTime?
+  mora_frozen                    Boolean   @default(false)
+
+  // Relations
+  lot          Lot              @relation(fields: [lot_id], references: [id])
+  receipts     PaymentReceipt[]
+  buyer_id     String?
+  buyer        User?            @relation("BuyerReservations", fields: [buyer_id], references: [id])
+}
+
+model User {
+  id                 String    @id @default(uuid())
+  email              String    @unique
+  password           String
+  name               String
+  role               Role      @default(USER)
+  createdAt          DateTime  @default(now())
+
+  // Relations
+  purchases     Reservation[]  @relation("BuyerReservations")
+}
+
+enum Role {
+  ADMIN
+  SELLER
+  USER
+}
+
+model PaymentReceipt {
+  id                  String    @id @default(uuid())
+  amount_clp          Int
+  status              String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  receipt_url         String
+  scope               String    // PIE, INSTALLMENT
+  installments_count  Int?      @default(0)
+  created_at          DateTime  @default(now())
+  processed_at        DateTime?
+  rejection_reason    String?
+
+  // Relations
+  reservation_id      String
+  lot_id              Int
+  reservation         Reservation @relation(fields: [reservation_id], references: [id])
+  lot                 Lot         @relation(fields: [lot_id], references: [id])
+}

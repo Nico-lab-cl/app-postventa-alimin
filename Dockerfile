@@ -1,27 +1,23 @@
 # Stage 1: Build
+# Build stage
 FROM node:20-alpine AS build
-
 WORKDIR /app
-
-# Install dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy source code
 COPY . .
-
-# Install expo-cli and build web
+RUN npx prisma generate
 RUN npx expo export --platform web
+# Build the server (compiling TS to JS)
+RUN npx tsc src/server/index.ts --outDir dist-server --esModuleInterop --skipLibCheck --target esnext
 
-# Stage 2: Serve
-FROM nginx:alpine
+# Production stage
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/dist-server ./dist-server
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
 
-# Copy static files to nginx
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+ENV NODE_ENV=production
+CMD ["node", "dist-server/index.js"]
