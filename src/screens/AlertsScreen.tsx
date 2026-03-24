@@ -1,98 +1,119 @@
 import React from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl, Platform, ScrollView } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
-import { AlertTriangle, Clock, TrendingDown, ArrowRight, Bell } from 'lucide-react-native';
+import { AlertTriangle, Clock, ArrowLeft, BellRing, ChevronRight } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ledgerService, LedgerEntry } from '../api/ledgerService';
+import { useAuth } from '../store/AuthContext';
 
 const AlertsScreen = () => {
-  const { data, isLoading, refetch, isRefetching } = useQuery({
-    queryKey: ['ledger', 'MORA'],
-    queryFn: () => ledgerService.getLedger('ALL'),
-  });
+    const { signOut } = useAuth();
+    const { data, isLoading, refetch, isRefetching } = useQuery({
+        queryKey: ['ledger', 'MORA'],
+        queryFn: () => ledgerService.getLedger('ALL'),
+    });
 
-  const delinquentLedgers = data?.filter(item => item.lateDays > 0 || item.penaltyAmount > 0) || [];
+    const delinquentLedgers = data?.filter(item => item.lateDays > 0 || item.penaltyAmount > 0) || [];
 
-  const MoraCard = ({ item }: { item: LedgerEntry }) => (
-    <View className="bg-surface-container/50 p-6 rounded-[32px] mb-4 overflow-hidden border border-error/5">
-      <View className="flex-row justify-between items-start mb-6">
-        <View className="flex-row items-center">
-            <View className="bg-error/10 p-2 rounded-xl mr-3">
-                <AlertTriangle color="#FFB4AB" size={18} />
-            </View>
-            <View>
-                <Text className="text-white font-serif font-bold text-lg">{item.customerName}</Text>
-                <Text className="text-secondary/40 text-[10px] font-sans uppercase tracking-[2px]">{item.lotId}</Text>
-            </View>
-        </View>
-        <View className="bg-error/20 px-3 py-1 rounded-full border border-error/30">
-            <Text className="text-error font-bold text-[10px]">{item.lateDays}d de atraso</Text>
-        </View>
-      </View>
-
-      <View className="flex-row justify-between items-end">
-        <View>
-          <Text className="text-secondary/40 text-[10px] uppercase tracking-[1px] mb-1">Multa Acumulada</Text>
-          <Text className="text-error text-2xl font-display font-bold">${item.penaltyAmount.toLocaleString()}</Text>
-        </View>
-        <TouchableOpacity 
-            activeOpacity={0.8}
-            className="bg-surface-high px-5 py-3 rounded-2xl border border-white/5 flex-row items-center"
-        >
-          <Text className="text-white text-xs font-bold mr-2">Gestionar</Text>
-          <ArrowRight color="#FFB4AB" size={14} />
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-
-  return (
-    <View className="flex-1 bg-background">
-      <LinearGradient
-        colors={['#0A0E1A', '#131313']}
-        className="absolute inset-0"
-      />
-      
-      <View className="flex-1 px-6 pt-16">
-        <View className="flex-row justify-between items-end mb-10">
-            <View>
-              <Text className="text-error text-[12px] font-sans uppercase tracking-[3px] mb-2">High Priority Risks</Text>
-              <Text className="text-white text-4xl font-serif font-bold">Mora &</Text>
-              <Text className="text-white text-4xl font-serif font-bold opacity-40">Alertas</Text>
-            </View>
-            <View className="bg-error/5 p-3 rounded-2xl">
-                <Bell color="#FFB4AB" size={24} />
-            </View>
-        </View>
-
-        {isLoading ? (
-            <View className="flex-1 justify-center items-center">
-            <ActivityIndicator color="#FFB4AB" />
-            </View>
-        ) : (
-            <FlatList 
-            data={delinquentLedgers}
-            keyExtractor={(item) => item.lotId}
-            renderItem={MoraCard}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-                <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#FFB4AB" />
-            }
-            ListEmptyComponent={() => (
-                <View className="mt-20 items-center px-10">
-                    <View className="bg-primary/5 p-8 rounded-full mb-6">
-                        <Clock color="#73D9B5" size={48} opacity={0.2} />
+    const MoraCard = ({ item }: { item: LedgerEntry }) => (
+        <TouchableOpacity className="glass-card p-6 rounded-[32px] mb-6 border border-error/5 overflow-hidden shadow-2xl">
+            <View className="absolute -right-12 -top-12 w-40 h-40 bg-error/10 rounded-full blur-3xl" />
+            
+            <View className="flex-row justify-between items-start mb-6">
+                <View className="flex-row items-center gap-4">
+                    <View className="bg-error/10 p-3 rounded-2xl">
+                        <AlertTriangle color="#ffb4ab" size={24} strokeWidth={2} />
                     </View>
-                    <Text className="text-secondary/30 text-center font-serif text-xl italic mb-2">Sin alertas críticas</Text>
-                    <Text className="text-secondary/10 text-center font-sans text-[10px] uppercase tracking-[2px]">La cartera está saludable</Text>
+                    <View>
+                        <Text className="text-on-surface font-display font-bold text-xl tracking-tight leading-tight">{item.customerName}</Text>
+                        <Text className="text-secondary font-display font-black text-[10px] uppercase tracking-[2px] mt-1">{item.lotId}</Text>
+                    </View>
                 </View>
-            )}
-            ListFooterComponent={<View className="h-20" />}
-            />
-        )}
-      </View>
-    </View>
-  );
+                <View className="bg-error/20 px-3 py-1.5 rounded-full">
+                    <Text className="text-error font-display font-black text-[10px] uppercase tracking-widest">{item.lateDays} Días</Text>
+                </View>
+            </View>
+
+            <View className="flex-row justify-between items-end">
+                <View>
+                    <Text className="text-on-surface-variant text-[10px] font-black uppercase tracking-[1px] mb-1">Mora Acumulada</Text>
+                    <Text className="text-error font-display font-black text-3xl tracking-tighter">${item.penaltyAmount.toLocaleString()} <Text className="text-xs font-normal opacity-40">USD</Text></Text>
+                </View>
+                <View className="flex-row items-center gap-2">
+                    <Text className="text-secondary font-display font-black text-[10px] uppercase tracking-widest">Gestionar</Text>
+                    <ChevronRight color="#edc062" size={16} />
+                </View>
+            </View>
+        </TouchableOpacity>
+    );
+
+    return (
+        <View className="flex-1 bg-background">
+            {/* TopAppBar */}
+            <View 
+                className="absolute top-0 w-full z-50 flex-row justify-between items-center px-6 h-24 bg-neutral-950/60"
+                style={{ paddingTop: Platform.OS === 'ios' ? 40 : 0 }}
+            >
+                <LinearGradient 
+                    colors={['rgba(54, 89, 95, 0.15)', 'transparent']} 
+                    className="absolute inset-0"
+                />
+                <View className="flex-row items-center gap-4">
+                    <TouchableOpacity onPress={() => signOut()}>
+                        <ArrowLeft color="#a8cdd4" size={24} />
+                    </TouchableOpacity>
+                    <Text className="font-display font-black text-[#edc062] tracking-tighter text-xl uppercase">Alertas</Text>
+                </View>
+                <View className="flex-row items-center gap-4">
+                    <BellRing color="#ffb4ab" size={24} />
+                </View>
+            </View>
+
+            <ScrollView 
+                className="flex-1" 
+                contentContainerStyle={{ paddingBottom: 120, paddingTop: 100 }}
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#ffb4ab" />
+                }
+            >
+                <View className="px-6 max-w-5xl mx-auto w-full">
+                    {/* Hero Title */}
+                    <View className="mb-10">
+                        <Text className="font-display text-on-surface-variant tracking-wide uppercase text-[10px] mb-2">Riesgos de Cartera</Text>
+                        <Text className="font-display font-bold text-4xl tracking-tight text-on-surface mb-2">Mora & Alertas</Text>
+                        <View className="h-1 w-12 bg-error rounded-full" />
+                    </View>
+
+                    {/* Alerts List */}
+                    <View>
+                        <View className="flex-row justify-between items-end mb-8 px-2">
+                            <Text className="font-display font-bold text-2xl text-on-surface">Casos Críticos</Text>
+                            <Text className="text-on-surface-variant text-[10px] font-black uppercase tracking-widest">{delinquentLedgers.length} Incidencias</Text>
+                        </View>
+
+                        {isLoading ? (
+                            <ActivityIndicator color="#ffb4ab" size="large" className="mt-10" />
+                        ) : (
+                            <View>
+                                {delinquentLedgers.map((item, index) => (
+                                    <MoraCard key={item.lotId} item={item} />
+                                ))}
+
+                                {delinquentLedgers.length === 0 && (
+                                    <View className="mt-4 items-center justify-center p-12 glass-card border-dashed border-white/10 opacity-40">
+                                        <Clock color="#8b9293" size={64} strokeWidth={1} />
+                                        <Text className="text-on-surface-variant text-xl text-center font-display font-bold mt-6">¡Sin retrasos!</Text>
+                                        <Text className="text-on-surface-variant text-center font-body text-xs mt-2">No se detectaron clientes con mora pendiente.</Text>
+                                    </View>
+                                )}
+                            </View>
+                        )}
+                    </View>
+                </View>
+            </ScrollView>
+        </View>
+    );
 };
 
 export default AlertsScreen;

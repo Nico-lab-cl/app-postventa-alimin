@@ -19,12 +19,12 @@ const CoastalTheme = {
   dark: true,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#73D9B5',
-    background: '#0A0E1A',
-    card: '#131313',
-    text: '#E5E2E1',
-    border: '#1B1B1B',
-    notification: '#98FFD9',
+    primary: '#a8cdd4',
+    background: '#131313',
+    card: '#1c1c1c',
+    text: '#e5e2e1',
+    border: 'rgba(54, 89, 95, 0.2)',
+    notification: '#edc062',
   },
 };
 
@@ -34,21 +34,26 @@ const MainTabs = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: { 
-          backgroundColor: '#131313', 
-          borderTopColor: 'rgba(115, 217, 181, 0.1)',
-          height: Platform.OS === 'ios' ? 88 : 68,
-          paddingBottom: Platform.OS === 'ios' ? 30 : 12,
+          backgroundColor: 'rgba(28, 28, 28, 0.6)', 
+          borderTopColor: 'rgba(54, 89, 95, 0.2)',
+          height: Platform.OS === 'ios' ? 94 : 84,
+          paddingBottom: Platform.OS === 'ios' ? 34 : 20,
           paddingTop: 12,
-          elevation: 0,
-          shadowOpacity: 0
+          elevation: 10,
+          position: 'absolute',
+          borderTopLeftRadius: 32,
+          borderTopRightRadius: 32,
+          borderTopWidth: 1,
         },
-        tabBarActiveTintColor: '#73D9B5',
-        tabBarInactiveTintColor: '#454957',
+        tabBarActiveTintColor: '#edc062',
+        tabBarInactiveTintColor: 'rgba(193, 200, 201, 0.7)',
         tabBarLabelStyle: {
           fontFamily: 'Inter',
           fontSize: 10,
           fontWeight: '600',
-          marginTop: 4
+          textTransform: 'uppercase',
+          letterSpacing: 0.5,
+          marginTop: 6
         }
       }}
     >
@@ -56,32 +61,48 @@ const MainTabs = () => {
         name="Dashboard" 
         component={DashboardScreen} 
         options={{
-          tabBarIcon: ({ color }) => <LayoutDashboard color={color} size={20} />,
-          title: 'Resumen'
+          tabBarIcon: ({ color, focused }) => (
+            <View className={`px-4 py-1.5 rounded-2xl ${focused ? "bg-[#36595f]/30" : ""}`}>
+                <LayoutDashboard color={color} size={22} fill={focused ? color : 'transparent'} />
+            </View>
+          ),
+          tabBarLabel: 'Home'
         }}
       />
       <Tab.Screen 
         name="Ledger" 
         component={LedgerScreen} 
         options={{
-          tabBarIcon: ({ color }) => <Wallet color={color} size={20} />,
-          title: 'Cartera'
+          tabBarIcon: ({ color, focused }) => (
+            <View className={`px-4 py-1.5 rounded-2xl ${focused ? "bg-[#36595f]/30" : ""}`}>
+                <Wallet color={color} size={22} />
+            </View>
+          ),
+          tabBarLabel: 'Terrenos'
         }}
       />
       <Tab.Screen 
         name="Receipts" 
         component={ReceiptsScreen} 
         options={{
-          tabBarIcon: ({ color }) => <ShieldCheck color={color} size={20} />,
-          title: 'Verificar'
+          tabBarIcon: ({ color, focused }) => (
+            <View className={`px-4 py-1.5 rounded-2xl ${focused ? "bg-[#36595f]/30" : ""}`}>
+                <CheckCircle color={color} size={22} />
+            </View>
+          ),
+          tabBarLabel: 'Recibos'
         }}
       />
       <Tab.Screen 
         name="Alerts" 
         component={AlertsScreen} 
         options={{
-          tabBarIcon: ({ color }) => <Bell color={color} size={20} />,
-          title: 'Mora'
+          tabBarIcon: ({ color, focused }) => (
+            <View className={`px-4 py-1.5 rounded-2xl ${focused ? "bg-[#36595f]/30" : ""}`}>
+                <Bell color={color} size={22} />
+            </View>
+          ),
+          tabBarLabel: 'Alertas'
         }}
       />
     </Tab.Navigator>

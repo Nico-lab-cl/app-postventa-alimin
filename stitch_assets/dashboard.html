@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed-dim": "#edc062",
+                        "error-container": "#93000a",
+                        "on-tertiary-container": "#bacbcd",
+                        "on-primary-fixed-variant": "#294c52",
+                        "on-secondary-fixed": "#261900",
+                        "on-tertiary-fixed": "#0f1e20",
+                        "surface-container": "#201f1f",
+                        "surface-container-high": "#2a2a2a",
+                        "secondary-fixed": "#ffdea1",
+                        "on-secondary": "#402d00",
+                        "background": "#131313",
+                        "inverse-surface": "#e5e2e1",
+                        "on-primary-fixed": "#001f24",
+                        "surface-bright": "#3a3939",
+                        "outline": "#8b9293",
+                        "surface-dim": "#131313",
+                        "secondary": "#edc062",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "on-primary": "#0f353b",
+                        "primary-fixed": "#c4e9f0",
+                        "secondary-container": "#805e00",
+                        "tertiary-container": "#465658",
+                        "primary-fixed-dim": "#a8cdd4",
+                        "on-tertiary": "#243335",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container-highest": "#353534",
+                        "surface-tint": "#a8cdd4",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e5e2e1",
+                        "on-surface": "#e5e2e1",
+                        "surface-variant": "#353534",
+                        "tertiary-fixed-dim": "#b9cacc",
+                        "primary-container": "#36595f",
+                        "inverse-on-surface": "#313030",
+                        "tertiary": "#b9cacc",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-secondary-fixed-variant": "#5c4300",
+                        "outline-variant": "#414849",
+                        "surface": "#131313",
+                        "on-surface-variant": "#c1c8c9",
+                        "on-secondary-container": "#ffdc98",
+                        "on-tertiary-fixed-variant": "#3a494b",
+                        "primary": "#a8cdd4",
+                        "tertiary-fixed": "#d5e6e8",
+                        "on-primary-container": "#aaced5",
+                        "inverse-primary": "#41646a"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "outfit": ["Outfit"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(54, 89, 95, 0.2) 0%, rgba(32, 31, 31, 0.4) 100%);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-neutral-950/60 backdrop-blur-xl flex justify-between items-center px-6 h-20 w-full bg-gradient-to-b from-[#36595f]/10 to-transparent shadow-2xl shadow-[#36595f]/5">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#a8cdd4] active:scale-95 transition-transform duration-200 cursor-pointer">arrow_back</span>
+<h1 class="font-['Outfit'] font-black text-[#edc062] tracking-tighter text-xl uppercase">Lomas del Mar</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#a8cdd4] active:scale-95 transition-transform duration-200 cursor-pointer">search</span>
+<div class="w-10 h-10 rounded-full border border-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a male administrator in business attire with soft lighting and minimalist background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMnereTlFQz73rf1ssaUBPqch7zLN3cEDYT4dF04UpwpyuwbY6CIkXzzdYzq4-LmF7AO0wHVaB_a_iCPnZQeH2z7oT3pM04HGKVxviTDht2_cMof9KYRzSE708io1cBpQO05tm7kWZ39DZkXWIs1PffXNaf-uPvsSse9kuxwXVE-AHybfUpzODF6SDYk_29Eg-bQcmixpDfVUK1NpLvM9kM38XTt5TCxu7j1XGYlHDgIsLB4ltTd2CuWhLlU9iBHp6CeRpSda4Cppd"/>
+</div>
+</div>
+</header>
+<main class="pt-28 px-6 max-w-5xl mx-auto">
+<!-- Hero Welcome -->
+<section class="mb-10">
+<p class="font-outfit text-on-surface-variant tracking-wide uppercase text-xs mb-2">Panel de Control</p>
+<h2 class="font-outfit font-bold text-4xl tracking-tight text-on-surface mb-2">Hola, Administrador</h2>
+<div class="h-1 w-12 bg-secondary rounded-full"></div>
+</section>
+<!-- Bento Grid Summary -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<!-- Total de Lotes Card -->
+<div class="glass-card p-8 rounded-xl border border-primary-container/20 flex flex-col justify-between aspect-square md:aspect-auto md:h-64 relative overflow-hidden group hover:border-primary/40 transition-colors">
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all"></div>
+<div>
+<span class="material-symbols-outlined text-primary text-3xl mb-4">landscape</span>
+<h3 class="font-outfit font-medium text-on-surface-variant">Total de Lotes</h3>
+</div>
+<div class="mt-auto">
+<span class="text-5xl font-outfit font-black text-primary tracking-tighter">482</span>
+<p class="text-xs text-on-surface-variant/60 mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> 12 nuevos este mes
+                    </p>
+</div>
+</div>
+<!-- Alertas de Deuda Card -->
+<div class="glass-card p-8 rounded-xl border border-error-container/20 flex flex-col justify-between aspect-square md:aspect-auto md:h-64 relative overflow-hidden group hover:border-error/40 transition-colors">
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-error/10 rounded-full blur-3xl group-hover:bg-error/20 transition-all"></div>
+<div>
+<span class="material-symbols-outlined text-error text-3xl mb-4">warning</span>
+<h3 class="font-outfit font-medium text-on-surface-variant">Alertas de Deuda</h3>
+</div>
+<div class="mt-auto">
+<span class="text-5xl font-outfit font-black text-error tracking-tighter">24</span>
+<p class="text-xs text-on-surface-variant/60 mt-2 uppercase tracking-widest font-bold">Acción Requerida</p>
+</div>
+</div>
+<!-- Recibos Pendientes Card -->
+<div class="glass-card p-8 rounded-xl border border-primary-container/20 flex flex-col justify-between aspect-square md:aspect-auto md:h-64 relative overflow-hidden group hover:border-primary/40 transition-colors">
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-primary-container/20 rounded-full blur-3xl group-hover:bg-primary-container/40 transition-all"></div>
+<div>
+<span class="material-symbols-outlined text-primary text-3xl mb-4" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<h3 class="font-outfit font-medium text-on-surface-variant">Recibos Pendientes</h3>
+</div>
+<div class="mt-auto">
+<span class="text-5xl font-outfit font-black text-primary-fixed-dim tracking-tighter">156</span>
+<p class="text-xs text-on-surface-variant/60 mt-2">Por procesar en Ledger</p>
+</div>
+</div>
+</div>
+<!-- Action Section -->
+<section class="mb-12">
+<div class="bg-surface-container-high rounded-xl p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 border border-outline-variant/10 shadow-xl">
+<div class="flex items-center gap-6">
+<div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl">sync</span>
+</div>
+<div>
+<h4 class="font-outfit font-bold text-xl text-on-surface">Sincronización de Datos</h4>
+<p class="text-on-surface-variant text-sm">Última sincronización: Hace 14 minutos</p>
+</div>
+</div>
+<button class="w-full md:w-auto px-8 py-4 bg-secondary text-on-secondary font-outfit font-bold rounded-full active:scale-95 transition-transform shadow-lg shadow-secondary/10 hover:opacity-90">
+                    Sincronizar Recibos
+                </button>
+</div>
+</section>
+<!-- Recent Activity Table Placeholder (Editorial Style) -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<h3 class="font-outfit font-bold text-2xl text-on-surface">Actividad Reciente</h3>
+<span class="text-secondary text-sm font-bold cursor-pointer hover:underline uppercase tracking-widest">Ver Todo</span>
+</div>
+<div class="space-y-4">
+<div class="glass-card p-5 rounded-lg flex items-center justify-between group cursor-pointer hover:bg-white/5 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+</div>
+<div>
+<p class="text-on-surface font-semibold">Pago Recibido - Lote B-24</p>
+<p class="text-on-surface-variant text-xs">Hoy, 10:45 AM</p>
+</div>
+</div>
+<span class="font-outfit font-bold text-primary">+$1,250.00</span>
+</div>
+<div class="glass-card p-5 rounded-lg flex items-center justify-between group cursor-pointer hover:bg-white/5 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-error">notification_important</span>
+</div>
+<div>
+<p class="text-on-surface font-semibold">Alerta de Mora - Lote A-08</p>
+<p class="text-on-surface-variant text-xs">Hoy, 09:12 AM</p>
+</div>
+</div>
+<span class="font-outfit font-bold text-error">Vencido</span>
+</div>
+<div class="glass-card p-5 rounded-lg flex items-center justify-between group cursor-pointer hover:bg-white/5 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">description</span>
+</div>
+<div>
+<p class="text-on-surface font-semibold">Nuevo Recibo Generado</p>
+<p class="text-on-surface-variant text-xs">Ayer, 06:30 PM</p>
+</div>
+</div>
+<span class="font-outfit font-bold text-on-surface-variant">#REC-9021</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-[32px] bg-[#1c1c1c]/60 backdrop-blur-2xl border-t border-[#36595f]/20 shadow-[0_-8px_32px_rgba(54,89,95,0.15)] flex justify-around items-center h-24 px-4 pb-6 w-full">
+<!-- Home Active -->
+<a class="flex flex-col items-center justify-center text-[#edc062] bg-[#36595f]/30 rounded-2xl px-4 py-1 shadow-[0_0_12px_rgba(168,205,212,0.1)] active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wide uppercase mt-1">Home</span>
+</a>
+<!-- Terrenos -->
+<a class="flex flex-col items-center justify-center text-[#c1c8c9]/70 hover:text-[#a8cdd4] transition-colors active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">landscape</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wide uppercase mt-1">Terrenos</span>
+</a>
+<!-- Ledger -->
+<a class="flex flex-col items-center justify-center text-[#c1c8c9]/70 hover:text-[#a8cdd4] transition-colors active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wide uppercase mt-1">Ledger</span>
+</a>
+<!-- Alertas -->
+<a class="flex flex-col items-center justify-center text-[#c1c8c9]/70 hover:text-[#a8cdd4] transition-colors active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wide uppercase mt-1">Alertas</span>
+</a>
+<!-- Recibos -->
+<a class="flex flex-col items-center justify-center text-[#c1c8c9]/70 hover:text-[#a8cdd4] transition-colors active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-['Inter'] text-[10px] font-semibold tracking-wide uppercase mt-1">Recibos</span>
+</a>
+</nav>
+</body></html>

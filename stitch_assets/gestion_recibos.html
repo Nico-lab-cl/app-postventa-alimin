@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lomas del Mar - Gestión de Recibos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#2a2a2a",
+              "inverse-surface": "#e5e2e1",
+              "primary-container": "#1a2e31",
+              "on-surface": "#e5e2e1",
+              "surface-container": "#201f1f",
+              "primary": "#a8cdd4",
+              "background": "#0e0e0e",
+              "surface-variant": "#353534",
+              "error": "#ffb4ab",
+              "secondary": "#edc062",
+              "success": "#34d399",
+              "on-success": "#064e3b",
+              "warning": "#fbbf24",
+              "on-warning": "#451a03"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "mono": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-row {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .financial-table-header {
+            background: rgba(168, 205, 212, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen pb-28">
+<!-- TopAppBar (Shared Component Logic) -->
+<header class="fixed top-0 w-full z-50 bg-neutral-950/60 backdrop-blur-xl shadow-2xl shadow-teal-900/10 flex items-center justify-between px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-teal-200 active:scale-95 duration-200" data-icon="menu">menu</span>
+<h1 class="font-['Plus_Jakarta_Sans'] font-bold tracking-tight text-xl font-extrabold text-amber-400 tracking-tighter">Lomas del Mar</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-teal-200 active:scale-95 duration-200" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<main class="pt-24 px-4 max-w-5xl mx-auto">
+<!-- Header Section -->
+<header class="mb-8 px-2">
+<h2 class="font-headline text-3xl font-extrabold tracking-tight text-white mb-1">Gestión de Recibos</h2>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-warning animate-pulse"></span>
+<p class="text-on-surface-variant text-sm font-medium">Revisión contable de comprobantes</p>
+</div>
+</header>
+<!-- Compact List View -->
+<div class="rounded-2xl overflow-hidden border border-white/5 bg-surface-container-low shadow-2xl">
+<!-- Table Headings -->
+<div class="financial-table-header grid grid-cols-[1fr_2fr_1.5fr_auto] gap-2 px-4 py-3 border-b border-white/10">
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary/70">ID / Lote</span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary/70 text-right">Monto</span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary/70 text-center">Estado</span>
+<div class="w-8"></div>
+</div>
+<!-- Receipt Rows -->
+<div class="flex flex-col">
+<!-- Row 1: Pending -->
+<div class="glass-row grid grid-cols-[1fr_2fr_1.5fr_auto] gap-2 px-4 py-4 items-center transition-colors">
+<div class="flex flex-col">
+<span class="text-xs font-mono text-secondary font-bold">#REC-9021</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-semibold">Lote A-12</span>
+</div>
+<div class="text-right">
+<span class="text-base font-bold text-white">$2,450.00</span>
+<span class="block text-[9px] text-on-surface-variant">12 Oct, 2023</span>
+</div>
+<div class="flex justify-center">
+<span class="bg-warning/10 text-warning text-[9px] font-bold px-2 py-0.5 rounded border border-warning/20 uppercase tracking-tighter">Pendiente</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-success hover:bg-success/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="check_circle">check_circle</span>
+</button>
+<span class="material-symbols-outlined text-on-surface-variant/40 text-lg" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row 2: Pending -->
+<div class="glass-row grid grid-cols-[1fr_2fr_1.5fr_auto] gap-2 px-4 py-4 items-center transition-colors">
+<div class="flex flex-col">
+<span class="text-xs font-mono text-secondary font-bold">#REC-8945</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-semibold">Lote C-05</span>
+</div>
+<div class="text-right">
+<span class="text-base font-bold text-white">$1,200.00</span>
+<span class="block text-[9px] text-on-surface-variant">14 Oct, 2023</span>
+</div>
+<div class="flex justify-center">
+<span class="bg-warning/10 text-warning text-[9px] font-bold px-2 py-0.5 rounded border border-warning/20 uppercase tracking-tighter">Pendiente</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-success hover:bg-success/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="check_circle">check_circle</span>
+</button>
+<span class="material-symbols-outlined text-on-surface-variant/40 text-lg" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row 3: Verified -->
+<div class="glass-row grid grid-cols-[1fr_2fr_1.5fr_auto] gap-2 px-4 py-4 items-center transition-colors opacity-80">
+<div class="flex flex-col">
+<span class="text-xs font-mono text-primary font-bold">#REC-8812</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-semibold">Lote B-03</span>
+</div>
+<div class="text-right">
+<span class="text-base font-bold text-white">$4,120.00</span>
+<span class="block text-[9px] text-on-surface-variant">10 Oct, 2023</span>
+</div>
+<div class="flex justify-center">
+<span class="bg-success/10 text-success text-[9px] font-bold px-2 py-0.5 rounded border border-success/20 uppercase tracking-tighter">Verificado</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 flex items-center justify-center text-on-surface-variant/20">
+<span class="material-symbols-outlined text-lg" data-icon="verified">verified</span>
+</span>
+<span class="material-symbols-outlined text-on-surface-variant/40 text-lg" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row 4: Rejected -->
+<div class="glass-row grid grid-cols-[1fr_2fr_1.5fr_auto] gap-2 px-4 py-4 items-center transition-colors">
+<div class="flex flex-col">
+<span class="text-xs font-mono text-error font-bold">#REC-8799</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-semibold">Lote A-01</span>
+</div>
+<div class="text-right">
+<span class="text-base font-bold text-white">$950.00</span>
+<span class="block text-[9px] text-on-surface-variant">09 Oct, 2023</span>
+</div>
+<div class="flex justify-center">
+<span class="bg-error/10 text-error text-[9px] font-bold px-2 py-0.5 rounded border border-error/20 uppercase tracking-tighter">Rechazado</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant/40 hover:bg-white/5 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="info">info</span>
+</button>
+<span class="material-symbols-outlined text-on-surface-variant/40 text-lg" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Row 5: Pending -->
+<div class="glass-row grid grid-cols-[1fr_2fr_1.5fr_auto] gap-2 px-4 py-4 items-center transition-colors">
+<div class="flex flex-col">
+<span class="text-xs font-mono text-secondary font-bold">#REC-8750</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-semibold">Lote D-22</span>
+</div>
+<div class="text-right">
+<span class="text-base font-bold text-white">$3,100.00</span>
+<span class="block text-[9px] text-on-surface-variant">08 Oct, 2023</span>
+</div>
+<div class="flex justify-center">
+<span class="bg-warning/10 text-warning text-[9px] font-bold px-2 py-0.5 rounded border border-warning/20 uppercase tracking-tighter">Pendiente</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-success hover:bg-success/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="check_circle">check_circle</span>
+</button>
+<span class="material-symbols-outlined text-on-surface-variant/40 text-lg" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-8 flex flex-col items-center gap-4">
+<button class="bg-primary-container text-primary border border-primary/20 px-8 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-primary/10 transition-all active:scale-95">
+<span class="material-symbols-outlined text-base" data-icon="expand_more">expand_more</span>
+            Cargar más registros
+        </button>
+<p class="text-[10px] text-on-surface-variant font-medium">Mostrando 5 de 142 recibos</p>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component) -->
+<nav class="fixed bottom-0 w-full rounded-t-[2.5rem] z-50 bg-neutral-950/70 backdrop-blur-2xl border-t border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex justify-around items-center h-20 px-4 pb-2">
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-teal-200 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-teal-200 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="landscape">landscape</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Terrenos</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-teal-200 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Ledger</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-teal-200 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="notification_important">notification_important</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Alertas</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-teal-900/40 text-amber-400 rounded-2xl px-3 py-1 shadow-[0_0_15px_rgba(54,89,95,0.3)] active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold uppercase tracking-widest mt-1">Recibos</span>
+</a>
+</nav>
+</body></html>
