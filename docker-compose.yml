@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      - EXPO_PUBLIC_API_URL=${EXPO_PUBLIC_API_URL}
+      - DATABASE_URL=${DATABASE_URL}
