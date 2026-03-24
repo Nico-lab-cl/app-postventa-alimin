@@ -1,7 +1,7 @@
 # Stage 1: Build
-# Build stage
 FROM node:20-alpine AS build
 WORKDIR /app
+RUN apk add --no-cache openssl libc6-compat
 COPY package*.json ./
 RUN npm install
 COPY . .
@@ -13,6 +13,7 @@ RUN npx tsc -p tsconfig.server.json
 # Production stage
 FROM node:20-alpine
 WORKDIR /app
+RUN apk add --no-cache openssl libc6-compat
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/dist-server ./dist-server
 COPY --from=build /app/node_modules ./node_modules
