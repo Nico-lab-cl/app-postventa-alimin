@@ -20,4 +20,4 @@ COPY --from=build /app/package.json ./package.json
 
 EXPOSE 3000
 ENV NODE_ENV=production
-CMD ["node", "dist-server/index.js"]
+CMD ["node", "dist-server/server/index.js"]
