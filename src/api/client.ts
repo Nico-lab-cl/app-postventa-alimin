@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { Platform } from 'react-native';
 import { storage } from '../utils/storage';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://aliminlomasdelmar.com/api/';
+const API_BASE_URL = Platform.OS === 'web' ? '/api' : (process.env.EXPO_PUBLIC_API_URL || 'https://aliminlomasdelmar.com/api/');
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`,
