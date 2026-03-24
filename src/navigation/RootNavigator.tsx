@@ -1,8 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
-import { LayoutDashboard, Wallet, Bell, CheckCircle } from 'lucide-react-native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { LayoutDashboard, Wallet, Bell, CheckCircle, ShieldCheck } from 'lucide-react-native';
+import { View, Platform } from 'react-native';
 
 import LoginScreen from '../screens/LoginScreen';
 import DashboardScreen from '../screens/DashboardScreen';
@@ -13,47 +14,74 @@ import ReceiptsScreen from '../screens/ReceiptsScreen';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+const CoastalTheme = {
+  ...DefaultTheme,
+  dark: true,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#73D9B5',
+    background: '#0A0E1A',
+    card: '#131313',
+    text: '#E5E2E1',
+    border: '#1B1B1B',
+    notification: '#98FFD9',
+  },
+};
+
 const MainTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: '#0F172A' },
-        headerTintColor: '#fff',
-        tabBarStyle: { backgroundColor: '#0F172A', borderTopColor: '#1E293B' },
-        tabBarActiveTintColor: '#10b981', // emerald-500
-        tabBarInactiveTintColor: '#64748b',
+        headerShown: false,
+        tabBarStyle: { 
+          backgroundColor: '#131313', 
+          borderTopColor: 'rgba(115, 217, 181, 0.1)',
+          height: Platform.OS === 'ios' ? 88 : 68,
+          paddingBottom: Platform.OS === 'ios' ? 30 : 12,
+          paddingTop: 12,
+          elevation: 0,
+          shadowOpacity: 0
+        },
+        tabBarActiveTintColor: '#73D9B5',
+        tabBarInactiveTintColor: '#454957',
+        tabBarLabelStyle: {
+          fontFamily: 'Inter',
+          fontSize: 10,
+          fontWeight: '600',
+          marginTop: 4
+        }
       }}
     >
       <Tab.Screen 
         name="Dashboard" 
         component={DashboardScreen} 
         options={{
-          tabBarIcon: ({ color, size }) => <LayoutDashboard color={color} size={size} />,
-          title: 'Dashboard'
+          tabBarIcon: ({ color }) => <LayoutDashboard color={color} size={20} />,
+          title: 'Resumen'
         }}
       />
       <Tab.Screen 
         name="Ledger" 
         component={LedgerScreen} 
         options={{
-          tabBarIcon: ({ color, size }) => <Wallet color={color} size={size} />,
+          tabBarIcon: ({ color }) => <Wallet color={color} size={20} />,
           title: 'Cartera'
-        }}
-      />
-      <Tab.Screen 
-        name="Alerts" 
-        component={AlertsScreen} 
-        options={{
-          tabBarIcon: ({ color, size }) => <Bell color={color} size={size} />,
-          title: 'Mora'
         }}
       />
       <Tab.Screen 
         name="Receipts" 
         component={ReceiptsScreen} 
         options={{
-          tabBarIcon: ({ color, size }) => <CheckCircle color={color} size={size} />,
-          title: 'Recibos'
+          tabBarIcon: ({ color }) => <ShieldCheck color={color} size={20} />,
+          title: 'Verificar'
+        }}
+      />
+      <Tab.Screen 
+        name="Alerts" 
+        component={AlertsScreen} 
+        options={{
+          tabBarIcon: ({ color }) => <Bell color={color} size={20} />,
+          title: 'Mora'
         }}
       />
     </Tab.Navigator>
@@ -66,28 +94,13 @@ const RootNavigator = () => {
   const { userToken, isLoading } = useAuth();
 
   if (isLoading) {
-    // You could return a Splash screen here
-    return null; 
+    return (
+        <View style={{ flex: 1, backgroundColor: '#0A0E1A' }} />
+    ); 
   }
 
   return (
-    <NavigationContainer theme={{
-      dark: true,
-      colors: {
-        primary: '#A8CDD4',
-        background: '#131313',
-        card: '#1C1B1B',
-        text: '#E5E2E1',
-        border: '#414849',
-        notification: '#EDC062',
-      },
-      fonts: {
-        regular: { fontFamily: 'Inter', fontWeight: '400' },
-        medium: { fontFamily: 'Inter', fontWeight: '500' },
-        bold: { fontFamily: 'Outfit', fontWeight: '700' },
-        heavy: { fontFamily: 'Outfit', fontWeight: '800' },
-      }
-    }}>
+    <NavigationContainer theme={CoastalTheme}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {userToken == null ? (
           <Stack.Screen name="Login" component={LoginScreen} />
