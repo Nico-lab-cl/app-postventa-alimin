@@ -80,9 +80,9 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
             include: { lot: true, receipts: { where: { status: 'APPROVED' } } }
         });
 
-        const data = reservations.map(resObj => {
+        const data = reservations.map((resObj: any) => {
             const lot = resObj.lot;
-            const totalPaid = resObj.receipts.reduce((sum, r) => sum + r.amount_clp, 0);
+            const totalPaid = resObj.receipts.reduce((sum: number, r: any) => sum + r.amount_clp, 0);
             const totalToPay = lot.price_total_clp || 0;
             const pendingBalance = Math.max(0, totalToPay - totalPaid);
             

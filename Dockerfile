@@ -8,7 +8,7 @@ COPY . .
 RUN npx prisma generate
 RUN npx expo export --platform web
 # Build the server (compiling TS to JS)
-RUN npx tsc src/server/index.ts --outDir dist-server --esModuleInterop --skipLibCheck --target esnext
+RUN npx tsc -p tsconfig.server.json
 
 # Production stage
 FROM node:20-alpine
