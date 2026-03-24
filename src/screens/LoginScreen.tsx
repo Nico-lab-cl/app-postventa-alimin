@@ -17,7 +17,7 @@ const LoginScreen = () => {
 
     setLoading(true);
     try {
-      const response = await apiClient.post('/mobile/auth/login', {
+      const response = await apiClient.post('mobile/auth/login', {
         email,
         password,
       });

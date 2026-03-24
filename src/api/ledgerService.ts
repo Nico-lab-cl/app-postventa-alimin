@@ -23,21 +23,21 @@ export interface DashboardSummary {
 
 export const ledgerService = {
   getLedger: async (stage: string = 'ALL'): Promise<LedgerEntry[]> => {
-    const response = await apiClient.get(`/mobile/postventa/ledger?stage=${stage}`);
+    const response = await apiClient.get(`mobile/postventa/ledger?stage=${stage}`);
     return response.data;
   },
 
   getDashboardSummary: async (): Promise<DashboardSummary> => {
-    const response = await apiClient.get('/mobile/postventa/summary');
+    const response = await apiClient.get('mobile/postventa/summary');
     return response.data;
   },
 
   getReceipts: async (): Promise<any[]> => {
-    const response = await apiClient.get('/mobile/postventa/receipts');
+    const response = await apiClient.get('mobile/postventa/receipts');
     return response.data;
   },
 
   verifyReceipt: async (id: string, action: 'approve' | 'reject'): Promise<void> => {
-    await apiClient.patch(`/mobile/receipt/${id}`, { action });
+    await apiClient.patch(`mobile/receipt/${id}`, { action });
   }
 };
