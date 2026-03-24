@@ -5,10 +5,14 @@ import "./global.css";
 
 const queryClient = new QueryClient();
 
+import { AuthProvider } from './src/store/AuthContext';
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RootNavigator />
+      <AuthProvider>
+        <RootNavigator />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

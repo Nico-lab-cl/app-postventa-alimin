@@ -29,7 +29,7 @@ const MainTabs = () => {
         component={DashboardScreen} 
         options={{
           tabBarIcon: ({ color, size }) => <LayoutDashboard color={color} size={size} />,
-          title: 'Lotes'
+          title: 'Dashboard'
         }}
       />
       <Tab.Screen 
@@ -53,20 +53,43 @@ const MainTabs = () => {
         component={ReceiptsScreen} 
         options={{
           tabBarIcon: ({ color, size }) => <CheckCircle color={color} size={size} />,
-          title: 'Verificación'
+          title: 'Recibos'
         }}
       />
     </Tab.Navigator>
   );
 };
 
+import { useAuth } from '../store/AuthContext';
+
 const RootNavigator = () => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const { userToken, isLoading } = useAuth();
+
+  if (isLoading) {
+    // You could return a Splash screen here
+    return null; 
+  }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={{
+      dark: true,
+      colors: {
+        primary: '#A8CDD4',
+        background: '#131313',
+        card: '#1C1B1B',
+        text: '#E5E2E1',
+        border: '#414849',
+        notification: '#EDC062',
+      },
+      fonts: {
+        regular: { fontFamily: 'Inter', fontWeight: '400' },
+        medium: { fontFamily: 'Inter', fontWeight: '500' },
+        bold: { fontFamily: 'Outfit', fontWeight: '700' },
+        heavy: { fontFamily: 'Outfit', fontWeight: '800' },
+      }
+    }}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!isAuthenticated ? (
+        {userToken == null ? (
           <Stack.Screen name="Login" component={LoginScreen} />
         ) : (
           <Stack.Screen name="Main" component={MainTabs} />
