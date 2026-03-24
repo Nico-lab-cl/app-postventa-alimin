@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as SecureStore from 'expo-secure-store';
+import { storage } from '../utils/storage';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://aliminlomasdelmar.com/api/';
 
@@ -13,7 +13,7 @@ const apiClient = axios.create({
 // Add a request interceptor to inject the JWT token
 apiClient.interceptors.request.use(
   async (config) => {
-    const token = await SecureStore.getItemAsync('userToken');
+    const token = await storage.getItem('userToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

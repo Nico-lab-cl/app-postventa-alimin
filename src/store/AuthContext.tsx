@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import * as SecureStore from 'expo-secure-store';
+import { storage } from '../utils/storage';
 
 interface AuthContextType {
   userToken: string | null;
@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const loadToken = async () => {
       try {
-        const token = await SecureStore.getItemAsync('userToken');
+        const token = await storage.getItem('userToken');
         if (token) {
           setUserToken(token);
         }
@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (token: string) => {
     try {
-      await SecureStore.setItemAsync('userToken', token);
+      await storage.setItem('userToken', token);
       setUserToken(token);
     } catch (e) {
       console.error('Failed to save token', e);
@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      await SecureStore.deleteItemAsync('userToken');
+      await storage.removeItem('userToken');
       setUserToken(null);
     } catch (e) {
       console.error('Failed to delete token', e);
