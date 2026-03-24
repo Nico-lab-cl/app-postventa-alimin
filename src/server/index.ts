@@ -1,4 +1,10 @@
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import path from 'path';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { PrismaClient } from '@prisma/client';
+import { getInstallmentDueDate, calculateTotalInterest, calculateDailyInterest } from '../lib/financials';
 
 const prisma = new PrismaClient();
 const app = express();
@@ -9,12 +15,12 @@ app.use(cors());
 app.use(express.json());
 
 // Auth Middleware
-const authenticate = (req: any, res: any, next: any) => {
+const authenticate = (req: Request, res: Response, next: any) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'No token provided' });
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
+    (req as any).user = decoded;
     next();
   } catch (e) {
     res.status(401).json({ error: 'Invalid token' });
@@ -22,7 +28,7 @@ const authenticate = (req: any, res: any, next: any) => {
 };
 
 // Login Endpoint
-app.post('/api/mobile/auth/login', async (req, res) => {
+app.post('/api/mobile/auth/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const user = await prisma.user.findUnique({ where: { email } });
@@ -38,7 +44,7 @@ app.post('/api/mobile/auth/login', async (req, res) => {
 });
 
 // Postventa Summary
-app.get('/api/mobile/postventa/summary', authenticate, async (req, res) => {
+app.get('/api/mobile/postventa/summary', authenticate, async (req: Request, res: Response) => {
   try {
     const activeContracts = await prisma.reservation.count({
       where: { lot: { status: { in: ['sold', 'reserved'] } } }
@@ -48,7 +54,7 @@ app.get('/api/mobile/postventa/summary', authenticate, async (req, res) => {
     const receipts = await prisma.paymentReceipt.findMany({
       where: { status: 'APPROVED' }
     });
-    const totalCollection = receipts.reduce((sum, r) => sum + r.amount_clp, 0);
+    const totalCollection = receipts.reduce((sum: number, r: any) => sum + r.amount_clp, 0);
     const pendingReceipts = await prisma.paymentReceipt.count({ where: { status: 'PENDING' } });
 
     res.json({
@@ -131,13 +137,13 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
 });
 
 // Receipts Management
-app.get('/api/mobile/postventa/receipts', authenticate, async (req, res) => {
+app.get('/api/mobile/postventa/receipts', authenticate, async (req: Request, res: Response) => {
     try {
         const receipts = await prisma.paymentReceipt.findMany({
             where: { status: 'PENDING' },
             include: { reservation: true, lot: true }
         });
-        res.json(receipts.map(r => ({
+        res.json(receipts.map((r: any) => ({
             id: r.id,
             customerName: r.reservation.name + ' ' + (r.reservation.last_name || ''),
             lotNumber: r.lot.number,
@@ -151,7 +157,7 @@ app.get('/api/mobile/postventa/receipts', authenticate, async (req, res) => {
     }
 });
 
-app.patch('/api/mobile/receipt/:id', authenticate, async (req, res) => {
+app.patch('/api/mobile/receipt/:id', authenticate, async (req: Request, res: Response) => {
     const { id } = req.params;
     const { action } = req.body;
     try {
@@ -167,7 +173,7 @@ app.patch('/api/mobile/receipt/:id', authenticate, async (req, res) => {
                 data: {
                     installments_paid: { increment: receipt.scope === 'INSTALLMENT' ? 1 : 0 },
                     pie_status: receipt.scope === 'PIE' ? 'PAID' : undefined
-                }
+                } as any
             });
         }
         res.json({ success: true });
