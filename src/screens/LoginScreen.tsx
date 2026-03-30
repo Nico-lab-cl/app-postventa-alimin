@@ -24,7 +24,12 @@ const LoginScreen = () => {
             });
 
             if (response.data.token && response.data.user) {
-                await signIn(response.data.token, response.data.user);
+                const user = response.data.user;
+                if (user.email.toLowerCase() === 'postventa@lomasdelmar.cl') {
+                    await signIn(response.data.token, user);
+                } else {
+                    Alert.alert('Acceso Denegado', 'Esta aplicación está restringida únicamente al personal autorizado de postventa.');
+                }
             } else {
                 Alert.alert('Error', 'No se recibió la información de sesión completa');
             }
