@@ -31,6 +31,39 @@ export interface DashboardSummary {
   pendingReceipts: number;
 }
 
+export interface AssignmentData {
+  // Personal Data
+  name: string;
+  surname: string;
+  rut: string;
+  email: string;
+  phone: string;
+  maritalStatus: string;
+  profession: string;
+  nationality: string;
+  address: {
+    street: string;
+    number: string;
+    region: string;
+    commune: string;
+  };
+  // Financials
+  priceTotal: number;
+  reservationAmount: number;
+  pieAmount: number;
+  piePaid: boolean;
+  // Installments
+  installmentCount: number;
+  normalInstallmentValue: number;
+  lastInstallmentValue: number;
+  firstInstallmentDate: string;
+  // Extra Logic
+  isPromotion: boolean;
+  freezeMora: boolean;
+  operationalCosts: boolean;
+  exceptionalRanges: { start: number; end: number; value: number }[];
+}
+
 export const ledgerService = {
   getLedger: async (stage: string = 'ALL'): Promise<LedgerEntry[]> => {
     const response = await apiClient.get(`mobile/postventa/ledger?stage=${stage}`);
@@ -44,6 +77,24 @@ export const ledgerService = {
 
   getReceipts: async (): Promise<any[]> => {
     const response = await apiClient.get('mobile/postventa/receipts');
+    return response.data;
+  },
+
+  searchUsers: async (query: string): Promise<any[]> => {
+    const response = await apiClient.get(`mobile/users/search?q=${query}`);
+    return response.data;
+  },
+
+  assignOwner: async (lotId: string, data: AssignmentData): Promise<void> => {
+    await apiClient.post(`mobile/postventa/lot/${lotId}/assign`, data);
+  },
+
+  resetLot: async (lotId: string): Promise<void> => {
+    await apiClient.delete(`mobile/postventa/lot/${lotId}`);
+  },
+
+  getUserDocuments: async (userId: string): Promise<any[]> => {
+    const response = await apiClient.get(`mobile/user/docs?userId=${userId}`);
     return response.data;
   },
 

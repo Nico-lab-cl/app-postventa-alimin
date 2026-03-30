@@ -11,6 +11,7 @@ import LedgerScreen from '../screens/LedgerScreen';
 import AlertsScreen from '../screens/AlertsScreen';
 import ReceiptsScreen from '../screens/ReceiptsScreen';
 import LedgerDetailScreen from '../screens/LedgerDetailScreen';
+import AssignOwnerScreen from '../screens/AssignOwnerScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -130,6 +131,7 @@ const RootNavigator = () => {
           <>
             <Stack.Screen name="Main" component={MainTabs} />
             <Stack.Screen name="LedgerDetail" component={LedgerDetailScreen} />
+            <Stack.Screen name="AssignOwner" component={AssignOwnerScreen} />
           </>
         )}
       </Stack.Navigator>
