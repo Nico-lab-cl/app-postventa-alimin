@@ -12,7 +12,9 @@ const LedgerScreen = () => {
     const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
     const [stage, setStage] = useState('ALL');
-    const [activeTab, setActiveTab] = useState<'MANAGEMENT' | 'DOCUMENTS'>('MANAGEMENT');
+    const [lotStatusFilter, setLotStatusFilter] = useState('ALL');
+    const [showStageDropdown, setShowStageDropdown] = useState(false);
+    const [showStatusDropdown, setShowStatusDropdown] = useState(false);
     const { signOut } = useAuth();
 
     const { data, isLoading, refetch, isRefetching } = useQuery({
@@ -28,11 +30,13 @@ const LedgerScreen = () => {
         },
     });
 
-    const filteredData = data?.filter(item => 
-        item.customerName?.toLowerCase().includes(search.toLowerCase()) ||
-        item.lotId?.toLowerCase().includes(search.toLowerCase()) ||
-        item.rut?.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredData = data?.filter(item => {
+        const matchesSearch = item.customerName?.toLowerCase().includes(search.toLowerCase()) ||
+                              item.lotId?.toLowerCase().includes(search.toLowerCase()) ||
+                              item.rut?.toLowerCase().includes(search.toLowerCase());
+        const matchesStatus = lotStatusFilter === 'ALL' || item.lotStatus === lotStatusFilter;
+        return matchesSearch && matchesStatus;
+    });
 
     const handleResetLot = (lotId: string) => {
         Alert.alert(
@@ -181,69 +185,109 @@ const LedgerScreen = () => {
                 }
             >
                 <View className="px-6 max-w-5xl mx-auto w-full">
-                    <View className="flex-row bg-[#1e2a2d] p-1.5 rounded-[24px] mb-8 border border-white/5">
-                        <TouchableOpacity 
-                            onPress={() => setActiveTab('MANAGEMENT')}
-                            className={`flex-1 py-3 rounded-[18px] items-center ${activeTab === 'MANAGEMENT' ? 'bg-[#36595f] shadow-lg' : ''}`}
-                        >
-                            <Text className={`text-[10px] font-black uppercase tracking-widest ${activeTab === 'MANAGEMENT' ? 'text-primary' : 'text-on-surface-variant'}`}>Terrenos</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            onPress={() => setActiveTab('DOCUMENTS')}
-                            className={`flex-1 py-3 rounded-[18px] items-center ${activeTab === 'DOCUMENTS' ? 'bg-[#36595f] shadow-lg' : ''}`}
-                        >
-                            <Text className={`text-[10px] font-black uppercase tracking-widest ${activeTab === 'DOCUMENTS' ? 'text-primary' : 'text-on-surface-variant'}`}>Documentos</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    {activeTab === 'MANAGEMENT' ? (
-                        <>
-                            <View className="mb-10">
-                                <View className="bg-surface-container-high rounded-[24px] px-6 py-4 flex-row items-center gap-4 border border-outline-variant/10 shadow-xl mb-6">
-                                    <Search color="#a8cdd4" size={20} />
-                                    <TextInput 
-                                        className="flex-1 text-on-surface font-body text-sm"
-                                        placeholder="Buscar por Lote, RUT o Nombre..."
-                                        placeholderTextColor="rgba(193, 200, 201, 0.5)"
-                                        value={search}
-                                        onChangeText={setSearch}
+                    <View className="mb-10">
+                        <View className="bg-surface-container-high rounded-[24px] px-6 py-4 flex-row items-center gap-4 border border-outline-variant/10 shadow-xl mb-6">
+                            <Search color="#a8cdd4" size={20} />
+                            <TextInput 
+                                className="flex-1 text-on-surface font-body text-sm"
+                                placeholder="Buscar por Lote, RUT o Nombre..."
+                                placeholderTextColor="rgba(193, 200, 201, 0.5)"
+                                value={search}
+                                onChangeText={setSearch}
+                            />
+                        </View>
+                        
+                        {/* Dropdown Filters */}
+                        <View className="flex-row gap-4 relative z-50">
+                            {/* Stage Dropdown */}
+                            <View className="flex-1">
+                                <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-2 ml-2">Filtrar por Etapa</Text>
+                                <TouchableOpacity 
+                                    onPress={() => { setShowStageDropdown(!showStageDropdown); setShowStatusDropdown(false); }}
+                                    className="bg-surface-container-high border border-white/10 rounded-2xl px-4 py-3 flex-row justify-between items-center"
+                                >
+                                    <Text className="text-on-surface font-bold text-xs">{stage === 'ALL' ? 'Todas las Etapas' : `Etapa ${stage}`}</Text>
+                                    <ChevronRight 
+                                        color="#a8cdd4" 
+                                        size={16} 
+                                        style={{ transform: [{ rotate: showStageDropdown ? '90deg' : '0deg' }] }} 
                                     />
-                                </View>
-                                <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-2">
-                                    {['ALL', 'Etapa 1', 'Etapa 2', 'Etapa 3', 'Etapa 4'].map((s, i) => (
-                                        <TouchableOpacity 
-                                            key={i} 
-                                            onPress={() => setStage(s === 'ALL' ? 'ALL' : s.replace('Etapa ', ''))}
-                                            className={`px-6 py-2 rounded-full mx-2 border ${stage === (s === 'ALL' ? 'ALL' : s.replace('Etapa ', '')) ? 'bg-[#edc062] border-[#edc062]' : 'bg-surface-container-highest border-outline-variant/10'}`}
-                                        >
-                                            <Text className={`text-[10px] font-black uppercase tracking-widest ${stage === (s === 'ALL' ? 'ALL' : s.replace('Etapa ', '')) ? 'text-black' : 'text-on-surface-variant'}`}>{s}</Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </ScrollView>
+                                </TouchableOpacity>
+                                
+                                {showStageDropdown && (
+                                    <View className="absolute top-[65px] left-0 right-0 bg-[#1e2a2d] border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50">
+                                        {['ALL', '1', '2', '3', '4'].map((s, i) => (
+                                            <TouchableOpacity 
+                                                key={i} 
+                                                onPress={() => { setStage(s); setShowStageDropdown(false); }}
+                                                className={`px-4 py-3 border-b border-white/5 ${stage === s ? 'bg-primary/20' : ''}`}
+                                            >
+                                                <Text className={`${stage === s ? 'text-primary' : 'text-on-surface'} font-bold text-xs`}>
+                                                    {s === 'ALL' ? 'Todas las Etapas' : `Etapa ${s}`}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                )}
                             </View>
 
-                            {isLoading ? (
-                                <ActivityIndicator color="#a8cdd4" size="large" className="mt-10" />
-                            ) : (
-                                <View>
-                                    {filteredData?.map((item, index) => (
-                                        <LedgerCard key={index} item={item} />
-                                    ))}
-                                    
-                                    {filteredData?.length === 0 && (
-                                        <View className="mt-4 items-center justify-center p-12 bg-[#1e2a2d]/60 rounded-[40px] border border-dashed border-white/10">
-                                            <Map color="#8b9293" size={48} strokeWidth={1} />
-                                            <Text className="text-on-surface-variant text-center font-headline font-bold mt-4">No se encontraron resultados.</Text>
-                                        </View>
-                                    )}
+                            {/* Status Dropdown */}
+                            <View className="flex-1">
+                                <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-2 ml-2">Estado del Lote</Text>
+                                <TouchableOpacity 
+                                    onPress={() => { setShowStatusDropdown(!showStatusDropdown); setShowStageDropdown(false); }}
+                                    className="bg-surface-container-high border border-white/10 rounded-2xl px-4 py-3 flex-row justify-between items-center"
+                                >
+                                    <Text className="text-on-surface font-bold text-xs">
+                                        {lotStatusFilter === 'ALL' ? 'Todos los Estados' : 
+                                         lotStatusFilter === 'available' ? 'Disponibles' : 
+                                         lotStatusFilter === 'sold' ? 'Vendidos' : 'Bloqueados/Reservados'}
+                                    </Text>
+                                    <ChevronRight 
+                                        color="#a8cdd4" 
+                                        size={16} 
+                                        style={{ transform: [{ rotate: showStatusDropdown ? '90deg' : '0deg' }] }} 
+                                    />
+                                </TouchableOpacity>
+                                
+                                {showStatusDropdown && (
+                                    <View className="absolute top-[65px] left-0 right-0 bg-[#1e2a2d] border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50">
+                                        {[
+                                            { val: 'ALL', label: 'Todos los Estados' },
+                                            { val: 'available', label: 'Disponibles' },
+                                            { val: 'sold', label: 'Vendidos' },
+                                            { val: 'reserved', label: 'Bloqueados/Reservados' }
+                                        ].map((s, i) => (
+                                            <TouchableOpacity 
+                                                key={i} 
+                                                onPress={() => { setLotStatusFilter(s.val); setShowStatusDropdown(false); }}
+                                                className={`px-4 py-3 border-b border-white/5 ${lotStatusFilter === s.val ? 'bg-primary/20' : ''}`}
+                                            >
+                                                <Text className={`${lotStatusFilter === s.val ? 'text-primary' : 'text-on-surface'} font-bold text-xs`}>
+                                                    {s.label}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                )}
+                            </View>
+                        </View>
+                    </View>
+
+                    {isLoading ? (
+                        <ActivityIndicator color="#a8cdd4" size="large" className="mt-10" />
+                    ) : (
+                        <View style={{ zIndex: 1 }}>
+                            {filteredData?.map((item, index) => (
+                                <LedgerCard key={index} item={item} />
+                            ))}
+                            
+                            {filteredData?.length === 0 && (
+                                <View className="mt-4 items-center justify-center p-12 bg-[#1e2a2d]/60 rounded-[40px] border border-dashed border-white/10">
+                                    <Map color="#8b9293" size={48} strokeWidth={1} />
+                                    <Text className="text-on-surface-variant text-center font-headline font-bold mt-4">No se encontraron resultados.</Text>
                                 </View>
                             )}
-                        </>
-                    ) : (
-                        <View className="items-center justify-center p-12 bg-[#1e2a2d]/60 rounded-[40px] border border-white/5 h-96">
-                            <FileText color="#a8cdd4" size={48} strokeWidth={1} />
-                            <Text className="text-on-surface font-headline font-bold mt-6 text-center text-lg">Repositorio de Documentos</Text>
-                            <Text className="text-on-surface-variant text-center mt-2 text-xs">Filtra por un cliente arriba para ver sus documentos firmados.</Text>
                         </View>
                     )}
                 </View>
