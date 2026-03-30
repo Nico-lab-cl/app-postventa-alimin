@@ -36,6 +36,13 @@ const LedgerScreen = () => {
         const isVendido = !!item.customerId && item.pie_status === 'PAID';
         const computedStatus = isVendido ? 'sold' : 'available';
         return { ...item, computedStatus };
+    }).sort((a, b) => {
+        const numA = parseInt(a.lotId.replace(/\D/g, ''), 10);
+        const numB = parseInt(b.lotId.replace(/\D/g, ''), 10);
+        if (isNaN(numA) || isNaN(numB)) {
+            return a.lotId.localeCompare(b.lotId);
+        }
+        return numA - numB;
     }) || [];
 
     const summaryCounts = {
