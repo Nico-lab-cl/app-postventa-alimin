@@ -10,6 +10,7 @@ import DashboardScreen from '../screens/DashboardScreen';
 import LedgerScreen from '../screens/LedgerScreen';
 import AlertsScreen from '../screens/AlertsScreen';
 import ReceiptsScreen from '../screens/ReceiptsScreen';
+import LedgerDetailScreen from '../screens/LedgerDetailScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -126,7 +127,10 @@ const RootNavigator = () => {
         {userToken == null ? (
           <Stack.Screen name="Login" component={LoginScreen} />
         ) : (
-          <Stack.Screen name="Main" component={MainTabs} />
+          <>
+            <Stack.Screen name="Main" component={MainTabs} />
+            <Stack.Screen name="LedgerDetail" component={LedgerDetailScreen} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>

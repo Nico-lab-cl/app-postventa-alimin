@@ -19,14 +19,14 @@ const LoginScreen = () => {
         setLoading(true);
         try {
             const response = await apiClient.post('mobile/auth/login', {
-                email,
+                email: email.toLowerCase(),
                 password,
             });
 
-            if (response.data.token) {
-                await signIn(response.data.token);
+            if (response.data.token && response.data.user) {
+                await signIn(response.data.token, response.data.user);
             } else {
-                Alert.alert('Error', 'No se recibió un token de acceso');
+                Alert.alert('Error', 'No se recibió la información de sesión completa');
             }
         } catch (error: any) {
             console.error('Login error:', error);

@@ -6,7 +6,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ledgerService, LedgerEntry } from '../api/ledgerService';
 import { useAuth } from '../store/AuthContext';
 
+import { useNavigation } from '@react-navigation/native';
+
 const LedgerScreen = () => {
+    const navigation = useNavigation<any>();
     const [search, setSearch] = useState('');
     const [stage, setStage] = useState('ALL');
     const { signOut } = useAuth();
@@ -22,24 +25,37 @@ const LedgerScreen = () => {
     );
 
     const LedgerCard = ({ item }: { item: LedgerEntry }) => {
-        const isOverdue = item.status === 'OVERDUE' || item.lateDays > 0;
+        const getStatusStyles = (status: string) => {
+            switch (status) {
+                case 'LATE': return { bg: 'bg-error/20', text: 'text-error', label: 'En Mora' };
+                case 'GRACE': return { bg: 'bg-secondary/20', text: 'text-secondary', label: 'En Gracia' };
+                case 'UPCOMING': return { bg: 'bg-primary/20', text: 'text-primary', label: 'Próximo' };
+                case 'OK': return { bg: 'bg-[#a8cdd4]/10', text: 'text-[#a8cdd4]', label: 'Al Día' };
+                default: return { bg: 'bg-surface-container-highest/20', text: 'text-on-surface-variant', label: 'Pendiente' };
+            }
+        };
+
+        const { bg, text, label } = getStatusStyles(item.status);
         
         return (
-            <TouchableOpacity className="bg-[#1e2a2d]/60 p-4 rounded-3xl mb-4 border border-white/5 flex-row items-center justify-between">
+            <TouchableOpacity 
+                onPress={() => navigation.navigate('LedgerDetail', { entry: item })}
+                className="bg-[#1e2a2d]/60 p-4 rounded-3xl mb-4 border border-white/5 flex-row items-center justify-between"
+            >
                 <View className="flex-row items-center gap-4">
-                    <View className={`w-14 h-14 rounded-2xl items-center justify-center ${isOverdue ? 'bg-error/10' : 'bg-[#36595f]/20'}`}>
-                        <Text className={`font-display font-black text-lg ${isOverdue ? 'text-error' : 'text-primary'}`}>{item.lotId}</Text>
+                    <View className={`w-14 h-14 rounded-2xl items-center justify-center ${item.status === 'LATE' ? 'bg-error/10' : 'bg-[#36595f]/20'}`}>
+                        <Text className={`font-display font-black text-lg ${item.status === 'LATE' ? 'text-error' : 'text-primary'}`}>{item.lotId}</Text>
                     </View>
                     <View>
-                        <Text className="text-on-surface font-headline font-bold text-sm">{item.customerName}</Text>
+                        <Text className="text-on-surface font-headline font-bold text-sm tracking-tight">{item.customerName}</Text>
                         <Text className="text-on-surface-variant text-[10px] uppercase tracking-widest">{item.stageName} • Manzana {item.lotId.split('-')[0] || 'A'}</Text>
                         <View className="flex-row items-center gap-2 mt-1">
-                            <View className={`px-2 py-0.5 rounded-full ${isOverdue ? 'bg-error/20' : 'bg-primary/20'}`}>
-                                <Text className={`text-[8px] font-black uppercase ${isOverdue ? 'text-error' : 'text-primary'}`}>
-                                    {isOverdue ? 'En Mora' : 'Al Día'}
+                            <View className={`px-2 py-0.5 rounded-full ${bg}`}>
+                                <Text className={`text-[8px] font-black uppercase tracking-widest ${text}`}>
+                                    {label}
                                 </Text>
                             </View>
-                            <Text className="text-[10px] text-on-surface-variant/60">${item.pendingBalance.toLocaleString()} USD</Text>
+                            <Text className="text-[10px] text-on-surface-variant/60">${item.pendingBalance.toLocaleString()} CLP</Text>
                         </View>
                     </View>
                 </View>

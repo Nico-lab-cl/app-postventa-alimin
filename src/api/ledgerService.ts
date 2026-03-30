@@ -3,14 +3,24 @@ import apiClient from './client';
 export interface LedgerEntry {
   customerId: string;
   customerName: string;
+  rut: string;
+  phone: string;
+  email: string;
   lotId: string;
   stageName: string;
+  area_m2: number;
+  price_total_clp: number;
+  valor_cuota: number;
+  pie: number;
+  pie_status: 'PAID' | 'PENDING';
+  installments_paid: number;
   totalPaid: number;
+  totalInvested: number;
   pendingBalance: number;
   nextDueDate: string;
   lateDays: number;
   penaltyAmount: number;
-  status: 'PAID' | 'PENDING' | 'OVERDUE';
+  status: 'LATE' | 'GRACE' | 'UPCOMING' | 'OK';
   badges: string[]; // RES, COM, PRM, GST
 }
 
