@@ -28,7 +28,19 @@ const LedgerScreen = () => {
         },
     });
 
-    const filteredData = data?.filter(item => 
+    const deduplicatedData = React.useMemo(() => {
+        if (!data) return [];
+        const seen: { [key: string]: LedgerEntry } = {};
+        data.forEach(item => {
+            const existing = seen[item.lotId];
+            if (!existing || (item.pie_status === 'PAID' && existing.pie_status !== 'PAID')) {
+                seen[item.lotId] = item;
+            }
+        });
+        return Object.values(seen);
+    }, [data]);
+
+    const filteredData = deduplicatedData.filter(item => 
         item.customerName?.toLowerCase().includes(search.toLowerCase()) ||
         item.lotId?.toLowerCase().includes(search.toLowerCase()) ||
         item.rut?.toLowerCase().includes(search.toLowerCase())

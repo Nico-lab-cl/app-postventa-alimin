@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Platform, Linking } from 'react-native';
-import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, CreditCard } from 'lucide-react-native';
+import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, CreditCard, Calendar, Landmark, Coins } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { LedgerEntry } from '../api/ledgerService';
@@ -8,7 +8,15 @@ import { LedgerEntry } from '../api/ledgerService';
 const LedgerDetailScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const { entry } = route.params as { entry: LedgerEntry };
+    const { entry } = (route.params as { entry: LedgerEntry }) || {};
+
+    if (!entry) {
+        return (
+            <View className="flex-1 bg-background items-center justify-center">
+                <Text className="text-white">Cargando...</Text>
+            </View>
+        );
+    }
 
     const getStatusInfo = (status: string) => {
         switch (status) {
@@ -20,7 +28,11 @@ const LedgerDetailScreen = () => {
         }
     };
 
-    const statusInfo = getStatusInfo(entry.status);
+    const statusInfo = getStatusInfo(entry.status || 'OK');
+
+    // Safe Numeric Formatting
+    const formatCurrency = (val: number | undefined) => (val ?? 0).toLocaleString();
+    const formatArea = (val: number | undefined) => (val ?? 0).toFixed(2);
 
     const InfoRow = ({ label, value, icon }: { label: string; value: string | number; icon?: React.ReactNode }) => (
         <View className="flex-row items-center justify-between py-4 border-b border-white/5">
@@ -47,6 +59,10 @@ const LedgerDetailScreen = () => {
         </TouchableOpacity>
     );
 
+    const investmentProgress = entry.price_total_clp > 0 
+        ? Math.round((entry.totalInvested / entry.price_total_clp) * 100) 
+        : 0;
+
     return (
         <View className="flex-1 bg-background">
             <LinearGradient colors={['rgba(54, 89, 95, 0.15)', 'transparent']} className="absolute inset-0" />
@@ -66,8 +82,8 @@ const LedgerDetailScreen = () => {
                         <View className="absolute -right-12 -top-12 w-48 h-48 bg-[#edc062]/10 rounded-full" />
                         <View className="flex-row justify-between items-center mb-6">
                             <View>
-                                <Text className="text-secondary font-display font-black text-4xl tracking-tighter">{entry.lotId}</Text>
-                                <Text className="text-on-surface-variant text-xs uppercase tracking-[4px] font-black mt-1">{entry.stageName}</Text>
+                                <Text className="text-secondary font-display font-black text-4xl tracking-tighter">{entry.lotId || 'N/A'}</Text>
+                                <Text className="text-on-surface-variant text-xs uppercase tracking-[4px] font-black mt-1">{entry.stageName || 'ETAPA'}</Text>
                             </View>
                             <View style={{ backgroundColor: `${statusInfo.color}20` }} className="px-4 py-2 rounded-full flex-row items-center gap-2 border border-white/5">
                                 {statusInfo.icon}
@@ -77,11 +93,11 @@ const LedgerDetailScreen = () => {
                         <View className="flex-row gap-8">
                             <View>
                                 <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-1">Superficie</Text>
-                                <Text className="text-on-surface font-headline font-bold text-lg leading-tight">{entry.area_m2} m²</Text>
+                                <Text className="text-on-surface font-headline font-bold text-lg leading-tight">{formatArea(entry.area_m2)} m²</Text>
                             </View>
                             <View>
                                 <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-1">Valor Total</Text>
-                                <Text className="text-on-surface font-headline font-bold text-lg leading-tight">${entry.price_total_clp.toLocaleString()} CLP</Text>
+                                <Text className="text-on-surface font-headline font-bold text-lg leading-tight">${formatCurrency(entry.price_total_clp)}</Text>
                             </View>
                         </View>
                     </View>
@@ -92,35 +108,44 @@ const LedgerDetailScreen = () => {
                         <View className="mb-6">
                             <View className="flex-row justify-between items-end mb-3">
                                 <Text className="text-on-surface-variant text-xs font-bold">Progreso de Pago</Text>
-                                <Text className="text-primary font-display font-black text-lg">{Math.round((entry.totalInvested / entry.price_total_clp) * 100)}%</Text>
+                                <Text className="text-primary font-display font-black text-lg">{investmentProgress}%</Text>
                             </View>
                             <View className="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
-                                <View style={{ width: `${(entry.totalInvested / entry.price_total_clp) * 100}%` }} className="h-full bg-primary" />
+                                <View style={{ width: `${investmentProgress}%` }} className="h-full bg-primary" />
                             </View>
                         </View>
                         <View className="flex-row justify-between mb-2">
                              <View className="flex-1">
                                 <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-1">Invertido</Text>
-                                <Text className="text-on-surface font-headline font-bold text-base">${entry.totalInvested.toLocaleString()}</Text>
+                                <Text className="text-on-surface font-headline font-bold text-base">${formatCurrency(entry.totalInvested)}</Text>
                              </View>
                              <View className="flex-1 items-end">
                                 <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-1">Saldo</Text>
-                                <Text className="text-secondary font-display font-black text-base">${entry.pendingBalance.toLocaleString()}</Text>
+                                <Text className="text-secondary font-display font-black text-base">${formatCurrency(entry.pendingBalance)}</Text>
                              </View>
                         </View>
                         <View className="h-[1px] bg-white/5 my-4" />
-                        <InfoRow label="Cuota Mensual" value={`$${entry.valor_cuota.toLocaleString()} CLP`} icon={<Wallet color="#edc062" size={16} />} />
-                        <InfoRow label="Monto Pie" value={`$${entry.pie.toLocaleString()} CLP`} icon={<CreditCard color="#a8cdd4" size={16} />} />
-                        <InfoRow label="Cuotas Pagadas" value={entry.installments_paid} icon={<CheckCircle2 color="#a8cdd4" size={16} />} />
-                    </View>
+                        <InfoRow label="Cuota Mensual" value={`$${formatCurrency(entry.valor_cuota)} CLP`} icon={<Wallet color="#edc062" size={16} />} />
+                        <InfoRow label="Monto Pie" value={`$${formatCurrency(entry.pie)} CLP`} icon={<CreditCard color="#a8cdd4" size={16} />} />
+                        <InfoRow label="Estado Pie" value={entry.pie_status === 'PAID' ? 'PAGADO' : 'PENDIENTE'} icon={<CheckCircle2 color={entry.pie_status === 'PAID' ? '#a8cdd4' : '#edc062'} size={16} />} />
+                        <InfoRow label="Cuotas Pagadas" value={entry.installments_paid || 0} icon={<Coins color="#a8cdd4" size={16} />} />
+                        <InfoRow label="Próximo Vencimiento" value={entry.nextDueDate ? new Date(entry.nextDueDate).toLocaleDateString() : 'N/A'} icon={<Calendar color="#edc062" size={16} />} />
+                    </Section>
 
                     {/* Customer Data */}
                     <Text className="font-display font-bold text-on-surface text-xl mb-6 ml-2">Datos del Cliente</Text>
                     <View className="bg-[#1e2a2d]/60 rounded-[32px] p-6 mb-8 border border-white/5">
-                        <InfoRow label="Nombre" value={entry.customerName} icon={<User color="#a8cdd4" size={16} />} />
-                        <InfoRow label="RUT" value={entry.rut} icon={<FileText color="#edc062" size={16} />} />
-                        <InfoRow label="Teléfono" value={entry.phone} icon={<Phone color="#edc062" size={16} />} />
-                        <InfoRow label="Email" value={entry.email} icon={<Mail color="#a8cdd4" size={16} />} />
+                        <InfoRow label="Nombre" value={entry.customerName || 'N/A'} icon={<User color="#a8cdd4" size={16} />} />
+                        <InfoRow label="RUT" value={entry.rut || 'N/A'} icon={<FileText color="#edc062" size={16} />} />
+                        <InfoRow label="Teléfono" value={entry.phone || 'N/A'} icon={<Phone color="#edc062" size={16} />} />
+                        <InfoRow label="Email" value={entry.email || 'N/A'} icon={<Mail color="#a8cdd4" size={16} />} />
+                    </View>
+
+                    {/* Extra Reservation Info */}
+                    <Text className="font-display font-bold text-on-surface text-xl mb-6 ml-2">Seguimiento de Mora</Text>
+                    <View className="bg-error/5 rounded-[32px] p-6 mb-8 border border-error/10">
+                        <InfoRow label="Días de Atraso" value={entry.lateDays || 0} icon={<AlertCircle color="#ffb4ab" size={16} />} />
+                        <InfoRow label="Interés Acumulado" value={`$${formatCurrency(entry.penaltyAmount)}`} icon={<Landmark color="#ffb4ab" size={16} />} />
                     </View>
 
                     {/* Documentation */}
@@ -131,10 +156,10 @@ const LedgerDetailScreen = () => {
 
                     {/* Quick Action */}
                     <TouchableOpacity 
-                        className="bg-secondary p-5 rounded-[32px] mt-8 items-center shadow-2xl shadow-secondary/20"
-                        onPress={() => {}}
+                        className="bg-primary/20 p-5 rounded-[32px] mt-8 items-center border border-primary/20 shadow-2xl"
+                        onPress={() => Linking.openURL(`mailto:${entry.email}`)}
                     >
-                        <Text className="text-on-secondary font-display font-black uppercase tracking-[2px] text-xs">Subir Comprobante Manual</Text>
+                        <Text className="text-primary font-display font-black uppercase tracking-[2px] text-xs">Contactar por Email</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
