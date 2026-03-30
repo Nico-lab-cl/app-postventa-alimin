@@ -30,11 +30,27 @@ const LedgerScreen = () => {
         },
     });
 
-    const filteredData = data?.filter(item => {
+    const processedData = data?.map(item => {
+        let computedStatus = 'available';
+        if (item.lotStatus === 'sold' || (item.lotStatus === 'reserved' && item.pie_status === 'PAID')) {
+            computedStatus = 'sold';
+        } else if (item.lotStatus === 'reserved' && item.pie_status !== 'PAID') {
+            computedStatus = 'reserved';
+        }
+        return { ...item, computedStatus };
+    }) || [];
+
+    const summaryCounts = {
+        sold: processedData.filter(i => i.computedStatus === 'sold').length,
+        reserved: processedData.filter(i => i.computedStatus === 'reserved').length,
+        available: processedData.filter(i => i.computedStatus === 'available').length,
+    };
+
+    const filteredData = processedData.filter(item => {
         const matchesSearch = item.customerName?.toLowerCase().includes(search.toLowerCase()) ||
                               item.lotId?.toLowerCase().includes(search.toLowerCase()) ||
                               item.rut?.toLowerCase().includes(search.toLowerCase());
-        const matchesStatus = lotStatusFilter === 'ALL' || item.lotStatus === lotStatusFilter;
+        const matchesStatus = lotStatusFilter === 'ALL' || item.computedStatus === lotStatusFilter;
         return matchesSearch && matchesStatus;
     });
 
@@ -49,8 +65,8 @@ const LedgerScreen = () => {
         );
     };
 
-    const StatusBadge = ({ status, lotStatus, isPaid }: { status: string, lotStatus: string, isPaid: boolean }) => {
-        if (lotStatus === 'available') {
+    const StatusBadge = ({ computedStatus, isPaid }: { computedStatus: string, isPaid: boolean }) => {
+        if (computedStatus === 'available') {
             return (
                 <View className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
                     <Text className="text-emerald-400 text-[8px] font-black uppercase tracking-widest">Disponible</Text>
@@ -58,8 +74,8 @@ const LedgerScreen = () => {
             );
         }
         
-        const label = lotStatus === 'sold' ? 'Vendido' : 'Bloqueado';
-        const color = lotStatus === 'sold' ? '#ffb4ab' : '#8b9293';
+        const label = computedStatus === 'sold' ? 'Vendido' : 'Bloqueado';
+        const color = computedStatus === 'sold' ? '#ffb4ab' : '#8b9293';
 
         return (
             <View className="flex-row gap-2">
@@ -76,9 +92,9 @@ const LedgerScreen = () => {
         );
     };
 
-    const LedgerCard = ({ item }: { item: LedgerEntry }) => {
+    const LedgerCard = ({ item }: { item: LedgerEntry & { computedStatus: string } }) => {
         const isPaid = item.pendingBalance <= 0;
-        const isAvailable = item.lotStatus === 'available';
+        const isAvailable = item.computedStatus === 'available';
 
         return (
             <View className={`bg-[#1e2a2d]/60 rounded-[32px] mb-6 border ${isAvailable ? 'border-dashed border-white/10' : 'border-white/5'} overflow-hidden`}>
@@ -89,7 +105,7 @@ const LedgerScreen = () => {
                             <Text className="text-secondary font-display font-black text-2xl tracking-tighter">{item.lotId}</Text>
                             <Text className="text-on-surface-variant text-[10px] uppercase tracking-widest font-black">{item.stageName}</Text>
                         </View>
-                        <StatusBadge status={item.status} lotStatus={item.lotStatus} isPaid={isPaid} />
+                        <StatusBadge computedStatus={item.computedStatus} isPaid={isPaid} />
                     </View>
 
                     {/* Owner / Status Segment */}
@@ -186,6 +202,22 @@ const LedgerScreen = () => {
             >
                 <View className="px-6 max-w-5xl mx-auto w-full">
                     <View className="mb-10 z-[100]" style={{ zIndex: 100, elevation: 100 }}>
+                        {/* Counters */}
+                        <View className="flex-row justify-between gap-3 mb-6">
+                            <View className="flex-1 bg-surface-container-high border border-[#ffb4ab]/20 rounded-2xl p-4 items-center">
+                                <Text className="text-[#ffb4ab] font-display font-black text-3xl mb-1">{summaryCounts.sold}</Text>
+                                <Text className="text-on-surface-variant text-[8px] uppercase tracking-widest font-black">Vendidos</Text>
+                            </View>
+                            <View className="flex-1 bg-surface-container-high border border-emerald-500/20 rounded-2xl p-4 items-center">
+                                <Text className="text-emerald-400 font-display font-black text-3xl mb-1">{summaryCounts.available}</Text>
+                                <Text className="text-on-surface-variant text-[8px] uppercase tracking-widest font-black">Disponibles</Text>
+                            </View>
+                            <View className="flex-1 bg-surface-container-high border border-[#c1c8c9]/20 rounded-2xl p-4 items-center">
+                                <Text className="text-[#c1c8c9] font-display font-black text-3xl mb-1">{summaryCounts.reserved}</Text>
+                                <Text className="text-on-surface-variant text-[8px] uppercase tracking-widest font-black">Bloqueados</Text>
+                            </View>
+                        </View>
+
                         <View className="bg-surface-container-high rounded-[24px] px-6 py-4 flex-row items-center gap-4 border border-outline-variant/10 shadow-xl mb-6">
                             <Search color="#a8cdd4" size={20} />
                             <TextInput 
