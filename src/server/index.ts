@@ -338,9 +338,12 @@ app.get('/api/mobile/postventa/receipts', authenticate, async (req: Request, res
             id: r.id,
             customerName: r.reservation.name + ' ' + (r.reservation.last_name || ''),
             lotNumber: r.lot.number,
+            stage: r.lot.stage,
             amount: r.amount_clp,
             date: r.created_at.toISOString(),
             status: r.status,
+            scope: r.scope,
+            installmentsCount: r.installments_count || 1,
             imageUrl: r.receipt_url
         })));
     } catch (e) {

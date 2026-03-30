@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert, Image, RefreshControl, Platform, ScrollView } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert, Image, RefreshControl, Platform, ScrollView, Linking } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Check, X, ArrowLeft, FileText, ShieldCheck, CheckCircle, Clock, Plus } from 'lucide-react-native';
+import { Check, X, ArrowLeft, FileText, ShieldCheck, CheckCircle, Clock } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ledgerService } from '../api/ledgerService';
@@ -30,70 +30,83 @@ const ReceiptsScreen = () => {
         }
     });
 
+    const formatDate = (isoText: string) => {
+        const d = new Date(isoText);
+        return d.toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' });
+    };
+
     const ReceiptCard = ({ item }: { item: any }) => (
-        <View className="bg-[#1e2a2d]/60 p-6 rounded-[32px] mb-8 border border-white/5 overflow-hidden shadow-2xl">
-            <View className="flex-row justify-between items-start mb-6">
-                <View className="flex-1 mr-4">
-                    <Text className="text-on-surface font-display font-bold text-xl tracking-tight leading-tight">{item.customerName}</Text>
-                    <Text className="text-secondary font-display font-black text-[10px] uppercase tracking-[2px] mt-1">{item.lotNumber}</Text>
+        <View className="bg-[#1e2a2d]/90 p-5 rounded-2xl mb-4 border border-white/5 flex-col">
+            <View className="flex-row justify-between items-start mb-3">
+                <View className="flex-row items-center gap-2">
+                    {item.status === 'APPROVED' ? <CheckCircle color="#2db395" size={16} /> : 
+                     item.status === 'REJECTED' ? <X color="#ffb4ab" size={16} /> : 
+                     <Clock color="#edc062" size={16} />}
+                     <Text className="text-on-surface font-display font-bold text-base">{item.customerName}</Text>
                 </View>
-                <View className="bg-[#36595f]/20 px-4 py-2 rounded-2xl border border-primary/20">
-                    <Text className="text-primary font-display font-black text-sm">${item.amount.toLocaleString()} <Text className="text-[8px] font-normal">USD</Text></Text>
+                <Text className="text-primary font-display font-black text-sm">${item.amount.toLocaleString()}</Text>
+            </View>
+
+            <View className="flex-row justify-between mb-4 mt-1 px-1">
+                <View>
+                    <Text className="text-on-surface-variant text-[10px] uppercase font-bold tracking-wider mb-1">Fecha</Text>
+                    <Text className="text-on-surface text-xs font-mono">{formatDate(item.date)}</Text>
+                </View>
+                <View>
+                    <Text className="text-on-surface-variant text-[10px] uppercase font-bold tracking-wider mb-1">Terreno</Text>
+                    <Text className="text-on-surface text-xs font-mono">L. {item.lotNumber} (E{item.stage || '-'})</Text>
+                </View>
+                <View>
+                    <Text className="text-on-surface-variant text-[10px] uppercase font-bold tracking-wider mb-1">Tipo</Text>
+                    <Text className="text-on-surface text-xs font-mono">{item.scope === 'PIE' ? 'Pie' : `${item.installmentsCount || 1} Cuota(s)`}</Text>
+                </View>
+                <View>
+                    <Text className="text-on-surface-variant text-[10px] uppercase font-bold tracking-wider mb-1">Estado</Text>
+                    <Text className={`text-xs font-mono font-bold ${item.status === 'APPROVED' ? 'text-emerald-400' : item.status === 'REJECTED' ? 'text-error' : 'text-[#edc062]'}`}>
+                        {item.status === 'APPROVED' ? 'Aprobado' : item.status === 'REJECTED' ? 'Rechazado' : 'Pendiente'}
+                    </Text>
                 </View>
             </View>
 
-            <View className="h-64 bg-surface-container-lowest rounded-3xl mb-8 justify-center items-center overflow-hidden border border-white/10 relative">
-                {item.imageUrl ? (
-                    <Image source={{ uri: item.imageUrl }} className="w-full h-full" resizeMode="cover" />
-                ) : (
-                    <View className="items-center opacity-30">
-                        <FileText color="#8b9293" size={48} strokeWidth={1} />
-                        <Text className="text-on-surface-variant text-[10px] mt-2 uppercase tracking-[2px] font-bold">Sin comprobante visual</Text>
-                    </View>
-                )}
-                <View className="absolute bottom-4 right-4 bg-black/60 px-3 py-1.5 rounded-full backdrop-blur-md">
-                    <Text className="text-white font-black text-[10px] uppercase tracking-widest">Vista Previa</Text>
-                </View>
-            </View>
-
-            {item.status === 'PENDING' ? (
-                <View className="flex-row gap-4">
+            <View className="flex-row justify-between items-center border-t border-white/10 pt-4 mt-2">
+                <View className="flex-row gap-2">
                     <TouchableOpacity 
-                        onPress={() => mutation.mutate({ id: item.id, action: 'reject' })}
-                        activeOpacity={0.7}
-                        className="flex-1 bg-error-container/20 border border-error/20 py-4 rounded-2xl flex-row justify-center items-center"
+                        className="bg-black/40 px-3 py-2 rounded-xl border border-white/10 flex-row items-center gap-1.5"
+                        onPress={() => Linking.openURL(item.imageUrl)}
                     >
-                        <X color="#ffb4ab" size={18} />
-                        <Text className="text-error font-display font-bold ml-2 text-xs uppercase tracking-[2px]">Rechazar</Text>
+                        <FileText color="#8b9293" size={14} />
+                        <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-wider">Origen</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity 
-                        onPress={() => mutation.mutate({ id: item.id, action: 'approve' })}
-                        activeOpacity={0.9}
-                        className="flex-1 rounded-2xl overflow-hidden shadow-lg shadow-primary/20"
-                    >
-                        <LinearGradient
-                            colors={['#a8cdd4', '#36595f']}
-                            start={{x: 0, y: 0}}
-                            end={{x: 1, y: 1}}
-                            className="py-4 flex-row justify-center items-center"
+                    {item.status === 'APPROVED' && (
+                        <TouchableOpacity 
+                            className="bg-primary/10 px-3 py-2 rounded-xl border border-primary/20 flex-row items-center gap-1.5"
+                            onPress={() => Linking.openURL(`https://aliminlomasdelmar.com/api/receipts/${item.id}/pdf`)}
                         >
-                            <Check color="#0f353b" size={18} />
-                            <Text className="text-[#0f353b] font-display font-black ml-2 text-xs uppercase tracking-[2px]">Aprobar</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
+                            <ShieldCheck color="#a8cdd4" size={14} />
+                            <Text className="text-primary font-bold text-[10px] uppercase tracking-wider">Oficial</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
-            ) : item.status === 'APPROVED' ? (
-                <View className="bg-emerald-500/10 border border-emerald-500/20 py-4 rounded-2xl flex-row justify-center items-center">
-                    <CheckCircle color="#2db395" size={18} />
-                    <Text className="text-emerald-400 font-display font-black ml-2 text-xs uppercase tracking-[2px]">Aprobado</Text>
-                </View>
-            ) : (
-                <View className="bg-error/10 border border-error/20 py-4 rounded-2xl flex-row justify-center items-center">
-                    <X color="#ffb4ab" size={18} />
-                    <Text className="text-error font-display font-black ml-2 text-xs uppercase tracking-[2px]">Rechazado</Text>
-                </View>
-            )}
+                
+                {item.status === 'PENDING' && (
+                    <View className="flex-row gap-2">
+                        <TouchableOpacity 
+                            onPress={() => mutation.mutate({ id: item.id, action: 'reject' })}
+                            className="bg-error/20 px-4 py-2 rounded-xl flex-row items-center"
+                        >
+                            <Text className="text-error font-bold text-[10px] uppercase tracking-wider">Rechazar</Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity 
+                            onPress={() => mutation.mutate({ id: item.id, action: 'approve' })}
+                            className="bg-primary/90 px-4 py-2 rounded-xl flex-row items-center shadow-lg shadow-primary/20"
+                        >
+                            <Text className="text-[#0f353b] font-black justify-center items-center text-[10px] uppercase tracking-wider">Aprobar</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            </View>
         </View>
     );
 
@@ -154,17 +167,7 @@ const ReceiptsScreen = () => {
                         </View>
                     </View>
 
-                    {/* Nueva Transferencia Button */}
-                    <TouchableOpacity 
-                        onPress={() => navigation.navigate('SelectClientForPayment')}
-                        activeOpacity={0.8}
-                        className="bg-primary p-5 rounded-3xl items-center flex-row justify-center gap-3 mb-12 shadow-lg shadow-primary/20"
-                    >
-                        <View className="bg-black/20 p-1.5 rounded-full">
-                            <Plus color="#000" size={18} />
-                        </View>
-                        <Text className="text-black font-display font-black uppercase text-sm tracking-widest">Ingresar Transferencia</Text>
-                    </TouchableOpacity>
+                    {/* Nueva Transferencia Button Removed to enforce Admin Auditing Mode */}
 
                     {/* Receipts List */}
                     <View>
