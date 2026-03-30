@@ -130,7 +130,7 @@ const LedgerDetailScreen = () => {
                         <InfoRow label="Estado Pie" value={entry.pie_status === 'PAID' ? 'PAGADO' : 'PENDIENTE'} icon={<CheckCircle2 color={entry.pie_status === 'PAID' ? '#a8cdd4' : '#edc062'} size={16} />} />
                         <InfoRow label="Cuotas Pagadas" value={entry.installments_paid || 0} icon={<Coins color="#a8cdd4" size={16} />} />
                         <InfoRow label="Próximo Vencimiento" value={entry.nextDueDate ? new Date(entry.nextDueDate).toLocaleDateString() : 'N/A'} icon={<Calendar color="#edc062" size={16} />} />
-                    </Section>
+                    </View>
 
                     {/* Customer Data */}
                     <Text className="font-display font-bold text-on-surface text-xl mb-6 ml-2">Datos del Cliente</Text>
