@@ -53,10 +53,10 @@ module.exports = {
         "inverse-primary": "#41646a"
       },
       fontFamily: {
-        "headline": ["Plus Jakarta Sans", "sans-serif"],
-        "body": ["Inter", "sans-serif"],
-        "label": ["Inter", "sans-serif"],
-        "display": ["Outfit", "sans-serif"]
+        "headline": ["System"],
+        "body": ["System"],
+        "label": ["System"],
+        "display": ["System"]
       },
       borderRadius: {
         DEFAULT: "1rem",

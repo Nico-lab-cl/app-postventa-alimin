@@ -29,7 +29,7 @@ const ReceiptsScreen = () => {
     });
 
     const ReceiptCard = ({ item }: { item: any }) => (
-        <View className="glass-card p-6 rounded-[32px] mb-8 border border-white/5 overflow-hidden shadow-2xl">
+        <View className="bg-[#1e2a2d]/60 p-6 rounded-[32px] mb-8 border border-white/5 overflow-hidden shadow-2xl">
             <View className="flex-row justify-between items-start mb-6">
                 <View className="flex-1 mr-4">
                     <Text className="text-on-surface font-display font-bold text-xl tracking-tight leading-tight">{item.customerName}</Text>
@@ -123,15 +123,15 @@ const ReceiptsScreen = () => {
 
                     {/* Stats Section */}
                     <View className="flex-row gap-6 mb-12 h-32">
-                        <View className="flex-1 glass-card p-6 rounded-3xl border border-primary-container/20 justify-between overflow-hidden">
-                            <View className="absolute -right-8 -top-8 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
+                        <View className="flex-1 bg-[#1e2a2d]/60 p-6 rounded-3xl border border-primary-container/20 justify-between overflow-hidden">
+                            <View className="absolute -right-8 -top-8 w-32 h-32 bg-primary/10 rounded-full" />
                             <View className="flex-row items-center gap-3">
                                 <CheckCircle color="#a8cdd4" size={20} />
                                 <Text className="font-display font-medium text-on-surface-variant text-[10px] uppercase tracking-widest">Verificados</Text>
                             </View>
                             <Text className="text-3xl font-display font-black text-primary tracking-tighter">124</Text>
                         </View>
-                        <View className="flex-1 glass-card p-6 rounded-3xl border border-white/5 justify-between overflow-hidden">
+                        <View className="flex-1 bg-[#1e2a2d]/60 p-6 rounded-3xl border border-white/5 justify-between overflow-hidden">
                             <View className="flex-row items-center gap-3">
                                 <Clock color="#edc062" size={20} />
                                 <Text className="font-display font-medium text-on-surface-variant text-[10px] uppercase tracking-widest">Pendientes</Text>
@@ -156,7 +156,7 @@ const ReceiptsScreen = () => {
                                 ))}
 
                                 {data?.length === 0 && (
-                                    <View className="mt-4 items-center justify-center p-12 glass-card border-dashed border-white/10 opacity-40">
+                                    <View className="mt-4 items-center justify-center p-12 bg-[#1e2a2d]/60 border-dashed border-white/10 opacity-40">
                                         <ShieldCheck color="#8b9293" size={64} strokeWidth={1} />
                                         <Text className="text-on-surface-variant text-xl text-center font-display font-bold mt-6">¡Todo al día!</Text>
                                         <Text className="text-on-surface-variant text-center font-body text-xs mt-2">No hay recibos pendientes de validación.</Text>

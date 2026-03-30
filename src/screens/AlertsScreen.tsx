@@ -16,8 +16,8 @@ const AlertsScreen = () => {
     const delinquentLedgers = data?.filter(item => item.lateDays > 0 || item.penaltyAmount > 0) || [];
 
     const MoraCard = ({ item }: { item: LedgerEntry }) => (
-        <TouchableOpacity className="glass-card p-6 rounded-[32px] mb-6 border border-error/5 overflow-hidden shadow-2xl">
-            <View className="absolute -right-12 -top-12 w-40 h-40 bg-error/10 rounded-full blur-3xl" />
+        <TouchableOpacity className="bg-[#1e2a2d]/60 p-6 rounded-[32px] mb-6 border border-error/5 overflow-hidden shadow-2xl">
+            <View className="absolute -right-12 -top-12 w-40 h-40 bg-error/10 rounded-full" />
             
             <View className="flex-row justify-between items-start mb-6">
                 <View className="flex-row items-center gap-4">
@@ -101,7 +101,7 @@ const AlertsScreen = () => {
                                 ))}
 
                                 {delinquentLedgers.length === 0 && (
-                                    <View className="mt-4 items-center justify-center p-12 glass-card border-dashed border-white/10 opacity-40">
+                                    <View className="mt-4 items-center justify-center p-12 bg-[#1e2a2d]/60 border-dashed border-white/10 opacity-40">
                                         <Clock color="#8b9293" size={64} strokeWidth={1} />
                                         <Text className="text-on-surface-variant text-xl text-center font-display font-bold mt-6">¡Sin retrasos!</Text>
                                         <Text className="text-on-surface-variant text-center font-body text-xs mt-2">No se detectaron clientes con mora pendiente.</Text>

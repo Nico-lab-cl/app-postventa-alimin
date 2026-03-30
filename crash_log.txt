@@ -1,0 +1,463 @@
+﻿--------- beginning of system
+03-24 20:46:43.492   716  2089 I ActivityManager: Force stopping com.postventa.alimin appid=10224 user=0: from pid 16995
+--------- beginning of main
+03-24 20:46:43.494   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.494   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.494   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.494   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.494   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.495   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.495   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.495   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.495   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.495   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.495   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.495   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.496   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.496   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.496   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:43.496   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:43.496   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.496   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:43.496   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:43.496   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.496   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.496   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.496   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.497   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.497   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:43.497   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.497   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.497   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.497   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.498   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.498   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.498   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.498   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.498   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.499   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.499   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.499   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.499   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.499   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.499   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.499   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.500   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.500   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.500   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.500   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.500   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.500   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.500   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.501   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.501   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.501   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.502   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.502   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.502   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.502   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.502   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.502   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.502   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.503   716  2089 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:43.503   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:43.503   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:43.503   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:43.503   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:43.504   716  2089 I AppsFilter: interaction: PackageSetting{164526f com.android.microdroid.empty_payload/10208} -> PackageSetting{d0873f com.postventa.alimin/10224} BLOCKED
+03-24 20:46:43.512  1387  1387 D CarrierSvcBindHelper: onHandleForceStop: [com.postventa.alimin]
+03-24 20:46:43.513  1387  1387 D CarrierSvcBindHelper: No carrier app for: 0
+03-24 20:46:43.515   716   889 I system_server: AssetManager2(0x775ce7c01a58) locale list changing from [] to [en-US]
+03-24 20:46:43.516   716   889 I system_server: AssetManager2(0x775ce7c9d818) locale list changing from [] to [en-US]
+03-24 20:46:43.521   716   889 I system_server: AssetManager2(0x775ce7c9ead8) locale list changing from [] to [en-US]
+03-24 20:46:44.560   716  2089 W ActivityTaskManager: callingPackage for (uid=2000, pid=17000) has no WPC
+03-24 20:46:44.560   716  2089 V GrammaticalInflectionUtils: AttributionSource: android.content.AttributionSource@ca68d6ac does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+03-24 20:46:44.560   716  2089 W OptProp : Cannot read opt property android.window.PROPERTY_COMPAT_ALLOW_USER_ASPECT_RATIO_OVERRIDE
+03-24 20:46:44.561   716  2089 W OptProp : Cannot read opt property android.window.PROPERTY_COMPAT_ALLOW_USER_ASPECT_RATIO_FULLSCREEN_OVERRIDE
+03-24 20:46:44.561   716  2089 W OptProp : Cannot read opt property android.window.PROPERTY_COMPAT_ALLOW_RESIZEABLE_ACTIVITY_OVERRIDES
+03-24 20:46:44.561   716  2089 W OptProp : Cannot read opt property android.window.PROPERTY_COMPAT_ALLOW_MIN_ASPECT_RATIO_OVERRIDE
+03-24 20:46:44.563   716  2089 W OptProp : Cannot read opt property android.window.PROPERTY_COMPAT_ALLOW_ORIENTATION_OVERRIDE
+03-24 20:46:44.564   553   578 I BpBinder: onLastStrongRef automatically unlinking death recipients: 
+03-24 20:46:44.567   716  2089 I ActivityTaskManager: START u0 {flg=0x10000000 xflg=0x5 cmp=com.postventa.alimin/.MainActivity} with LAUNCH_SINGLE_TASK from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
+03-24 20:46:44.567 13224 13245 V WindowManagerShell: Transition requested (#145): android.os.BinderProxy@4903abb TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=54 effectiveUid=10224 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=com.postventa.alimin/.MainActivity } baseActivity=ComponentInfo{com.postventa.alimin/com.postventa.alimin.MainActivity} topActivity=ComponentInfo{com.postventa.alimin/com.postventa.alimin.MainActivity} origActivity=null realActivity=ComponentInfo{com.postventa.alimin/com.postventa.alimin.MainActivity} numActivities=1 lastActiveTime=16603226 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@af02bd8} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 156 - 0, 0) topActivityInfo=ActivityInfo{6aeab31 com.postventa.alimin.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=Rect(329, 830 - 952, 2110) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1280, 2856) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=inactive}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 145 }
+03-24 20:46:44.567 13224 13245 D ShellSplitScreen: logExit: no-op, mLoggerSessionId is null
+03-24 20:46:44.569 13224 13253 W HWUI    : Image decoding logging dropped!
+03-24 20:46:44.571 12990 12990 W SplitSelectStateCtor: Missing session instanceIds
+03-24 20:46:44.571 12990 12990 D StatsLog: LAUNCHER_SPLIT_SELECTION_EXIT_INTERRUPTED
+03-24 20:46:44.571 13224 13245 D WindowManagerShell: setLauncherKeepClearAreaHeight: visible=false, height=603
+03-24 20:46:44.572   716  2391 I AppsFilter: interaction: PackageSetting{164526f com.android.microdroid.empty_payload/10208} -> PackageSetting{af44235 com.postventa.alimin/10224} BLOCKED
+03-24 20:46:44.573   599 13182 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:44.573   599 13182 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:44.574 13224 13253 W HWUI    : Image decoding logging dropped!
+03-24 20:46:44.577   553   553 I BpBinder: onLastStrongRef automatically unlinking death recipients: 
+03-24 20:46:44.578   716   751 V GrammaticalInflectionUtils: AttributionSource: android.content.AttributionSource@ca68d6ac does not have READ_SYSTEM_GRAMMATICAL_GENDER permission.
+03-24 20:46:44.580 13224 13253 W HWUI    : Image decoding logging dropped!
+03-24 20:46:44.584   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:44.586   716  2391 D CoreBackPreview: Window{a22911f u0 Splash Screen com.postventa.alimin}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@6ad5bb3, mPriority=0, mIsAnimationCallback=false, mOverrideBehavior=0}
+03-24 20:46:44.596   487   487 D Zygote  : Forked child process 17003
+03-24 20:46:44.598   716   758 I ActivityManager: Start proc 17003:com.postventa.alimin/u0a224 for next-top-activity {com.postventa.alimin/com.postventa.alimin.MainActivity}
+03-24 20:46:44.598   716   758 I ActivityManager: ProcessObserver broadcast disabled
+03-24 20:46:44.619 17003 17003 I ostventa.alimin: Using CollectorTypeCMC GC.
+03-24 20:46:44.621 17003 17003 W ostventa.alimin: Unexpected CPU variant for x86: x86_64.
+03-24 20:46:44.621 17003 17003 W ostventa.alimin: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, default
+03-24 20:46:44.668 17003 17003 I berberis: Initialized Berberis (aarch64), version 16.0.0
+03-24 20:46:44.727   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=152
+03-24 20:46:44.727   716   748 V WindowManager: Sent Transition (#145) createdAt=03-24 20:46:44.561 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=54 effectiveUid=10224 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=com.postventa.alimin/.MainActivity } baseActivity=ComponentInfo{com.postventa.alimin/com.postventa.alimin.MainActivity} topActivity=ComponentInfo{com.postventa.alimin/com.postventa.alimin.MainActivity} origActivity=null realActivity=ComponentInfo{com.postventa.alimin/com.postventa.alimin.MainActivity} numActivities=1 lastActiveTime=16603226 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{1bb22a5 Task{ce5fbc3 #54 type=standard A=10224:com.postventa.alimin}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 156 - 0, 0) topActivityInfo=ActivityInfo{1da367a com.postventa.alimin.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=false lastNonFullscreenBounds=Rect(329, 830 - 952, 2110) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= true isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 1280, 2856) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=inactive}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 145 }
+03-24 20:46:44.727   716   748 V WindowManager:     startWCT=WindowContainerTransaction { changes= {} hops= [] errorCallbackToken=null taskFragmentOrganizer=null }
+03-24 20:46:44.727   716   748 V WindowManager:     info={id=145 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[
+03-24 20:46:44.727   716   748 V WindowManager:         {WCT{RemoteToken{1bb22a5 Task{ce5fbc3 #54 type=standard A=10224:com.postventa.alimin}}} m=OPEN f=NONE leash=Surface(name=Task=54)/@0x898000f sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},
+03-24 20:46:44.727   716   748 V WindowManager:         {WCT{RemoteToken{3045ae Task{5bc855 #1 type=home}}} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0x4f4426c sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},
+03-24 20:46:44.727   716   748 V WindowManager:         {m=TO_BACK f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{b115d1b showWhenLocked=false})/@0xc6bb85 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0}
+03-24 20:46:44.727   716   748 V WindowManager:     ]}
+03-24 20:46:44.727 13224 13319 V WindowManagerShell: onTransitionReady(transaction=3075196589098)
+03-24 20:46:44.727 13224 13245 V WindowManagerShell: onTransitionReady (#145) android.os.BinderProxy@4903abb: {id=145 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[
+03-24 20:46:44.727 13224 13245 V WindowManagerShell:         {m=OPEN f=NONE leash=Surface(name=Task=54)/@0x1742223 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},
+03-24 20:46:44.727 13224 13245 V WindowManagerShell:         {m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0xaeb6320 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},
+03-24 20:46:44.727 13224 13245 V WindowManagerShell:         {m=TO_BACK f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{b115d1b showWhenLocked=false})/@0x92d24d9 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0}
+03-24 20:46:44.727 13224 13245 V WindowManagerShell:     ]}
+03-24 20:46:44.727 13224 13245 V WindowManagerShell: Playing animation for (#145) android.os.BinderProxy@4903abb@0
+03-24 20:46:44.727 13224 13245 V ShellRecents: RecentsTransitionHandler.startAnimation: no controller found
+03-24 20:46:44.728 13224 13245 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=145 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{m=OPEN f=NONE leash=Surface(name=Task=54)/@0x1742223 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},{m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0xaeb6320 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},{m=TO_BACK f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{b115d1b showWhenLocked=false})/@0x92d24d9 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0}]}
+03-24 20:46:44.728 13224 13245 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=undefined independent=true modes=[CLOSE,TO_BACK] flags=IN_TASK_WITH_EMBEDDED_ACTIVITY mustBeTask=false order=ANY topActivity=null launchCookie=null taskFragmentToken=android.os.BinderProxy@9d9abe8 windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@17f1201, appThread = android.app.IApplicationThread$Stub$Proxy@85d28a6, debugName = overlayBackTransition }}
+03-24 20:46:44.728 13224 13245 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@87112e7, appThread = android.app.IApplicationThread$Stub$Proxy@1919e94, debugName = LauncherToDream }}
+03-24 20:46:44.728 13224 13245 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity} launchCookie=null windowingMode=undefined},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined},{NOT atype=undefined independent=true modes=[] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null customAnim=true windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@3c9cd3d, appThread = android.app.IApplicationThread$Stub$Proxy@3a32932, debugName = QuickstepLaunchHome }}
+03-24 20:46:44.728 13224 13245 V WindowManagerShell:  Delegate animation for (#145) to null
+03-24 20:46:44.728 13224 13245 V WindowManagerShell: start default transition animation, info = {id=145 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{m=OPEN f=NONE leash=Surface(name=Task=54)/@0x1742223 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},{m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0xaeb6320 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},{m=TO_BACK f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{b115d1b showWhenLocked=false})/@0x92d24d9 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0}]}
+03-24 20:46:44.728 13224 13245 V WindowManagerShell: loadAnimation: anim=android.view.animation.AnimationSet@2dcbd7f animAttr=0x13 type=OPEN isEntrance=false
+03-24 20:46:44.728 13224 13245 V WindowManagerShell: loadAnimation: anim=android.view.animation.AnimationSet@8f3914c animAttr=0x12 type=OPEN isEntrance=true
+03-24 20:46:44.729 13224 13245 V WindowManagerShell:  animated by com.android.wm.shell.transition.DefaultTransitionHandler@aa224ae
+03-24 20:46:44.743   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=153
+03-24 20:46:44.760   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=154
+03-24 20:46:44.770 17003 17003 E ostventa.alimin: Not starting debugger since process cannot load the jdwp agent.
+03-24 20:46:44.773 17003 17003 D nativeloader: Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+03-24 20:46:44.776   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=155
+03-24 20:46:44.784   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:44.791 17003 17003 D nativeloader: Configuring clns-9 for other apk /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64:/data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.postventa.alimin
+03-24 20:46:44.795   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=156
+03-24 20:46:44.810   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=157
+03-24 20:46:44.811 17003 17003 I ostventa.alimin: AssetManager2(0x775ce7bd8a18) locale list changing from [] to [en-US]
+03-24 20:46:44.814 17003 17003 V GraphicsEnvironment: Currently set values for:
+03-24 20:46:44.814 17003 17003 V GraphicsEnvironment:   angle_gl_driver_selection_pkgs=[]
+03-24 20:46:44.814 17003 17003 V GraphicsEnvironment:   angle_gl_driver_selection_values=[]
+03-24 20:46:44.814 17003 17003 V GraphicsEnvironment: com.postventa.alimin is not listed in per-application setting
+03-24 20:46:44.814 17003 17003 V GraphicsEnvironment: ANGLE allowlist from config: com.dreamgames.royalmatch com.dts.freefiremax com.dxx.firenow com.gramgames.mergedragons com.ludo.king com.mojang.minecraftpe com.my.defense com.nintendo.zaka com.os.airforce com.playrix.fishdomdd.gplay io.teslatech.callbreak jp.konami.prospia net.peakgames.toonblast
+03-24 20:46:44.814 17003 17003 V GraphicsEnvironment: com.postventa.alimin is not listed in ANGLE allowlist or settings, returning default
+03-24 20:46:44.814 17003 17003 V GraphicsEnvironment: Neither updatable production driver nor prerelease driver is supported.
+03-24 20:46:44.829 17003 17003 W SoLoader: Initializing SoLoader: 0
+03-24 20:46:44.830 17003 17003 W SoLoader: Recording new base apk path: /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk
+03-24 20:46:44.830 17003 17003 W SoLoader: Previously recorded 0 base apk paths.
+03-24 20:46:44.831 17003 17003 I SoLoader: Preparing SO source: DirectorySoSource[root = /vendor/lib64 flags = 2]
+03-24 20:46:44.832 17003 17003 I SoLoader: Preparing SO source: DirectorySoSource[root = /system/lib64 flags = 2]
+03-24 20:46:44.832 17003 17003 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk!/lib/x86_64]]
+03-24 20:46:44.833 17003 17003 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64 flags = 0]]
+03-24 20:46:44.833 17003 17003 I SoLoader: init finish: 4 SO sources prepared
+03-24 20:46:44.834 17003 17003 W SoLoader: SoLoader initialized: 8
+03-24 20:46:44.835 17003 17003 W SoLoader: Running a recovery step for libreactnative.so due to com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libreactnative.so
+03-24 20:46:44.835 17003 17003 W SoLoader: 	existing SO sources: 
+03-24 20:46:44.835 17003 17003 W SoLoader: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64 flags = 0]]
+03-24 20:46:44.835 17003 17003 W SoLoader: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk!/lib/x86_64]]
+03-24 20:46:44.835 17003 17003 W SoLoader: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 2]
+03-24 20:46:44.835 17003 17003 W SoLoader: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 2]
+03-24 20:46:44.835 17003 17003 W SoLoader: 	Native lib dir: /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64
+03-24 20:46:44.836 17003 17003 W soloader.recovery.CheckBaseApkExists: Base apk exists: /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk
+03-24 20:46:44.836 17003 17003 W SoLoader: Running a recovery step for libreactnative.so due to com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libreactnative.so
+03-24 20:46:44.836 17003 17003 W SoLoader: 	existing SO sources: 
+03-24 20:46:44.836 17003 17003 W SoLoader: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64 flags = 0]]
+03-24 20:46:44.836 17003 17003 W SoLoader: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk!/lib/x86_64]]
+03-24 20:46:44.836 17003 17003 W SoLoader: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 2]
+03-24 20:46:44.836 17003 17003 W SoLoader: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 2]
+03-24 20:46:44.836 17003 17003 W SoLoader: 	Native lib dir: /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64
+03-24 20:46:44.836 17003 17003 E SoLoader: Checking /data/app missing libraries.
+03-24 20:46:44.837 17003 17003 E SoLoader: Successfully recovered from /data/app disk failure.
+03-24 20:46:44.837 17003 17003 W SoLoader: Running a recovery step for libreactnative.so due to com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libreactnative.so
+03-24 20:46:44.837 17003 17003 W SoLoader: 	existing SO sources: 
+03-24 20:46:44.837 17003 17003 W SoLoader: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64 flags = 0]]
+03-24 20:46:44.837 17003 17003 W SoLoader: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk!/lib/x86_64]]
+03-24 20:46:44.837 17003 17003 W SoLoader: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 3]
+03-24 20:46:44.837 17003 17003 W SoLoader: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 3]
+03-24 20:46:44.837 17003 17003 W SoLoader: 	Native lib dir: /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64
+03-24 20:46:44.837 17003 17003 E SoLoader: Checking /data/data missing libraries.
+03-24 20:46:44.837 17003 17003 E SoLoader: No libraries missing from unpacking so paths while recovering /data/data failure
+03-24 20:46:44.837 17003 17003 W SoLoader: Running a recovery step for libreactnative.so due to com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libreactnative.so
+03-24 20:46:44.837 17003 17003 W SoLoader: 	existing SO sources: 
+03-24 20:46:44.837 17003 17003 W SoLoader: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64 flags = 0]]
+03-24 20:46:44.837 17003 17003 W SoLoader: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk!/lib/x86_64]]
+03-24 20:46:44.837 17003 17003 W SoLoader: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 3]
+03-24 20:46:44.837 17003 17003 W SoLoader: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 3]
+03-24 20:46:44.837 17003 17003 W SoLoader: 	Native lib dir: /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64
+03-24 20:46:44.837 17003 17003 W SoLoader: Failed to recover
+03-24 20:46:44.837 17003 17003 D AndroidRuntime: Shutting down VM
+--------- beginning of crash
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: FATAL EXCEPTION: main
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: Process: com.postventa.alimin, PID: 17003
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libreactnative.so
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	existing SO sources: 
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64 flags = 0]]
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk!/lib/x86_64]]
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 3]
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 3]
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	Native lib dir: /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.doLoadLibraryBySoName(SoLoader.java:1216)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibraryBySoNameImpl(SoLoader.java:1078)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibraryBySoName(SoLoader.java:943)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibraryOnAndroid(SoLoader.java:859)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibrary(SoLoader.java:842)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibrary(SoLoader.java:812)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsCxxInterop.<clinit>(ReactNativeFeatureFlagsCxxInterop.kt:28)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsCxxAccessor.override(ReactNativeFeatureFlagsCxxAccessor.kt:875)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeFeatureFlags.override(ReactNativeFeatureFlags.kt:558)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load(DefaultNewArchitectureEntryPoint.kt:101)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load(DefaultNewArchitectureEntryPoint.kt:43)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.ReactNativeApplicationEntryPoint.loadReactNative(ReactNativeApplicationEntryPoint.java:31)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.postventa.alimin.MainApplication.onCreate(MainApplication.kt:37)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.Instrumentation.callApplicationOnCreate(Instrumentation.java:1381)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.ActivityThread.handleBindApplication(ActivityThread.java:7830)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleBindApplication(Unknown Source:0)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2546)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:248)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:338)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+03-24 20:46:44.841 17003 17003 I Process : Sending signal. PID: 17003 SIG: 9
+03-24 20:46:44.850   716  2086 I ActivityManager: Process com.postventa.alimin (pid 17003) has died: fg  TOP 
+03-24 20:46:44.850   716  2086 W ActivityTaskManager: ProcessRecord{bf8517 17003:com.postventa.alimin/u0a224} is removed with pending start ActivityRecord{188414834 u0 com.postventa.alimin/.MainActivity t54}
+03-24 20:46:44.852 13224 13245 V WindowManagerShell: Transition requested (#146): android.os.BinderProxy@c46dd77 TransitionRequestInfo { type = CLOSE, triggerTask = TaskInfo{userId=0 taskId=54 effectiveUid=10224 displayId=0 isRunning=false baseIntent=Intent { flg=0x10000000 cmp=com.postventa.alimin/.MainActivity } baseActivity=null topActivity=null origActivity=null realActivity=ComponentInfo{com.postventa.alimin/com.postventa.alimin.MainActivity} numActivities=0 lastActiveTime=16603226 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@2b0bde4} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0) topActivityInfo=null launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=true isVisibleRequested=true isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=true lastNonFullscreenBounds=Rect(329, 830 - 952, 2110) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 0, 0) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=undefined}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 146 }
+03-24 20:46:44.856   716   759 I libprocessgroup: Removed cgroup /sys/fs/cgroup/apps/uid_10224/pid_17003
+03-24 20:46:44.857 13224 13245 D WindowManagerShell: setLauncherKeepClearAreaHeight: visible=true, height=603
+03-24 20:46:44.857 12990 12990 D StatsLog: LAUNCHER_ONRESUME
+03-24 20:46:44.859   716  1111 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+03-24 20:46:44.860   716  1111 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+03-24 20:46:44.860   716  1111 D InetDiagMessage: Destroyed live tcp sockets for uids={10224} in 1ms
+03-24 20:46:44.862   716  1111 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+03-24 20:46:44.862   716  1111 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+03-24 20:46:44.862   487   487 I Zygote  : Process 17003 exited due to signal 9 (Killed)
+03-24 20:46:44.862   716  1111 D InetDiagMessage: Destroyed live tcp sockets for uids={20224} in 3ms
+03-24 20:46:44.866   553   691 I BpBinder: onLastStrongRef automatically unlinking death recipients: 
+03-24 20:46:44.867   716   861 W UsageStatsService: Unexpected activity event reported! (com.postventa.alimin/com.postventa.alimin.MainActivity event : 23 instanceId : 208915520)
+03-24 20:46:44.867   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:44.867   716  1160 D BackgroundInstallControlService: Package event received: 0
+03-24 20:46:44.869 12990 12990 I NotificationListener: Handling notification state refresh for android#0
+03-24 20:46:44.869 12990 12990 I NotificationListener: Handling notification state refresh for com.android.systemui#0
+03-24 20:46:44.869 12990 13026 D QuickstepModelDelegate: notifyAppTargetEvent action=1 launchLocation=workspace/0/[-1,-1]/[1,1]
+03-24 20:46:44.870  1881  2257 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
+03-24 20:46:44.870  1881  2257 I AiAiEcho: EchoTargets: 
+03-24 20:46:44.870  1881  2257 I AiAiEcho: Filtered by AiAi flag check: 
+03-24 20:46:44.870  1881  2257 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
+03-24 20:46:44.871  1881  2257 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
+03-24 20:46:44.873 13224 13255 V WindowManagerShell: onTransitionReady(transaction=3075196589105)
+03-24 20:46:44.874 13224 13245 V WindowManagerShell: onTransitionReady (#146) android.os.BinderProxy@c46dd77: {id=146 t=CLOSE f=0x0 trk=0 r=[0@Point(0, 0)] c=[
+03-24 20:46:44.874 13224 13245 V WindowManagerShell:         {m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x174824d sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},
+03-24 20:46:44.874 13224 13245 V WindowManagerShell:         {m=CLOSE f=NONE leash=Surface(name=Task=54)/@0x2dd2102 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},
+03-24 20:46:44.874 13224 13245 V WindowManagerShell:         {m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{b115d1b showWhenLocked=false})/@0x1c1da13 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0}
+03-24 20:46:44.874 13224 13245 V WindowManagerShell:     ]}
+03-24 20:46:44.874 13224 13245 V WindowManagerShell: Transition (#146) android.os.BinderProxy@c46dd77@0 ready while (#145) android.os.BinderProxy@4903abb@0 is still animating. Notify the animating transition in case they can be merged
+03-24 20:46:44.876 13224 13245 V WindowManagerShell: Transition animation finished (aborted=false), notifying core (#145) android.os.BinderProxy@4903abb@0
+03-24 20:46:44.896  1881  2257 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+03-24 20:46:44.896   716   748 V WindowManager: Sent Transition (#146) createdAt=03-24 20:46:44.850 via request=TransitionRequestInfo { type = CLOSE, triggerTask = TaskInfo{userId=0 taskId=54 effectiveUid=10224 displayId=0 isRunning=false baseIntent=Intent { flg=0x10000000 cmp=com.postventa.alimin/.MainActivity } baseActivity=null topActivity=null origActivity=null realActivity=ComponentInfo{com.postventa.alimin/com.postventa.alimin.MainActivity} numActivities=0 lastActiveTime=16603226 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{1bb22a5 Task{ce5fbc3 #54 type=standard A=10224:com.postventa.alimin}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 0 - 0, 0) topActivityInfo=null launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=true isVisibleRequested=true isTopActivityNoDisplay=false isSleeping=false locusId=null displayAreaFeatureId=1 isTopActivityTransparent=false isActivityStackTransparent=true lastNonFullscreenBounds=Rect(329, 830 - 952, 2110) capturedLink=null capturedLinkTimestamp=0 requestedVisibleTypes=-9 topActivityRequestOpenInBrowserEducationTimestamp=0 appCompatTaskInfo=AppCompatTaskInfo { topActivityInSizeCompat=false eligibleForLetterboxEducation= false isLetterboxEducationEnabled= false isLetterboxDoubleTapEnabled= false eligibleForUserAspectRatioButton= false topActivityBoundsLetterboxed= false isFromLetterboxDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 topActivityAppBounds=Rect(0, 0 - 0, 0) isUserFullscreenOverrideEnabled=false isSystemFullscreenOverrideEnabled=false hasMinAspectRatioOverride=false topActivityLetterboxBounds=null cameraCompatTaskInfo=CameraCompatTaskInfo { freeformCameraCompatMode=undefined}} topActivityMainWindowFrame=null}, pipChange = null, remoteTransition = null, displayChange = null, flags = 0, debugId = 146 }
+03-24 20:46:44.897   716   748 V WindowManager:     startWCT=WindowContainerTransaction { changes= {} hops= [] errorCallbackToken=null taskFragmentOrganizer=null }
+03-24 20:46:44.897   716   748 V WindowManager:     info={id=146 t=CLOSE f=0x0 trk=0 r=[0@Point(0, 0)] c=[
+03-24 20:46:44.897   716   748 V WindowManager:         {WCT{RemoteToken{3045ae Task{5bc855 #1 type=home}}} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x4f4426c sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},
+03-24 20:46:44.897   716   748 V WindowManager:         {WCT{RemoteToken{1bb22a5 Task{ce5fbc3 #54 type=standard A=10224:com.postventa.alimin}}} m=CLOSE f=NONE leash=Surface(name=Task=54)/@0x898000f sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},
+03-24 20:46:44.897   716   748 V WindowManager:         {m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{b115d1b showWhenLocked=false})/@0xc6bb85 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0}
+03-24 20:46:44.897   716   748 V WindowManager:     ]}
+03-24 20:46:44.898 12990 12990 D SsBaseTemplateCard: No text view can be set up
+03-24 20:46:44.898 12990 12990 D SsBaseTemplateCard: Passed-in item info is null
+03-24 20:46:44.898 12990 12990 D SsBaseTemplateCard: Passed-in item info is null
+03-24 20:46:44.898 12990 12990 D SsBaseTemplateCard: Passed-in item info is null
+03-24 20:46:44.898 12990 12990 I SsBaseTemplateCard: Secondary card pane is null
+03-24 20:46:44.899   716   748 V WindowManager: Finish Transition (#145): created at 03-24 20:46:44.561 collect-started=0.056ms request-sent=5.39ms started=8.682ms ready=160.678ms sent=164.582ms commit=18.207ms finished=337.349ms
+03-24 20:46:44.900 13224 13245 V WindowManagerShell: Playing animation for (#146) android.os.BinderProxy@c46dd77@0
+03-24 20:46:44.900 13224 13245 V ShellRecents: RecentsTransitionHandler.startAnimation: no controller found
+03-24 20:46:44.900 13224 13245 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=146 t=CLOSE f=0x0 trk=0 r=[0@Point(0, 0)] c=[{m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x174824d sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},{m=CLOSE f=NONE leash=Surface(name=Task=54)/@0x2dd2102 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0 taskParent=-1},{m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{b115d1b showWhenLocked=false})/@0x1c1da13 sb=Rect(0, 0 - 1280, 2856) eb=Rect(0, 0 - 1280, 2856) epz=Point(1280, 2856) d=0}]}
+03-24 20:46:44.900 13224 13245 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=undefined independent=true modes=[CLOSE,TO_BACK] flags=IN_TASK_WITH_EMBEDDED_ACTIVITY mustBeTask=false order=ANY topActivity=null launchCookie=null taskFragmentToken=android.os.BinderProxy@9d9abe8 windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@17f1201, appThread = android.app.IApplicationThread$Stub$Proxy@85d28a6, debugName = overlayBackTransition }}
+03-24 20:46:44.900 13224 13245 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@87112e7, appThread = android.app.IApplicationThread$Stub$Proxy@1919e94, debugName = LauncherToDream }}
+03-24 20:46:44.900 13224 13245 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity} launchCookie=null windowingMode=undefined},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined},{NOT atype=undefined independent=true modes=[] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null customAnim=true windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@3c9cd3d, appThread = android.app.IApplicationThread$Stub$Proxy@3a32932, debugName = QuickstepLaunchHome }}
+03-24 20:46:44.900 13224 13245 D RemoteTransitionHandler: Found filterPair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity} launchCookie=null windowingMode=undefined},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null launchCookie=null windowingMode=undefined},{NOT atype=undefined independent=true modes=[] flags=NONE mustBeTask=true order=ANY topActivity=null launchCookie=null customAnim=true windowingMode=undefined}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@3c9cd3d, appThread = android.app.IApplicationThread$Stub$Proxy@3a32932, debugName = QuickstepLaunchHome }}
+03-24 20:46:44.900 13224 13245 V WindowManagerShell:  Delegate animation for (#146) to RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@3c9cd3d, appThread = android.app.IApplicationThread$Stub$Proxy@3a32932, debugName = QuickstepLaunchHome }
+03-24 20:46:44.901 13224 13245 V WindowManagerShell:  animated by com.android.wm.shell.transition.RemoteTransitionHandler@60d3514
+03-24 20:46:44.904 12990 12990 D StateManager: createAtomicAnimation - fromState: Background, toState: Normal, partial trace:
+03-24 20:46:44.904 12990 12990 D StateManager: 	at com.android.quickstep.util.ScalingWorkspaceRevealAnim.<init>(go/retraceme 72a59688580715d19f0e415c69e80376c2f062d1648c80db6730905005a27c20:39)
+03-24 20:46:44.904 12990 12990 D StateManager: 	at com.android.launcher3.QuickstepTransitionManager.createWallpaperOpenAnimations(go/retraceme 72a59688580715d19f0e415c69e80376c2f062d1648c80db6730905005a27c20:168)
+03-24 20:46:44.904 12990 12990 D StateManager: 	at com.android.launcher3.QuickstepTransitionManager$WallpaperOpenLauncherAnimationRunner.onAnimationStart(go/retraceme 72a59688580715d19f0e415c69e80376c2f062d1648c80db6730905005a27c20:17)
+03-24 20:46:44.904 12990 12990 D b/311077782: LauncherAnimationRunner.setAnimation
+03-24 20:46:44.907 12990 13026 W HWUI    : Image decoding logging dropped!
+03-24 20:46:44.909 12990 13026 W HWUI    : Image decoding logging dropped!
+03-24 20:46:44.920 12990 13026 W HWUI    : Image decoding logging dropped!
+03-24 20:46:44.923   599 13182 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:44.923   599 13182 W IPCThreadState: Sending oneway calls to frozen process.
+03-24 20:46:44.923   716   888 I ImeTracker: com.google.android.apps.nexuslauncher:9db43cd8: onRequestHide at ORIGIN_SERVER reason HIDE_SAME_WINDOW_FOCUSED_WITHOUT_EDITOR fromUser false
+03-24 20:46:44.923 12990 12990 D InsetsController: hide(ime(), fromIme=false)
+03-24 20:46:44.923 12990 12990 I ImeTracker: com.google.android.apps.nexuslauncher:9db43cd8: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+03-24 20:46:44.926  6769  6769 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():2043 
+03-24 20:46:44.926   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=158
+03-24 20:46:44.927   553   553 I BpBinder: onLastStrongRef automatically unlinking death recipients: 
+03-24 20:46:44.930  6769  6769 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 0, locked = false
+03-24 20:46:44.935  6769  6769 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1293 onStartInput(EditorInfo{EditorInfo{packageName=com.google.android.apps.nexuslauncher, inputType=0, inputTypeString=NULL, enableLearning=false, autoCorrection=false, autoComplete=false, imeOptions=0, privateImeOptions=null, actionName=UNSPECIFIED, actionLabel=null, initialSelStart=-1, initialSelEnd=-1, initialCapsMode=0, label=null, fieldId=0, fieldName=null, extras=null, hintText=null, hintLocales=[]}}, false)
+03-24 20:46:44.941 12990 13003 W System  : A resource failed to call release. 
+03-24 20:46:44.941 12990 13003 W System  : A resource failed to call release. 
+03-24 20:46:44.941 12990 13003 W System  : A resource failed to call release. 
+03-24 20:46:44.941 12990 13003 W System  : A resource failed to call release. 
+03-24 20:46:44.941 12990 13003 W System  : A resource failed to call release. 
+03-24 20:46:44.941  6769  6769 I Module  : DeviceLockedStatusModuleProvider$Module.updateDeviceLockedStatus():100 repeatCheckTimes = 1, locked = false
+03-24 20:46:44.941 12990 13003 W System  : A resource failed to call release. 
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: EmojiCompatManager.getEmojiCompatIfLoaded():343 EmojiCompat.init() was never called.
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: java.lang.IllegalStateException: EmojiCompat is not initialized. Please call EmojiCompat.init() first
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at asx.p(PG:6)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at axb.b(PG:13)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at jnr.b(PG:2)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at jnr.c(PG:4)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at jnr.f(PG:3)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at jnx.c(PG:3)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at kif.cz(PG:47)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at lhl.run(PG:1025)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at jaf.execute(PG:12)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at nco.v(PG:13)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at lhn.m(PG:96)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at lhn.k(PG:25)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at kgn.onStartInput(PG:250)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService.doStartInput(InputMethodService.java:3521)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.startInput(InputMethodService.java:879)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at android.inputmethodservice.InputMethodService$InputMethodImpl.dispatchStartInput(InputMethodService.java:908)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at android.inputmethodservice.IInputMethodWrapper.executeMessage(IInputMethodWrapper.java:201)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at com.android.internal.os.HandlerCaller$MyHandler.handleMessage(HandlerCaller.java:44)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at android.os.Looper.loopOnce(Looper.java:248)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at android.os.Looper.loop(Looper.java:338)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at java.lang.reflect.Method.invoke(Native Method)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+03-24 20:46:44.943  6769  6769 I EmojiCompatManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+03-24 20:46:44.944   716  2086 W PackageConfigPersister: App-specific configuration not found for packageName: com.google.android.apps.nexuslauncher and userId: 0
+03-24 20:46:44.945   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=159
+03-24 20:46:44.956 13224 13252 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=false callback=android.view.ViewRootImpl$$ExternalSyntheticLambda13@8323b08
+03-24 20:46:44.956   716  2386 D CoreBackPreview: Window{a22911f u0 Splash Screen com.postventa.alimin EXITING}: Setting back callback null
+03-24 20:46:44.960   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=160
+03-24 20:46:44.977   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=161
+03-24 20:46:44.993   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=162
+03-24 20:46:45.010   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=163
+03-24 20:46:45.027   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=164
+03-24 20:46:45.045   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=165
+03-24 20:46:45.060   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=166
+03-24 20:46:45.077   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=167
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.083 13224 13232 W System  : A resource failed to call release. 
+03-24 20:46:45.095   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=168
+03-24 20:46:45.110   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=169
+03-24 20:46:45.127   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=170
+03-24 20:46:45.143   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=171
+03-24 20:46:45.160   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=172
+03-24 20:46:45.176   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=173
+03-24 20:46:45.193   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=174
+03-24 20:46:45.210   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=175
+03-24 20:46:45.227   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=176
+03-24 20:46:45.243   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=177
+03-24 20:46:45.260   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=178
+03-24 20:46:45.277   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=179
+03-24 20:46:45.293   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=180
+03-24 20:46:45.309   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=181
+03-24 20:46:45.327   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=182
+03-24 20:46:45.343   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=183
+03-24 20:46:45.359   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=184
+03-24 20:46:45.377   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=185
+03-24 20:46:45.393   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=186
+03-24 20:46:45.410   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=187
+03-24 20:46:45.427   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=188
+03-24 20:46:45.445   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=189
+03-24 20:46:45.460   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=190
+03-24 20:46:45.476   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=191
+03-24 20:46:45.493   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=192
+03-24 20:46:45.510   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=193
+03-24 20:46:45.527   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=194
+03-24 20:46:45.543   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=195
+03-24 20:46:45.560   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=196
+03-24 20:46:45.577   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=197
+03-24 20:46:45.594   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=198
+03-24 20:46:45.609   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=199
+03-24 20:46:45.627   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=200
+03-24 20:46:45.645   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=201
+03-24 20:46:45.660   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=202
+03-24 20:46:45.676   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=203
+03-24 20:46:45.694   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=204
+03-24 20:46:45.710   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=205
+03-24 20:46:45.727   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=206
+03-24 20:46:45.743   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=207
+03-24 20:46:45.760   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=208
+03-24 20:46:45.776   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=209
+03-24 20:46:45.793   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=210
+03-24 20:46:45.810   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=211
+03-24 20:46:45.826   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=212
+03-24 20:46:45.843   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=213
+03-24 20:46:45.860   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=214
+03-24 20:46:45.877   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=215
+03-24 20:46:45.894   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=216
+03-24 20:46:45.910   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=217
+03-24 20:46:45.911 12990 12990 D ScalingWorkspaceRevealAnim: alpha of workspace at the end of animation: 1.0
+03-24 20:46:45.913 13224 13245 V WindowManagerShell: Transition animation finished (aborted=false), notifying core (#146) android.os.BinderProxy@c46dd77@0
+03-24 20:46:45.914   716   748 V WindowManager: Finish Transition (#146): created at 03-24 20:46:44.850 collect-started=0.049ms request-sent=0.116ms started=6.042ms ready=8.811ms sent=21.278ms commit=40.206ms finished=1062.7ms
+03-24 20:46:45.918 13224 13245 V WindowManagerShell: Track 0 became idle
+03-24 20:46:45.918 13224 13245 V WindowManagerShell: All active transition animations finished
+03-24 20:46:45.919 12990 12990 D RecentsView: onTaskRemoved: 54, not handling task stack changes
+03-24 20:46:45.919 12990 12990 D RecentsView: onTaskRemoved: 54, not handling task stack changes
+03-24 20:46:45.927   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=218
+03-24 20:46:45.944   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=219
+03-24 20:46:45.960   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=220
+03-24 20:46:45.977   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=221
+03-24 20:46:45.994   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=222
+03-24 20:46:46.010   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=223
+03-24 20:46:46.027   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=224
+03-24 20:46:46.044   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=225
+03-24 20:46:46.060   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=226
+03-24 20:46:46.077   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=227
+03-24 20:46:46.093   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=228
+03-24 20:46:46.110   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=229
+03-24 20:46:46.127   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=230
+03-24 20:46:46.143   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=231
+03-24 20:46:46.160   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=232
+03-24 20:46:46.177   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=233
+03-24 20:46:46.193   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=234
+03-24 20:46:46.210   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=235
+03-24 20:46:46.227   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=236
+03-24 20:46:46.243   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=237
+03-24 20:46:46.260   553   553 E SurfaceFlinger: Out of order buffers detected for RequestedLayerState{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity#1063 parentId=402} producedId=17 frameNumber=365 -> producedId=17 frameNumber=238
+03-24 20:46:46.486 17018 17018 W dumpsys : Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: package
+03-24 20:46:46.600   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+03-24 20:46:46.603   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/split_AdsDynamite_installtime.odex) is kOatUpToDate with filter 'speed' executable 'false'
+03-24 20:46:46.604   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/split_CronetDynamite_installtime.odex) is kOatUpToDate with filter 'speed' executable 'false'
+03-24 20:46:46.606   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/split_DynamiteLoader_installtime.odex) is kOatUpToDate with filter 'speed' executable 'false'
+03-24 20:46:46.607   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/split_DynamiteModulesA_installtime.odex) is kOatUpToDate with filter 'speed' executable 'false'
+03-24 20:46:46.609   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/split_DynamiteModulesC_installtime.odex) is kOatUpToDate with filter 'speed' executable 'false'
+03-24 20:46:46.610   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/split_GoogleCertificates_installtime.odex) is kOatUpToDate with filter 'speed' executable 'false'
+03-24 20:46:46.612   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/split_MapsDynamite_installtime.odex) is kOatUpToDate with filter 'speed' executable 'false'
+03-24 20:46:46.613   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/split_MeasurementDynamite_installtime.odex) is kOatUpToDate with filter 'speed' executable 'false'
+03-24 20:46:46.615   905   909 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~IwY1FPkKfudSE7EvnGcrcA==/com.google.android.gms-rd8gk_uWHfry7QMeKUcwxA==/oat/x86_64/split_all_locale_splits.odex) is kOatUpToDate with filter 'speed' executable 'false'
+03-24 20:46:46.615   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000001/CronetDynamite.apk has no usable artifacts
+03-24 20:46:46.616   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000015/dl-MlkitOcrCommon.optional_261133100800.apk has no usable artifacts
+03-24 20:46:46.616   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000002/DynamiteLoader.apk has no usable artifacts
+03-24 20:46:46.616   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000005/GoogleCertificates.apk has no usable artifacts
+03-24 20:46:46.618   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000012/dl-Appsearch.optional_261133100800.apk has no usable artifacts
+03-24 20:46:46.619   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000011/dl-PlayCloudSearch.optional_261133100000.apk has no usable artifacts
+03-24 20:46:46.620   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000014/dl-MlkitBarcodeUi.optional_261133100800.apk has no usable artifacts
+03-24 20:46:46.622   905   909 I artd    : GetBestInfo: vdex next to the dex file (/data/user/0/com.google.android.gms/app_dg_cache/E054CA794C125F959C88D4849C82AB3F226237E6/oat/x86_64/the.vdex) is kOatUpToDate with filter 'verify' executable 'false'
+03-24 20:46:46.623   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/0000000f/dl-PlayCloudSearch.optional_250834100000.apk has no usable artifacts
+03-24 20:46:46.624   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/0000000d/dl-TfliteDynamiteDynamite.integ_252130102100800.apk has no usable artifacts
+03-24 20:46:46.625   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000010/dl-VisionOcr.optional_261133100000.apk has no usable artifacts
+03-24 20:46:46.626   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/0000000a/dl-MlkitOcrCommon.optional_250834100800.apk has no usable artifacts
+03-24 20:46:46.627   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000008/dl-Appsearch.optional_250834100800.apk has no usable artifacts
+03-24 20:46:46.629   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/0000000b/dl-VisionOcr.optional_250834100000.apk has no usable artifacts
+03-24 20:46:46.630   905   909 I artd    : GetBestInfo: vdex next to the dex file (/data/user/0/com.google.android.gms/app_dg_cache/492BB24C67899DCD3E45A896813896109D71DC84/oat/x86_64/the.vdex) is kOatUpToDate with filter 'verify' executable 'false'
+03-24 20:46:46.631   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/0000000e/dl-MlkitBarcodeUi.optional_250834100800.apk has no usable artifacts
+03-24 20:46:46.632   905   909 I artd    : GetBestInfo: /data/user_de/0/com.google.android.gms/app_chimera/m/00000007/MeasurementDynamite.apk has no usable artifacts
+03-24 20:46:48.072   716  3253 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+03-24 20:46:48.135  1387  1658 D SatelliteController: iisInCarrierRoamingNbIotNtn: satellite is disabled

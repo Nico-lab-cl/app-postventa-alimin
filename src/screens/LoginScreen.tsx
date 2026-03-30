@@ -46,8 +46,8 @@ const LoginScreen = () => {
             <View className="absolute inset-0 bg-[#131313]/60" />
             
             {/* Background Bloom Decor */}
-            <View className="absolute -top-[10%] -left-[10%] w-[80%] h-[50%] rounded-full bg-primary-container/20 blur-[100px]" />
-            <View className="absolute -bottom-[10%] -right-[10%] w-[80%] h-[50%] rounded-full bg-secondary-container/10 blur-[100px]" />
+            <View className="absolute -top-[10%] -left-[10%] w-[80%] h-[50%] rounded-full bg-primary-container/20" />
+            <View className="absolute -bottom-[10%] -right-[10%] w-[80%] h-[50%] rounded-full bg-secondary-container/10" />
 
             <KeyboardAvoidingView 
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -58,7 +58,7 @@ const LoginScreen = () => {
                         {/* Branding Header */}
                         <View className="items-center mb-12">
                             <View className="relative w-24 h-24 items-center justify-center">
-                                <View className="absolute inset-0 bg-secondary/10 rounded-full blur-2xl" />
+                                <View className="absolute inset-0 bg-secondary/10 rounded-full" />
                                 <Image 
                                     alt="Lomas del Mar Logo" 
                                     className="w-full h-full"
@@ -73,7 +73,7 @@ const LoginScreen = () => {
                         </View>
 
                         {/* Login Form Card */}
-                        <View className="glass-effect rounded-[32px] p-8 border border-white/5 shadow-2xl">
+                        <View className="bg-[#1c1b1b]/45 rounded-[32px] p-8 border border-white/5 shadow-2xl">
                             <View className="mb-8">
                                 <Text className="font-display text-2xl font-bold text-on-surface">Bienvenido</Text>
                                 <Text className="text-on-surface-variant text-sm mt-1">Ingresa tus credenciales para acceder al portal.</Text>

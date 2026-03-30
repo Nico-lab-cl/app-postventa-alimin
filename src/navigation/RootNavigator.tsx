@@ -48,7 +48,7 @@ const MainTabs = () => {
         tabBarActiveTintColor: '#edc062',
         tabBarInactiveTintColor: 'rgba(193, 200, 201, 0.7)',
         tabBarLabelStyle: {
-          fontFamily: 'Inter',
+          fontFamily: undefined,
           fontSize: 10,
           fontWeight: '600',
           textTransform: 'uppercase',

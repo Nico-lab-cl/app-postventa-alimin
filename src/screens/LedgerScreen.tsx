@@ -25,7 +25,7 @@ const LedgerScreen = () => {
         const isOverdue = item.status === 'OVERDUE' || item.lateDays > 0;
         
         return (
-            <TouchableOpacity className="glass-card p-4 rounded-3xl mb-4 border border-white/5 flex-row items-center justify-between">
+            <TouchableOpacity className="bg-[#1e2a2d]/60 p-4 rounded-3xl mb-4 border border-white/5 flex-row items-center justify-between">
                 <View className="flex-row items-center gap-4">
                     <View className={`w-14 h-14 rounded-2xl items-center justify-center ${isOverdue ? 'bg-error/10' : 'bg-[#36595f]/20'}`}>
                         <Text className={`font-display font-black text-lg ${isOverdue ? 'text-error' : 'text-primary'}`}>{item.lotId}</Text>
@@ -106,8 +106,8 @@ const LedgerScreen = () => {
 
                     {/* asymmetric stats */}
                     <View className="flex-row gap-6 mb-12 h-44">
-                        <View className="flex-1 glass-card p-6 rounded-3xl border border-primary-container/20 justify-between overflow-hidden">
-                            <View className="absolute -right-8 -top-8 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
+                        <View className="flex-1 bg-[#1e2a2d]/60 p-6 rounded-3xl border border-primary-container/20 justify-between overflow-hidden">
+                            <View className="absolute -right-8 -top-8 w-32 h-32 bg-primary/10 rounded-full" />
                             <View>
                                 <Text className="font-display font-medium text-on-surface-variant text-xs uppercase tracking-widest">Disponibilidad</Text>
                                 <Text className="text-4xl font-display font-black text-primary tracking-tighter mt-2">{data?.length || 24} / 86</Text>
@@ -117,12 +117,12 @@ const LedgerScreen = () => {
                             </View>
                         </View>
                         <View className="w-1/3 gap-6">
-                            <View className="flex-1 glass-card p-4 rounded-2xl border border-white/5 items-center justify-center">
+                            <View className="flex-1 bg-[#1e2a2d]/60 p-4 rounded-2xl border border-white/5 items-center justify-center">
                                 <TrendingUp color="#edc062" size={24} />
                                 <Text className="text-[10px] text-on-surface-variant font-black uppercase mt-1">Precios</Text>
                                 <Text className="text-primary font-display font-bold text-xs">+4.2%</Text>
                             </View>
-                            <View className="flex-1 glass-card p-4 rounded-2xl border border-white/5 items-center justify-center">
+                            <View className="flex-1 bg-[#1e2a2d]/60 p-4 rounded-2xl border border-white/5 items-center justify-center">
                                 <Landmark color="#a8cdd4" size={24} />
                                 <Text className="text-[10px] text-on-surface-variant font-black uppercase mt-1">Vistas</Text>
                                 <Text className="text-primary font-display font-bold text-xs">Premium</Text>
@@ -146,7 +146,7 @@ const LedgerScreen = () => {
                                 ))}
                                 
                                 {filteredData?.length === 0 && (
-                                    <View className="mt-4 items-center justify-center p-8 glass-card border-dashed border-white/10 opacity-40">
+                                    <View className="mt-4 items-center justify-center p-8 bg-[#1e2a2d]/60 border-dashed border-white/10 opacity-40">
                                         <Map color="#8b9293" size={48} strokeWidth={1} />
                                         <Text className="text-on-surface-variant text-center font-headline font-bold mt-4">No se encontraron lotes.</Text>
                                     </View>

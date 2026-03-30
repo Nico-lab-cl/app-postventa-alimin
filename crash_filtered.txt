@@ -1,0 +1,35 @@
+﻿03-24 20:46:44.837 17003 17003 D AndroidRuntime: Shutting down VM
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: FATAL EXCEPTION: main
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: Process: com.postventa.alimin, PID: 17003
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libreactnative.so
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	existing SO sources: 
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64 flags = 0]]
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/base.apk!/lib/x86_64]]
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 3]
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 3]
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	Native lib dir: /data/app/~~HntrZPmTSKNI1OllsO6Fdw==/com.postventa.alimin-EsLupQZubOXifI8Qe_IoFQ==/lib/arm64
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.doLoadLibraryBySoName(SoLoader.java:1216)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibraryBySoNameImpl(SoLoader.java:1078)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibraryBySoName(SoLoader.java:943)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibraryOnAndroid(SoLoader.java:859)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibrary(SoLoader.java:842)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibrary(SoLoader.java:812)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsCxxInterop.<clinit>(ReactNativeFeatureFlagsCxxInterop.kt:28)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsCxxAccessor.override(ReactNativeFeatureFlagsCxxAccessor.kt:875)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeFeatureFlags.override(ReactNativeFeatureFlags.kt:558)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load(DefaultNewArchitectureEntryPoint.kt:101)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load(DefaultNewArchitectureEntryPoint.kt:43)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.facebook.react.ReactNativeApplicationEntryPoint.loadReactNative(ReactNativeApplicationEntryPoint.java:31)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.postventa.alimin.MainApplication.onCreate(MainApplication.kt:37)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.Instrumentation.callApplicationOnCreate(Instrumentation.java:1381)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.ActivityThread.handleBindApplication(ActivityThread.java:7830)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleBindApplication(Unknown Source:0)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2546)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:248)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:338)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+03-24 20:46:44.837 17003 17003 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
