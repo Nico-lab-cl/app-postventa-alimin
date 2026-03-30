@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, RefreshControl, Image, Platform, Alert, Linking } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, Filter, ArrowLeft, Landmark, Map, ChevronRight, TrendingUp, Edit3, Trash2, FileText, User, CheckCircle, Clock } from 'lucide-react-native';
+import { Search, Filter, ArrowLeft, Landmark, Map, ChevronRight, TrendingUp, Edit3, Trash2, FileText, User, CheckCircle, Clock, Zap } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ledgerService, LedgerEntry } from '../api/ledgerService';
 import { useAuth } from '../store/AuthContext';
@@ -28,19 +28,7 @@ const LedgerScreen = () => {
         },
     });
 
-    const deduplicatedData = React.useMemo(() => {
-        if (!data) return [];
-        const seen: { [key: string]: LedgerEntry } = {};
-        data.forEach(item => {
-            const existing = seen[item.lotId];
-            if (!existing || (item.pie_status === 'PAID' && existing.pie_status !== 'PAID')) {
-                seen[item.lotId] = item;
-            }
-        });
-        return Object.values(seen);
-    }, [data]);
-
-    const filteredData = deduplicatedData.filter(item => 
+    const filteredData = data?.filter(item => 
         item.customerName?.toLowerCase().includes(search.toLowerCase()) ||
         item.lotId?.toLowerCase().includes(search.toLowerCase()) ||
         item.rut?.toLowerCase().includes(search.toLowerCase())
@@ -57,12 +45,39 @@ const LedgerScreen = () => {
         );
     };
 
-    const LedgerCard = ({ item }: { item: LedgerEntry }) => {
-        const isPaid = item.pendingBalance <= 0;
-        const isOffline = item.badges?.includes('GST');
+    const StatusBadge = ({ status, lotStatus, isPaid }: { status: string, lotStatus: string, isPaid: boolean }) => {
+        if (lotStatus === 'available') {
+            return (
+                <View className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                    <Text className="text-emerald-400 text-[8px] font-black uppercase tracking-widest">Disponible</Text>
+                </View>
+            );
+        }
+        
+        const label = lotStatus === 'sold' ? 'Vendido' : 'Reservado';
+        const color = lotStatus === 'sold' ? '#edc062' : '#a8cdd4';
 
         return (
-            <View className="bg-[#1e2a2d]/60 rounded-[32px] mb-6 border border-white/5 overflow-hidden">
+            <View className="flex-row gap-2">
+                {isPaid && (
+                    <View className="bg-primary/10 px-3 py-1 rounded-full border border-primary/20 flex-row items-center gap-1">
+                        <CheckCircle color="#a8cdd4" size={8} />
+                        <Text className="text-primary text-[8px] font-black uppercase tracking-widest">Pagado</Text>
+                    </View>
+                )}
+                <View style={{ borderColor: `${color}40`, backgroundColor: `${color}10` }} className="px-3 py-1 rounded-full border">
+                    <Text style={{ color }} className="text-[8px] font-black uppercase tracking-widest">{label}</Text>
+                </View>
+            </View>
+        );
+    };
+
+    const LedgerCard = ({ item }: { item: LedgerEntry }) => {
+        const isPaid = item.pendingBalance <= 0;
+        const isAvailable = item.lotStatus === 'available';
+
+        return (
+            <View className={`bg-[#1e2a2d]/60 rounded-[32px] mb-6 border ${isAvailable ? 'border-dashed border-white/10' : 'border-white/5'} overflow-hidden`}>
                 <View className="p-5">
                     {/* Header */}
                     <View className="flex-row justify-between items-start mb-4">
@@ -70,31 +85,24 @@ const LedgerScreen = () => {
                             <Text className="text-secondary font-display font-black text-2xl tracking-tighter">{item.lotId}</Text>
                             <Text className="text-on-surface-variant text-[10px] uppercase tracking-widest font-black">{item.stageName}</Text>
                         </View>
-                        <View className="flex-row gap-2">
-                            {isOffline && (
-                                <View className="bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                                    <Text className="text-primary text-[8px] font-black uppercase">Venta Offline</Text>
-                                </View>
-                            )}
-                            <View className={`${isPaid ? 'bg-[#a8cdd4]/10' : 'bg-secondary/10'} px-3 py-1 rounded-full border ${isPaid ? 'border-primary/20' : 'border-secondary/20'}`}>
-                                <Text className={`${isPaid ? 'text-primary' : 'text-secondary'} text-[8px] font-black uppercase tracking-widest`}>
-                                    {isPaid ? 'PAGADO' : 'PENDIENTE'}
-                                </Text>
-                            </View>
-                        </View>
+                        <StatusBadge status={item.status} lotStatus={item.lotStatus} isPaid={isPaid} />
                     </View>
 
-                    {/* Owner */}
+                    {/* Owner / Status Segment */}
                     <TouchableOpacity 
-                        onPress={() => item.customerId && navigation.navigate('LedgerDetail', { entry: item })}
-                        className="flex-row items-center gap-3 mb-6 bg-white/5 p-3 rounded-2xl"
+                        onPress={() => item.customerId ? navigation.navigate('LedgerDetail', { entry: item }) : navigation.navigate('AssignOwner', { lot: item })}
+                        className={`flex-row items-center gap-3 mb-6 p-4 rounded-2xl ${isAvailable ? 'bg-emerald-500/5 border border-emerald-500/10' : 'bg-white/5'}`}
                     >
-                        <View className="bg-primary/20 p-2 rounded-xl">
-                            <User color="#a8cdd4" size={16} />
+                        <View className={`${isAvailable ? 'bg-emerald-500/20' : 'bg-primary/20'} p-2.5 rounded-xl`}>
+                            {isAvailable ? <Zap color="#2db395" size={18} /> : <User color="#a8cdd4" size={18} />}
                         </View>
                         <View className="flex-1">
-                            <Text className="text-on-surface font-headline font-bold text-sm leading-tight">{item.customerName || 'Disponible'}</Text>
-                            <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest">{item.rut || 'Sin asignar'}</Text>
+                            <Text className={`${isAvailable ? 'text-emerald-400' : 'text-on-surface'} font-headline font-bold text-sm leading-tight`}>
+                                {item.customerName}
+                            </Text>
+                            <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest">
+                                {isAvailable ? 'Presiona para asignar propietario' : item.rut}
+                            </Text>
                         </View>
                         <ChevronRight color="rgba(193, 200, 201, 0.2)" size={16} />
                     </TouchableOpacity>
@@ -115,22 +123,25 @@ const LedgerScreen = () => {
                     <View className="flex-row gap-3 pt-4 border-t border-white/5">
                         <TouchableOpacity 
                             onPress={() => navigation.navigate('AssignOwner', { lot: item })}
-                            className="flex-1 bg-white/5 py-3 rounded-2xl items-center flex-row justify-center gap-2"
+                            className={`flex-1 ${isAvailable ? 'bg-primary' : 'bg-white/5'} py-3.5 rounded-2xl items-center flex-row justify-center gap-2`}
                         >
-                            <Edit3 color="#a8cdd4" size={14} />
-                            <Text className="text-primary text-[10px] font-black uppercase">Asignar</Text>
+                            <Edit3 color={isAvailable ? '#000' : '#a8cdd4'} size={14} />
+                            <Text className={`${isAvailable ? 'text-black' : 'text-primary'} text-[10px] font-black uppercase`}>
+                                {isAvailable ? 'Asignar Lote' : 'Editar'}
+                            </Text>
                         </TouchableOpacity>
-                        {item.customerId && (
+                        
+                        {!isAvailable && (
                             <>
                                 <TouchableOpacity 
                                     onPress={() => handleResetLot(item.lotId)}
-                                    className="bg-error/10 px-4 py-3 rounded-2xl items-center flex-row justify-center"
+                                    className="bg-error/10 px-5 py-3 rounded-2xl items-center flex-row justify-center"
                                 >
                                     <Trash2 color="#ffb4ab" size={14} />
                                 </TouchableOpacity>
                                 <TouchableOpacity 
                                     onPress={() => Linking.openURL(`https://aliminlomasdelmar.com/api/contracts/${item.customerId}/file?type=RESERVA`)}
-                                    className="bg-secondary/10 px-4 py-3 rounded-2xl items-center flex-row justify-center"
+                                    className="bg-secondary/10 px-5 py-3 rounded-2xl items-center flex-row justify-center"
                                 >
                                     <FileText color="#edc062" size={14} />
                                 </TouchableOpacity>
@@ -144,14 +155,13 @@ const LedgerScreen = () => {
 
     return (
         <View className="flex-1 bg-background">
-            {/* TopAppBar */}
             <View 
                 className="absolute top-0 w-full z-50 px-6 h-24 bg-neutral-950/60"
                 style={{ paddingTop: Platform.OS === 'ios' ? 40 : 0 }}
             >
                 <View className="flex-row justify-between items-center h-full">
                     <View className="flex-row items-center gap-4">
-                        <TouchableOpacity onPress={() => signOut()}>
+                        <TouchableOpacity onPress={() => navigation.goBack()}>
                             <ArrowLeft color="#a8cdd4" size={24} />
                         </TouchableOpacity>
                         <Text className="font-display font-black text-[#edc062] tracking-tighter text-xl uppercase">Gestión</Text>
@@ -171,7 +181,6 @@ const LedgerScreen = () => {
                 }
             >
                 <View className="px-6 max-w-5xl mx-auto w-full">
-                    {/* Tab Switcher */}
                     <View className="flex-row bg-[#1e2a2d] p-1.5 rounded-[24px] mb-8 border border-white/5">
                         <TouchableOpacity 
                             onPress={() => setActiveTab('MANAGEMENT')}
@@ -189,13 +198,12 @@ const LedgerScreen = () => {
 
                     {activeTab === 'MANAGEMENT' ? (
                         <>
-                            {/* Hero Search */}
                             <View className="mb-10">
                                 <View className="bg-surface-container-high rounded-[24px] px-6 py-4 flex-row items-center gap-4 border border-outline-variant/10 shadow-xl mb-6">
                                     <Search color="#a8cdd4" size={20} />
                                     <TextInput 
                                         className="flex-1 text-on-surface font-body text-sm"
-                                        placeholder="Buscar por Nombre, RUT o Email..."
+                                        placeholder="Buscar por Lote, RUT o Nombre..."
                                         placeholderTextColor="rgba(193, 200, 201, 0.5)"
                                         value={search}
                                         onChangeText={setSearch}
@@ -225,7 +233,7 @@ const LedgerScreen = () => {
                                     {filteredData?.length === 0 && (
                                         <View className="mt-4 items-center justify-center p-12 bg-[#1e2a2d]/60 rounded-[40px] border border-dashed border-white/10">
                                             <Map color="#8b9293" size={48} strokeWidth={1} />
-                                            <Text className="text-on-surface-variant text-center font-headline font-bold mt-4">No se encontraron lotes.</Text>
+                                            <Text className="text-on-surface-variant text-center font-headline font-bold mt-4">No se encontraron resultados.</Text>
                                         </View>
                                     )}
                                 </View>

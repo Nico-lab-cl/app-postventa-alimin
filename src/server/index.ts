@@ -27,7 +27,7 @@ const authenticate = (req: Request, res: Response, next: any) => {
   }
 };
 
-// Login Endpoint
+// Login
 app.post('/api/mobile/auth/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
@@ -38,124 +38,122 @@ app.post('/api/mobile/auth/login', async (req: Request, res: Response) => {
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
     res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (e) {
-    console.error('Login error:', e);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
 
-// Postventa Summary
-app.get('/api/mobile/postventa/summary', authenticate, async (req: Request, res: Response) => {
-  try {
-    const activeContracts = await prisma.reservation.count({
-      where: { lot: { status: { in: ['sold', 'reserved'] } } }
-    });
-    
-    const receipts = await prisma.paymentReceipt.findMany({
-      where: { status: 'APPROVED' }
-    });
-    const totalCollection = receipts.reduce((sum: number, r: any) => sum + r.amount_clp, 0);
-    const pendingReceipts = await prisma.paymentReceipt.count({ where: { status: 'PENDING' } });
-
-    res.json({
-      totalCollection,
-      activeContracts,
-      totalMora: 0,
-      pendingReceipts
-    });
-  } catch (e) {
-    res.status(500).json({ error: 'Error al obtener resumen' });
-  }
-});
-
-// Ledger (Cartera)
+// Ledger (Mapa de Inventario)
 app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any) => {
     const { stage } = req.query;
     try {
-        const reservations = await prisma.reservation.findMany({
+        const lots = await prisma.lot.findMany({
             where: {
-                lot: {
-                    status: { in: ['sold', 'reserved'] },
-                    ...(stage && stage !== 'ALL' ? { stage: parseInt(stage as string) } : {})
+                ...(stage && stage !== 'ALL' ? { stage: parseInt(stage as string) } : {})
+            },
+            include: { 
+                reservations: { 
+                    orderBy: { created_at: 'desc' },
+                    take: 1,
+                    include: { receipts: { where: { status: 'APPROVED' } } }
                 }
             },
-            include: { lot: true, receipts: { where: { status: 'APPROVED' } } }
+            orderBy: { number: 'asc' }
         });
 
-        const data = reservations.map((resObj: any) => {
-            const lot = resObj.lot;
-            const totalPaid = resObj.receipts.reduce((sum: number, r: any) => sum + r.amount_clp, 0);
-            const totalToPay = lot.price_total_clp || 0;
-            const pendingBalance = Math.max(0, totalToPay - totalPaid);
+        const data = lots.map((lot: any) => {
+            const activeRes = lot.reservations[0];
             
-            const paidCuotas = resObj.installments_paid || 0;
-            const totalCuotas = lot.cuotas || 0;
-            
+            // Financial Defaults
+            let totalPaid = 0;
+            let pendingBalance = lot.price_total_clp || 0;
             let nextDueDate = null;
             let lateDays = 0;
             let penaltyAmount = 0;
+            let status: 'OK' | 'LATE' | 'UPCOMING' | 'AVAILABLE' = 'AVAILABLE';
 
-            if (paidCuotas < totalCuotas) {
-                const baseDate = resObj.legacy_installment_start_date || resObj.created_at;
-                nextDueDate = getInstallmentDueDate(baseDate, paidCuotas + 1, resObj.is_legacy);
+            if (activeRes) {
+                totalPaid = activeRes.receipts?.reduce((sum: number, r: any) => sum + r.amount_clp, 0) || 0;
+                pendingBalance = Math.max(0, (lot.price_total_clp || 0) - totalPaid);
                 
-                penaltyAmount = calculateTotalInterest(
-                    totalToPay,
-                    lot.area_m2 || 200,
-                    nextDueDate,
-                    resObj.is_legacy,
-                    new Date(),
-                    resObj.mora_frozen,
-                    resObj.legacy_debt_start_date
-                );
+                const paidCuotas = activeRes.installments_paid || 0;
+                const totalCuotas = lot.cuotas || 0;
 
-                if (penaltyAmount > 0) {
-                    const daily = calculateDailyInterest(totalToPay, lot.area_m2 || 200);
-                    lateDays = Math.round(penaltyAmount / daily);
+                if (paidCuotas < totalCuotas) {
+                    const baseDate = activeRes.legacy_installment_start_date || activeRes.created_at;
+                    nextDueDate = getInstallmentDueDate(baseDate, paidCuotas + 1, activeRes.is_legacy);
+                    
+                    penaltyAmount = calculateTotalInterest(
+                        lot.price_total_clp || 0,
+                        lot.area_m2 || 200,
+                        nextDueDate,
+                        activeRes.is_legacy,
+                        new Date(),
+                        activeRes.mora_frozen,
+                        activeRes.legacy_debt_start_date
+                    );
+
+                    if (penaltyAmount > 0) {
+                        const daily = calculateDailyInterest(lot.price_total_clp || 0, lot.area_m2 || 200);
+                        lateDays = Math.round(penaltyAmount / daily);
+                    }
                 }
+                status = penaltyAmount > 0 ? 'LATE' : (pendingBalance === 0 ? 'OK' : 'UPCOMING');
             }
 
             return {
-                customerId: resObj.id,
-                customerName: resObj.name + (resObj.last_name ? ` ${resObj.last_name}` : ''),
-                rut: resObj.rut || '',
-                email: resObj.email || '',
-                phone: resObj.phone || '',
+                customerId: activeRes?.id || null,
+                customerName: activeRes ? `${activeRes.name} ${activeRes.last_name || ''}` : 'Lote Disponible',
+                rut: activeRes?.rut || '',
+                email: activeRes?.email || '',
+                phone: activeRes?.phone || '',
                 lotId: lot.number,
                 stageName: `Etapa ${lot.stage}`,
                 area_m2: lot.area_m2 || 0,
                 price_total_clp: lot.price_total_clp || 0,
                 valor_cuota: lot.valor_cuota || 0,
-                pie: resObj.pie || lot.pie || 0,
-                pie_status: resObj.pie_status || 'PENDING',
-                installments_paid: resObj.installments_paid || 0,
+                pie: activeRes?.pie || lot.pie || 0,
+                pie_status: activeRes?.pie_status || 'PENDING',
+                installments_paid: activeRes?.installments_paid || 0,
                 totalPaid,
                 totalInvested: totalPaid,
                 pendingBalance,
                 nextDueDate: nextDueDate ? nextDueDate.toISOString() : null,
                 lateDays,
                 penaltyAmount,
-                status: penaltyAmount > 0 ? 'LATE' : (pendingBalance === 0 ? 'OK' : 'UPCOMING'),
-                badges: [resObj.is_legacy ? 'LGC' : 'NEW']
+                status: activeRes ? status : 'AVAILABLE',
+                lotStatus: lot.status, // sold, reserved, available
+                badges: activeRes ? [activeRes.is_legacy ? 'LGC' : 'NEW'] : []
             };
         });
 
         res.json(data);
     } catch (e) {
         console.error('Ledger error:', e);
-        res.status(500).json({ error: 'Error al obtener cartera' });
+        res.status(500).json({ error: 'Error al obtener inventario' });
     }
 });
 
-// Assign Owner
+// Rest of endpoints (Summary, Receipts, Assign, Reset, Docs...)
+app.get('/api/mobile/postventa/summary', authenticate, async (req: Request, res: Response) => {
+  try {
+    const activeContracts = await prisma.reservation.count({
+      where: { lot: { status: { in: ['sold', 'reserved'] } } }
+    });
+    const receipts = await prisma.paymentReceipt.findMany({ where: { status: 'APPROVED' } });
+    const totalCollection = receipts.reduce((sum: number, r: any) => sum + r.amount_clp, 0);
+    const pendingReceipts = await prisma.paymentReceipt.count({ where: { status: 'PENDING' } });
+    res.json({ totalCollection, activeContracts, totalMora: 0, pendingReceipts });
+  } catch (e) {
+    res.status(500).json({ error: 'Error al obtener resumen' });
+  }
+});
+
 app.post('/api/mobile/postventa/lot/:lotId/assign', authenticate, async (req: Request, res: Response) => {
     const { lotId } = req.params;
     const body = req.body;
     try {
-        // Find the lot
         const lot = await prisma.lot.findFirst({ where: { number: lotId } });
         if (!lot) return res.status(404).json({ error: 'Lote no encontrado' });
-
-        // Create the reservation
         await prisma.reservation.create({
             data: {
                 lot_id: lot.id,
@@ -166,54 +164,34 @@ app.post('/api/mobile/postventa/lot/:lotId/assign', authenticate, async (req: Re
                 rut: body.rut,
                 pie: body.pieAmount,
                 pie_status: body.piePaid ? 'PAID' : 'PENDING',
-                installments_paid: 0, // Fresh owner
+                installments_paid: 0,
                 mora_frozen: body.freezeMora,
                 pipeline_stage: 'RESERVA_PAGADA'
             }
         });
-
-        // Update lot status
         await prisma.lot.update({
             where: { id: lot.id },
-            data: { 
-                status: 'sold',
-                price_total_clp: body.priceTotal,
-                valor_cuota: body.normalInstallmentValue,
-                pie: body.pieAmount
-            }
+            data: { status: 'sold', price_total_clp: body.priceTotal, valor_cuota: body.normalInstallmentValue, pie: body.pieAmount }
         });
-
         res.json({ success: true });
     } catch (e) {
-        console.error('Assign error:', e);
         res.status(500).json({ error: 'Error al asignar propietario' });
     }
 });
 
-// Reset Lot
 app.delete('/api/mobile/postventa/lot/:lotId', authenticate, async (req: Request, res: Response) => {
     const { lotId } = req.params;
     try {
         const lot = await prisma.lot.findFirst({ where: { number: lotId } });
         if (!lot) return res.status(404).json({ error: 'Lote no encontrado' });
-
-        // Delete all reservations for this lot (or just the active ones)
         await prisma.reservation.deleteMany({ where: { lot_id: lot.id } });
-
-        // Reset lot status
-        await prisma.lot.update({
-            where: { id: lot.id },
-            data: { status: 'available' }
-        });
-
+        await prisma.lot.update({ where: { id: lot.id }, data: { status: 'available' } });
         res.json({ success: true });
     } catch (e) {
-        console.error('Reset error:', e);
         res.status(500).json({ error: 'Error al resetear lote' });
     }
 });
 
-// Receipts Management
 app.get('/api/mobile/postventa/receipts', authenticate, async (req: Request, res: Response) => {
     try {
         const receipts = await prisma.paymentReceipt.findMany({
@@ -234,18 +212,12 @@ app.get('/api/mobile/postventa/receipts', authenticate, async (req: Request, res
     }
 });
 
-// Docs
 app.get('/api/mobile/user/docs', authenticate, async (req: Request, res: Response) => {
     const { userId } = req.query;
-    try {
-        // Simplified doc list
-        res.json([
-            { id: '1', title: 'Reserva', type: 'RESERVA', date: new Date().toISOString() },
-            { id: '2', title: 'Promesa', type: 'PROMESA', date: new Date().toISOString() }
-        ]);
-    } catch (e) {
-        res.status(500).json({ error: 'Error al obtener documentos' });
-    }
+    res.json([
+        { id: '1', title: 'Reserva', type: 'RESERVA', date: new Date().toISOString() },
+        { id: '2', title: 'Promesa', type: 'PROMESA', date: new Date().toISOString() }
+    ]);
 });
 
 app.patch('/api/mobile/receipt/:id', authenticate, async (req: Request, res: Response) => {
@@ -253,18 +225,11 @@ app.patch('/api/mobile/receipt/:id', authenticate, async (req: Request, res: Res
     const { action } = req.body;
     try {
         const status = action === 'approve' ? 'APPROVED' : 'REJECTED';
-        const receipt = await prisma.paymentReceipt.update({
-            where: { id },
-            data: { status, processed_at: new Date() }
-        });
-
+        const receipt = await prisma.paymentReceipt.update({ where: { id }, data: { status, processed_at: new Date() } });
         if (status === 'APPROVED') {
             await prisma.reservation.update({
                 where: { id: receipt.reservation_id },
-                data: {
-                    installments_paid: { increment: receipt.scope === 'INSTALLMENT' ? 1 : 0 },
-                    pie_status: receipt.scope === 'PIE' ? 'PAID' : undefined
-                } as any
+                data: { installments_paid: { increment: receipt.scope === 'INSTALLMENT' ? 1 : 0 }, pie_status: receipt.scope === 'PIE' ? 'PAID' : undefined } as any
             });
         }
         res.json({ success: true });
@@ -273,13 +238,6 @@ app.patch('/api/mobile/receipt/:id', authenticate, async (req: Request, res: Res
     }
 });
 
-// Serve static files from Expo web build
 app.use(express.static(path.join(__dirname, '../../dist')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../dist/index.html'));
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.get('*', (req, res) => { res.sendFile(path.join(__dirname, '../../dist/index.html')); });
+app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });

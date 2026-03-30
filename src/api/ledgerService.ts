@@ -20,7 +20,8 @@ export interface LedgerEntry {
   nextDueDate: string;
   lateDays: number;
   penaltyAmount: number;
-  status: 'LATE' | 'GRACE' | 'UPCOMING' | 'OK';
+  status: 'LATE' | 'GRACE' | 'UPCOMING' | 'OK' | 'AVAILABLE';
+  lotStatus: 'sold' | 'reserved' | 'available';
   badges: string[]; // RES, COM, PRM, GST
 }
 
