@@ -76,3 +76,47 @@ export function calculateTotalInterest(
     const dailyInterest = calculateDailyInterest(totalLotPrice, lotAreaM2);
     return dailyInterest * daysLate;
 }
+
+export function calcularTotalAPagar(
+    cantidadCuotas: number, 
+    installmentsPaid: number,
+    totalCuotas: number,
+    valorUltimaCuota: number,
+    valorCuotaNormal: number,
+    penaltyAmountClp: number,
+    legacyInstallmentRanges?: { from: number; to: number; amount: number }[]
+): number {
+    let totalPago = 0;
+    
+    for (let i = 0; i < cantidadCuotas; i++) {
+        const numeroCobroActual = installmentsPaid + 1 + i;
+        
+        // 1. Is it the very last installment?
+        if (numeroCobroActual === totalCuotas) {
+            totalPago += valorUltimaCuota;
+            continue;
+        }
+        
+        // 2. Did the client have an exceptional rate for this installment?
+        let excepcionAplicada = false;
+        if (legacyInstallmentRanges && legacyInstallmentRanges.length > 0) {
+            for (const range of legacyInstallmentRanges) {
+                if (numeroCobroActual >= range.from && numeroCobroActual <= range.to) {
+                    totalPago += range.amount;
+                    excepcionAplicada = true;
+                    break;
+                }
+            }
+        }
+        
+        // 3. Standard contract value
+        if (!excepcionAplicada) {
+            totalPago += valorCuotaNormal;
+        }
+    }
+    
+    // Add any existing penalty (calculated in the backend for the first due installment)
+    totalPago += penaltyAmountClp;
+    
+    return totalPago;
+}

@@ -1,4 +1,5 @@
 import apiClient from './client';
+import { LotDetailResponse } from '../types/payment.types';
 
 export interface LedgerEntry {
   customerId: string;
@@ -102,5 +103,22 @@ export const ledgerService = {
 
   verifyReceipt: async (id: string, action: 'approve' | 'reject'): Promise<void> => {
     await apiClient.patch(`mobile/receipt/${id}`, { action });
+  },
+
+  getLotDetails: async (id: string): Promise<LotDetailResponse> => {
+    const response = await apiClient.get(`mobile/postventa/lot-details/${id}`);
+    return response.data;
+  },
+
+  uploadPaymentReceipt: async (data: {
+    reservationId: string;
+    lotId: string | number;
+    amount: number;
+    scope: string;
+    installmentsCount: number;
+    receiptBase64: string;
+  }): Promise<{ success: boolean; receiptId: string }> => {
+    const response = await apiClient.post('mobile/postventa/payments/upload', data);
+    return response.data;
   }
 };

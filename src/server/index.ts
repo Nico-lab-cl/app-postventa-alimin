@@ -148,7 +148,142 @@ app.get('/api/mobile/postventa/summary', authenticate, async (req: Request, res:
     res.status(500).json({ error: 'Error al obtener resumen' });
   }
 });
+app.get('/api/mobile/postventa/lot-details/:id', authenticate, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const reservation = await prisma.reservation.findUnique({
+            where: { id },
+            include: { 
+                lot: true, 
+                receipts: { orderBy: { created_at: 'desc' }, take: 10 } 
+            }
+        });
 
+        if (!reservation) return res.status(404).json({ error: 'Reserva no encontrada' });
+
+        const lot = reservation.lot;
+        
+        let totalPaid = reservation.receipts?.filter((r: any) => r.status === 'APPROVED').reduce((sum: number, r: any) => sum + r.amount_clp, 0) || 0;
+        let pendingBalance = Math.max(0, (lot.price_total_clp || 0) - totalPaid);
+        let nextDueDate = null;
+        let lateDays = 0;
+        let penaltyAmount = 0;
+        let status: 'OK' | 'LATE' | 'UPCOMING' | 'AVAILABLE' = 'OK';
+
+        const paidCuotas = reservation.installments_paid || 0;
+        const totalCuotas = lot.cuotas || 0;
+
+        if (paidCuotas < totalCuotas) {
+            const baseDate = reservation.legacy_installment_start_date || reservation.created_at;
+            nextDueDate = getInstallmentDueDate(baseDate, paidCuotas + 1, reservation.is_legacy);
+            
+            penaltyAmount = calculateTotalInterest(
+                lot.price_total_clp || 0,
+                lot.area_m2 || 200,
+                nextDueDate,
+                reservation.is_legacy,
+                new Date(),
+                reservation.mora_frozen,
+                reservation.legacy_debt_start_date
+            );
+
+            if (penaltyAmount > 0) {
+                const daily = calculateDailyInterest(lot.price_total_clp || 0, lot.area_m2 || 200);
+                lateDays = Math.round(penaltyAmount / daily);
+                status = 'LATE';
+            } else {
+                status = pendingBalance === 0 ? 'OK' : 'UPCOMING';
+            }
+        }
+
+        let parsedLegacyRanges = [];
+        try {
+            parsedLegacyRanges = (reservation as any).legacy_installment_ranges ? JSON.parse((reservation as any).legacy_installment_ranges as string) : [];
+        } catch(e) {}
+
+        const responseData = {
+            success: true,
+            financials: {
+                lotId: lot.id,
+                lotNumber: lot.number,
+                stage: lot.stage,
+                areaM2: lot.area_m2 || 0,
+                priceTotalClp: lot.price_total_clp || 0,
+                reservationAmountClp: lot.reservation_amount_clp || 0,
+                targetPieAmountClp: lot.pie || 0,
+                totalCuotas: lot.cuotas || 0,
+                valorCuotaNormal: lot.valor_cuota || 0,
+                valorUltimaCuota: (lot as any).last_installment_amount || lot.valor_cuota || 0,
+                isLegacy: reservation.is_legacy || false,
+                legacyInstallmentRanges: parsedLegacyRanges,
+                legacyDebtStartDate: reservation.legacy_debt_start_date || null,
+                legacyInstallmentStartDate: reservation.legacy_installment_start_date || null
+            },
+            account: {
+                reservationId: reservation.id,
+                clientName: `${reservation.name} ${reservation.last_name || ''}`.trim(),
+                clientEmail: reservation.email,
+                clientPhone: reservation.phone,
+                pieStatus: reservation.pie_status || 'PENDING',
+                installmentsPaid: reservation.installments_paid || 0,
+                totalPaidClp: totalPaid,
+                pendingBalanceClp: pendingBalance,
+                nextDueDate: nextDueDate ? nextDueDate.toISOString() : null,
+                moraStatus: status,
+                lateDays: lateDays,
+                penaltyAmountClp: penaltyAmount,
+                moraFrozen: reservation.mora_frozen || false,
+                isPromo: (reservation as any).is_promo || false,
+                hasPendingPieReceipt: reservation.receipts.some((r: any) => r.status === 'PENDING' && r.scope === 'PIE'),
+                hasPendingInstallmentReceipt: reservation.receipts.some((r: any) => r.status === 'PENDING' && r.scope === 'INSTALLMENT')
+            },
+            recentReceipts: reservation.receipts.map((r: any) => ({
+                receiptId: r.id,
+                scope: r.scope,
+                amountClp: r.amount_clp,
+                status: r.status,
+                rejectionReason: (r as any).rejection_reason,
+                installmentsCount: r.installments_count || 1,
+                createdAt: r.created_at.toISOString(),
+                receiptUrl: r.receipt_url
+            }))
+        };
+        
+        res.json(responseData);
+    } catch (e) {
+        console.error('Error fetching lot details:', e);
+        res.status(500).json({ error: 'Error al obtener detalles de la reserva' });
+    }
+});
+
+app.post('/api/mobile/postventa/payments/upload', authenticate, async (req: Request, res: Response) => {
+    try {
+        const { reservationId, lotId, amount, scope, installmentsCount, receiptBase64 } = req.body;
+        
+        if (!reservationId || !amount || !receiptBase64) {
+             return res.status(400).json({ error: 'Faltan datos requeridos' });
+        }
+
+        const receiptUrl = receiptBase64.startsWith('data:image') ? receiptBase64 : `data:image/jpeg;base64,${receiptBase64}`;
+
+        const newReceipt = await prisma.paymentReceipt.create({
+            data: {
+                reservation_id: reservationId,
+                lot_id: parseInt(lotId, 10),
+                amount_clp: parseInt(amount, 10),
+                scope: scope || 'INSTALLMENT',
+                installments_count: parseInt(installmentsCount || '1', 10),
+                receipt_url: receiptUrl,
+                status: 'PENDING'
+            }
+        });
+
+        res.json({ success: true, receiptId: newReceipt.id });
+    } catch (e) {
+        console.error('Error uploading payment receipt:', e);
+        res.status(500).json({ error: 'Error al subir comprobante de pago' });
+    }
+});
 app.post('/api/mobile/postventa/lot/:lotId/assign', authenticate, async (req: Request, res: Response) => {
     const { lotId } = req.params;
     const body = req.body;
