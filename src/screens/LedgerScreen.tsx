@@ -15,6 +15,8 @@ const LedgerScreen = () => {
     const [lotStatusFilter, setLotStatusFilter] = useState('ALL');
     const [showStageDropdown, setShowStageDropdown] = useState(false);
     const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 15;
     const { signOut } = useAuth();
 
     const { data, isLoading, refetch, isRefetching } = useQuery({
@@ -53,6 +55,9 @@ const LedgerScreen = () => {
         const matchesStatus = lotStatusFilter === 'ALL' || item.computedStatus === lotStatusFilter;
         return matchesSearch && matchesStatus;
     });
+
+    const totalPages = Math.ceil((filteredData?.length || 0) / ITEMS_PER_PAGE);
+    const paginatedData = filteredData?.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE) || [];
 
     const handleResetLot = (lotId: string) => {
         Alert.alert(
@@ -225,7 +230,7 @@ const LedgerScreen = () => {
                                 placeholder="Buscar por Lote, RUT o Nombre..."
                                 placeholderTextColor="rgba(193, 200, 201, 0.5)"
                                 value={search}
-                                onChangeText={setSearch}
+                                onChangeText={(val) => { setSearch(val); setCurrentPage(1); }}
                             />
                         </View>
                         
@@ -251,7 +256,7 @@ const LedgerScreen = () => {
                                         {['ALL', '1', '2', '3', '4'].map((s, i) => (
                                             <TouchableOpacity 
                                                 key={i} 
-                                                onPress={() => { setStage(s); setShowStageDropdown(false); }}
+                                                onPress={() => { setStage(s); setShowStageDropdown(false); setCurrentPage(1); }}
                                                 className={`px-4 py-4 border-b border-white/10 ${stage === s ? 'bg-primary' : ''}`}
                                             >
                                                 <Text className={`${stage === s ? 'text-[#1e2a2d]' : 'text-on-surface'} font-bold text-xs`}>
@@ -292,7 +297,7 @@ const LedgerScreen = () => {
                                         ].map((s, i) => (
                                             <TouchableOpacity 
                                                 key={i} 
-                                                onPress={() => { setLotStatusFilter(s.val); setShowStatusDropdown(false); }}
+                                                onPress={() => { setLotStatusFilter(s.val); setShowStatusDropdown(false); setCurrentPage(1); }}
                                                 className={`px-4 py-4 border-b border-white/10 ${lotStatusFilter === s.val ? 'bg-primary' : ''}`}
                                             >
                                                 <Text className={`${lotStatusFilter === s.val ? 'text-[#1e2a2d]' : 'text-on-surface'} font-bold text-xs`}>
@@ -310,7 +315,7 @@ const LedgerScreen = () => {
                         <ActivityIndicator color="#a8cdd4" size="large" className="mt-10 z-0" style={{ zIndex: 0 }} />
                     ) : (
                         <View style={{ zIndex: 0, elevation: 0 }}>
-                            {filteredData?.map((item, index) => (
+                            {paginatedData?.map((item, index) => (
                                 <LedgerCard key={index} item={item} />
                             ))}
                             
@@ -318,6 +323,28 @@ const LedgerScreen = () => {
                                 <View className="mt-4 items-center justify-center p-12 bg-[#1e2a2d]/60 rounded-[40px] border border-dashed border-white/10">
                                     <Map color="#8b9293" size={48} strokeWidth={1} />
                                     <Text className="text-on-surface-variant text-center font-headline font-bold mt-4">No se encontraron resultados.</Text>
+                                </View>
+                            )}
+
+                            {totalPages > 1 && (
+                                <View className="flex-row justify-between items-center mt-4 mb-12 px-2">
+                                    <TouchableOpacity 
+                                        disabled={currentPage === 1}
+                                        onPress={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                        className={`px-6 py-3 rounded-2xl ${currentPage === 1 ? 'bg-white/5 opacity-50' : 'bg-surface-container-highest border border-white/10'}`}
+                                    >
+                                        <Text className="text-on-surface-variant font-black text-[10px] uppercase tracking-widest">Anterior</Text>
+                                    </TouchableOpacity>
+                                    
+                                    <Text className="text-on-surface-variant font-bold text-xs">Página {currentPage} de {totalPages}</Text>
+
+                                    <TouchableOpacity 
+                                        disabled={currentPage === totalPages}
+                                        onPress={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                        className={`px-6 py-3 rounded-2xl ${currentPage === totalPages ? 'bg-white/5 opacity-50' : 'bg-[#edc062] border border-[#edc062]/20'}`}
+                                    >
+                                        <Text className={`font-black text-[10px] uppercase tracking-widest ${currentPage === totalPages ? 'text-on-surface-variant' : 'text-black'}`}>Siguiente</Text>
+                                    </TouchableOpacity>
                                 </View>
                             )}
                         </View>
