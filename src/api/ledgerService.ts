@@ -11,6 +11,7 @@ export interface LedgerEntry {
   area_m2: number;
   price_total_clp: number;
   valor_cuota: number;
+  reservation_amount: number;
   pie: number;
   pie_status: 'PAID' | 'PENDING';
   installments_paid: number;

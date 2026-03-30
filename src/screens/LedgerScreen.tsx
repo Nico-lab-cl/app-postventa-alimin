@@ -105,36 +105,75 @@ const LedgerScreen = () => {
                         <StatusBadge computedStatus={item.computedStatus} isPaid={isPaid} />
                     </View>
 
-                    {/* Owner / Status Segment */}
-                    <TouchableOpacity 
-                        onPress={() => item.customerId ? navigation.navigate('LedgerDetail', { entry: item }) : navigation.navigate('AssignOwner', { lot: item })}
-                        className={`flex-row items-center gap-3 mb-6 p-4 rounded-2xl ${isAvailable ? 'bg-emerald-500/5 border border-emerald-500/10' : 'bg-white/5'}`}
-                    >
-                        <View className={`${isAvailable ? 'bg-emerald-500/20' : 'bg-primary/20'} p-2.5 rounded-xl`}>
-                            {isAvailable ? <Zap color="#2db395" size={18} /> : <User color="#a8cdd4" size={18} />}
+                    {/* Contextual Content Segment */}
+                    {isAvailable ? (
+                        <View className="bg-emerald-500/5 p-5 rounded-2xl border border-emerald-500/10 mb-6">
+                            <View className="flex-row items-center gap-2 mb-4">
+                                <Zap color="#2db395" size={16} />
+                                <Text className="text-emerald-400 font-headline font-bold text-sm">Detalles del Terreno</Text>
+                            </View>
+                            
+                            <View className="flex-row flex-wrap gap-y-5">
+                                <View className="w-1/2 pr-2">
+                                    <View className="bg-neutral-900/40 p-3 rounded-xl border border-white/5">
+                                        <Text className="text-on-surface-variant text-[9px] uppercase font-black tracking-widest mb-1">Superficie</Text>
+                                        <Text className="text-on-surface font-bold text-xs">{item.area_m2} m²</Text>
+                                    </View>
+                                </View>
+                                <View className="w-1/2 pl-2">
+                                    <View className="bg-neutral-900/40 p-3 rounded-xl border border-white/5">
+                                        <Text className="text-on-surface-variant text-[9px] uppercase font-black tracking-widest mb-1">Valor Total</Text>
+                                        <Text className="text-on-surface font-bold text-xs">${item.price_total_clp?.toLocaleString()} CLP</Text>
+                                    </View>
+                                </View>
+                                <View className="w-1/2 pr-2">
+                                    <View className="bg-neutral-900/40 p-3 rounded-xl border border-white/5">
+                                        <Text className="text-on-surface-variant text-[9px] uppercase font-black tracking-widest mb-1">Valor Pie</Text>
+                                        <Text className="text-on-surface font-bold text-xs">${item.pie?.toLocaleString() || '0'} CLP</Text>
+                                    </View>
+                                </View>
+                                <View className="w-1/2 pl-2">
+                                    <View className="bg-neutral-900/40 p-3 rounded-xl border border-white/5">
+                                        <Text className="text-on-surface-variant text-[9px] uppercase font-black tracking-widest mb-1">Reserva</Text>
+                                        <Text className="text-on-surface font-bold text-xs">${item.reservation_amount?.toLocaleString() || '0'} CLP</Text>
+                                    </View>
+                                </View>
+                            </View>
                         </View>
-                        <View className="flex-1">
-                            <Text className={`${isAvailable ? 'text-emerald-400' : 'text-on-surface'} font-headline font-bold text-sm leading-tight`}>
-                                {item.customerName}
-                            </Text>
-                            <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest">
-                                {isAvailable ? 'Presiona para asignar propietario' : item.rut}
-                            </Text>
-                        </View>
-                        <ChevronRight color="rgba(193, 200, 201, 0.2)" size={16} />
-                    </TouchableOpacity>
+                    ) : (
+                        <>
+                            {/* Owner Segment */}
+                            <TouchableOpacity 
+                                onPress={() => navigation.navigate('LedgerDetail', { entry: item })}
+                                className="flex-row items-center gap-3 mb-6 p-4 rounded-2xl bg-white/5"
+                            >
+                                <View className="bg-primary/20 p-2.5 rounded-xl">
+                                    <User color="#a8cdd4" size={18} />
+                                </View>
+                                <View className="flex-1">
+                                    <Text className="text-on-surface font-headline font-bold text-sm leading-tight">
+                                        {item.customerName}
+                                    </Text>
+                                    <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest">
+                                        {item.rut}
+                                    </Text>
+                                </View>
+                                <ChevronRight color="rgba(193, 200, 201, 0.2)" size={16} />
+                            </TouchableOpacity>
 
-                    {/* Info Grid */}
-                    <View className="flex-row gap-8 mb-6 px-2">
-                        <View>
-                            <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-1">Superficie</Text>
-                            <Text className="text-on-surface font-bold text-base">{item.area_m2} m²</Text>
-                        </View>
-                        <View>
-                            <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-1">Valor Total</Text>
-                            <Text className="text-on-surface font-bold text-base">${item.price_total_clp?.toLocaleString()} CLP</Text>
-                        </View>
-                    </View>
+                            {/* Info Grid */}
+                            <View className="flex-row gap-8 mb-6 px-2">
+                                <View>
+                                    <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-1">Superficie</Text>
+                                    <Text className="text-on-surface font-bold text-base">{item.area_m2} m²</Text>
+                                </View>
+                                <View>
+                                    <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-1">Valor Total</Text>
+                                    <Text className="text-on-surface font-bold text-base">${item.price_total_clp?.toLocaleString()} CLP</Text>
+                                </View>
+                            </View>
+                        </>
+                    )}
 
                     {/* Actions */}
                     <View className="flex-row gap-3 pt-4 border-t border-white/5">

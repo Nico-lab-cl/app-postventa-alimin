@@ -111,6 +111,7 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
                 area_m2: lot.area_m2 || 0,
                 price_total_clp: lot.price_total_clp || 0,
                 valor_cuota: lot.valor_cuota || 0,
+                reservation_amount: lot.reservation_amount_clp || 0,
                 pie: activeRes?.pie || lot.pie || 0,
                 pie_status: activeRes?.pie_status || 'PENDING',
                 installments_paid: activeRes?.installments_paid || 0,
