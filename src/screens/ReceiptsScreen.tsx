@@ -56,32 +56,44 @@ const ReceiptsScreen = () => {
                 </View>
             </View>
 
-            <View className="flex-row gap-4">
-                <TouchableOpacity 
-                    onPress={() => mutation.mutate({ id: item.id, action: 'reject' })}
-                    activeOpacity={0.7}
-                    className="flex-1 bg-error-container/20 border border-error/20 py-4 rounded-2xl flex-row justify-center items-center"
-                >
-                    <X color="#ffb4ab" size={18} />
-                    <Text className="text-error font-display font-bold ml-2 text-xs uppercase tracking-[2px]">Rechazar</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                    onPress={() => mutation.mutate({ id: item.id, action: 'approve' })}
-                    activeOpacity={0.9}
-                    className="flex-1 rounded-2xl overflow-hidden shadow-lg shadow-primary/20"
-                >
-                    <LinearGradient
-                        colors={['#a8cdd4', '#36595f']}
-                        start={{x: 0, y: 0}}
-                        end={{x: 1, y: 1}}
-                        className="py-4 flex-row justify-center items-center"
+            {item.status === 'PENDING' ? (
+                <View className="flex-row gap-4">
+                    <TouchableOpacity 
+                        onPress={() => mutation.mutate({ id: item.id, action: 'reject' })}
+                        activeOpacity={0.7}
+                        className="flex-1 bg-error-container/20 border border-error/20 py-4 rounded-2xl flex-row justify-center items-center"
                     >
-                        <Check color="#0f353b" size={18} />
-                        <Text className="text-[#0f353b] font-display font-black ml-2 text-xs uppercase tracking-[2px]">Aprobar</Text>
-                    </LinearGradient>
-                </TouchableOpacity>
-            </View>
+                        <X color="#ffb4ab" size={18} />
+                        <Text className="text-error font-display font-bold ml-2 text-xs uppercase tracking-[2px]">Rechazar</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity 
+                        onPress={() => mutation.mutate({ id: item.id, action: 'approve' })}
+                        activeOpacity={0.9}
+                        className="flex-1 rounded-2xl overflow-hidden shadow-lg shadow-primary/20"
+                    >
+                        <LinearGradient
+                            colors={['#a8cdd4', '#36595f']}
+                            start={{x: 0, y: 0}}
+                            end={{x: 1, y: 1}}
+                            className="py-4 flex-row justify-center items-center"
+                        >
+                            <Check color="#0f353b" size={18} />
+                            <Text className="text-[#0f353b] font-display font-black ml-2 text-xs uppercase tracking-[2px]">Aprobar</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </View>
+            ) : item.status === 'APPROVED' ? (
+                <View className="bg-emerald-500/10 border border-emerald-500/20 py-4 rounded-2xl flex-row justify-center items-center">
+                    <CheckCircle color="#2db395" size={18} />
+                    <Text className="text-emerald-400 font-display font-black ml-2 text-xs uppercase tracking-[2px]">Aprobado</Text>
+                </View>
+            ) : (
+                <View className="bg-error/10 border border-error/20 py-4 rounded-2xl flex-row justify-center items-center">
+                    <X color="#ffb4ab" size={18} />
+                    <Text className="text-error font-display font-black ml-2 text-xs uppercase tracking-[2px]">Rechazado</Text>
+                </View>
+            )}
         </View>
     );
 
@@ -129,16 +141,16 @@ const ReceiptsScreen = () => {
                             <View className="absolute -right-8 -top-8 w-32 h-32 bg-primary/10 rounded-full" />
                             <View className="flex-row items-center gap-3">
                                 <CheckCircle color="#a8cdd4" size={20} />
-                                <Text className="font-display font-medium text-on-surface-variant text-[10px] uppercase tracking-widest">Verificados</Text>
+                                <Text className="font-display font-medium text-on-surface-variant text-[10px] uppercase tracking-widest">Habilitados</Text>
                             </View>
-                            <Text className="text-3xl font-display font-black text-primary tracking-tighter">124</Text>
+                            <Text className="text-3xl font-display font-black text-primary tracking-tighter">{data?.filter((r: any) => r.status === 'APPROVED').length || 0}</Text>
                         </View>
                         <View className="flex-1 bg-[#1e2a2d]/60 p-6 rounded-3xl border border-white/5 justify-between overflow-hidden">
                             <View className="flex-row items-center gap-3">
                                 <Clock color="#edc062" size={20} />
-                                <Text className="font-display font-medium text-on-surface-variant text-[10px] uppercase tracking-widest">Pendientes</Text>
+                                <Text className="font-display font-medium text-on-surface-variant text-[10px] uppercase tracking-widest">Por Validar</Text>
                             </View>
-                            <Text className="text-3xl font-display font-black text-[#edc062] tracking-tighter">{data?.length || 0}</Text>
+                            <Text className="text-3xl font-display font-black text-[#edc062] tracking-tighter">{data?.filter((r: any) => r.status === 'PENDING').length || 0}</Text>
                         </View>
                     </View>
 
@@ -157,23 +169,23 @@ const ReceiptsScreen = () => {
                     {/* Receipts List */}
                     <View>
                         <View className="flex-row justify-between items-end mb-8 px-2">
-                            <Text className="font-display font-bold text-2xl text-on-surface">Validar Ingresos</Text>
-                            <Text className="text-on-surface-variant text-[10px] font-black uppercase tracking-widest">{data?.length || 0} Pendientes</Text>
+                            <Text className="font-display font-bold text-2xl text-on-surface">Historial de Transacciones</Text>
+                            <Text className="text-on-surface-variant text-[10px] font-black uppercase tracking-widest">{data?.length || 0} Registros</Text>
                         </View>
 
                         {isLoading ? (
                             <ActivityIndicator color="#a8cdd4" size="large" className="mt-10" />
                         ) : (
                             <View>
-                                {data?.map((item, index) => (
+                                {data?.map((item: any) => (
                                     <ReceiptCard key={item.id} item={item} />
                                 ))}
 
                                 {data?.length === 0 && (
                                     <View className="mt-4 items-center justify-center p-12 bg-[#1e2a2d]/60 border-dashed border-white/10 opacity-40">
                                         <ShieldCheck color="#8b9293" size={64} strokeWidth={1} />
-                                        <Text className="text-on-surface-variant text-xl text-center font-display font-bold mt-6">¡Todo al día!</Text>
-                                        <Text className="text-on-surface-variant text-center font-body text-xs mt-2">No hay recibos pendientes de validación.</Text>
+                                        <Text className="text-on-surface-variant text-xl text-center font-display font-bold mt-6">¡Bandeja Limpia!</Text>
+                                        <Text className="text-on-surface-variant text-center font-body text-xs mt-2">No hay transacciones ni validaciones registradas.</Text>
                                     </View>
                                 )}
                             </View>

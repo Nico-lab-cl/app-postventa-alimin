@@ -331,7 +331,7 @@ app.delete('/api/mobile/postventa/lot/:lotId', authenticate, async (req: Request
 app.get('/api/mobile/postventa/receipts', authenticate, async (req: Request, res: Response) => {
     try {
         const receipts = await prisma.paymentReceipt.findMany({
-            where: { status: 'PENDING' },
+            orderBy: { created_at: 'desc' },
             include: { reservation: true, lot: true }
         });
         res.json(receipts.map((r: any) => ({
