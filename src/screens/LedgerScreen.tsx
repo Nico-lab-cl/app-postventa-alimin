@@ -33,18 +33,13 @@ const LedgerScreen = () => {
     });
 
     const processedData = data?.map(item => {
-        let computedStatus = 'available';
-        if (item.lotStatus === 'sold' || (item.lotStatus === 'reserved' && item.pie_status === 'PAID')) {
-            computedStatus = 'sold';
-        } else if (item.lotStatus === 'reserved' && item.pie_status !== 'PAID') {
-            computedStatus = 'reserved';
-        }
+        const isVendido = !!item.customerId && item.pie_status === 'PAID';
+        const computedStatus = isVendido ? 'sold' : 'available';
         return { ...item, computedStatus };
     }) || [];
 
     const summaryCounts = {
         sold: processedData.filter(i => i.computedStatus === 'sold').length,
-        reserved: processedData.filter(i => i.computedStatus === 'reserved').length,
         available: processedData.filter(i => i.computedStatus === 'available').length,
     };
 
@@ -71,28 +66,25 @@ const LedgerScreen = () => {
     };
 
     const StatusBadge = ({ computedStatus, isPaid }: { computedStatus: string, isPaid: boolean }) => {
-        if (computedStatus === 'available') {
+        if (computedStatus === 'sold') {
             return (
-                <View className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                    <Text className="text-emerald-400 text-[8px] font-black uppercase tracking-widest">Disponible</Text>
+                <View className="flex-row gap-2">
+                    {isPaid && (
+                        <View className="bg-primary/10 px-3 py-1 rounded-full border border-primary/20 flex-row items-center gap-1">
+                            <CheckCircle color="#a8cdd4" size={8} />
+                            <Text className="text-primary text-[8px] font-black uppercase tracking-widest">Pagado</Text>
+                        </View>
+                    )}
+                    <View className="border border-[#ffb4ab]/40 bg-[#ffb4ab]/10 px-3 py-1 rounded-full">
+                        <Text className="text-[#ffb4ab] text-[8px] font-black uppercase tracking-widest">Vendido</Text>
+                    </View>
                 </View>
             );
         }
-        
-        const label = computedStatus === 'sold' ? 'Vendido' : 'Bloqueado';
-        const color = computedStatus === 'sold' ? '#ffb4ab' : '#8b9293';
 
         return (
-            <View className="flex-row gap-2">
-                {isPaid && (
-                    <View className="bg-primary/10 px-3 py-1 rounded-full border border-primary/20 flex-row items-center gap-1">
-                        <CheckCircle color="#a8cdd4" size={8} />
-                        <Text className="text-primary text-[8px] font-black uppercase tracking-widest">Pagado</Text>
-                    </View>
-                )}
-                <View style={{ borderColor: `${color}40`, backgroundColor: `${color}10` }} className="px-3 py-1 rounded-full border">
-                    <Text style={{ color }} className="text-[8px] font-black uppercase tracking-widest">{label}</Text>
-                </View>
+            <View className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                <Text className="text-emerald-400 text-[8px] font-black uppercase tracking-widest">Disponible</Text>
             </View>
         );
     };
@@ -217,10 +209,6 @@ const LedgerScreen = () => {
                                 <Text className="text-emerald-400 font-display font-black text-3xl mb-1">{summaryCounts.available}</Text>
                                 <Text className="text-on-surface-variant text-[8px] uppercase tracking-widest font-black">Disponibles</Text>
                             </View>
-                            <View className="flex-1 bg-surface-container-high border border-[#c1c8c9]/20 rounded-2xl p-4 items-center">
-                                <Text className="text-[#c1c8c9] font-display font-black text-3xl mb-1">{summaryCounts.reserved}</Text>
-                                <Text className="text-on-surface-variant text-[8px] uppercase tracking-widest font-black">Bloqueados</Text>
-                            </View>
                         </View>
 
                         <View className="bg-surface-container-high rounded-[24px] px-6 py-4 flex-row items-center gap-4 border border-outline-variant/10 shadow-xl mb-6">
@@ -277,8 +265,7 @@ const LedgerScreen = () => {
                                 >
                                     <Text className="text-on-surface font-bold text-xs">
                                         {lotStatusFilter === 'ALL' ? 'Todos los Estados' : 
-                                         lotStatusFilter === 'available' ? 'Disponibles' : 
-                                         lotStatusFilter === 'sold' ? 'Vendidos' : 'Bloqueados'}
+                                         lotStatusFilter === 'available' ? 'Disponibles' : 'Vendidos'}
                                     </Text>
                                     <ChevronRight 
                                         color="#a8cdd4" 
@@ -292,8 +279,7 @@ const LedgerScreen = () => {
                                         {[
                                             { val: 'ALL', label: 'Todos los Estados' },
                                             { val: 'available', label: 'Disponibles' },
-                                            { val: 'sold', label: 'Vendidos' },
-                                            { val: 'reserved', label: 'Bloqueados' }
+                                            { val: 'sold', label: 'Vendidos' }
                                         ].map((s, i) => (
                                             <TouchableOpacity 
                                                 key={i} 
