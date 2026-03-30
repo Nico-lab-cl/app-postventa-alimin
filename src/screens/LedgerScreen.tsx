@@ -185,7 +185,7 @@ const LedgerScreen = () => {
                 }
             >
                 <View className="px-6 max-w-5xl mx-auto w-full">
-                    <View className="mb-10">
+                    <View className="mb-10 z-[100]" style={{ zIndex: 100, elevation: 100 }}>
                         <View className="bg-surface-container-high rounded-[24px] px-6 py-4 flex-row items-center gap-4 border border-outline-variant/10 shadow-xl mb-6">
                             <Search color="#a8cdd4" size={20} />
                             <TextInput 
@@ -198,9 +198,9 @@ const LedgerScreen = () => {
                         </View>
                         
                         {/* Dropdown Filters */}
-                        <View className="flex-row gap-4 relative z-50">
+                        <View className="flex-row gap-4 relative z-50" style={{ zIndex: 50, elevation: 50 }}>
                             {/* Stage Dropdown */}
-                            <View className="flex-1">
+                            <View className="flex-1 z-50" style={{ zIndex: 50, elevation: 50 }}>
                                 <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-2 ml-2">Filtrar por Etapa</Text>
                                 <TouchableOpacity 
                                     onPress={() => { setShowStageDropdown(!showStageDropdown); setShowStatusDropdown(false); }}
@@ -215,14 +215,14 @@ const LedgerScreen = () => {
                                 </TouchableOpacity>
                                 
                                 {showStageDropdown && (
-                                    <View className="absolute top-[65px] left-0 right-0 bg-[#1e2a2d] border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50">
+                                    <View className="absolute top-[70px] left-0 right-0 bg-[#36595f] border border-white/20 rounded-2xl overflow-hidden shadow-2xl z-[100]" style={{ zIndex: 100, elevation: 100 }}>
                                         {['ALL', '1', '2', '3', '4'].map((s, i) => (
                                             <TouchableOpacity 
                                                 key={i} 
                                                 onPress={() => { setStage(s); setShowStageDropdown(false); }}
-                                                className={`px-4 py-3 border-b border-white/5 ${stage === s ? 'bg-primary/20' : ''}`}
+                                                className={`px-4 py-4 border-b border-white/10 ${stage === s ? 'bg-primary' : ''}`}
                                             >
-                                                <Text className={`${stage === s ? 'text-primary' : 'text-on-surface'} font-bold text-xs`}>
+                                                <Text className={`${stage === s ? 'text-[#1e2a2d]' : 'text-on-surface'} font-bold text-xs`}>
                                                     {s === 'ALL' ? 'Todas las Etapas' : `Etapa ${s}`}
                                                 </Text>
                                             </TouchableOpacity>
@@ -232,7 +232,7 @@ const LedgerScreen = () => {
                             </View>
 
                             {/* Status Dropdown */}
-                            <View className="flex-1">
+                            <View className="flex-1 z-50" style={{ zIndex: 50, elevation: 50 }}>
                                 <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-2 ml-2">Estado del Lote</Text>
                                 <TouchableOpacity 
                                     onPress={() => { setShowStatusDropdown(!showStatusDropdown); setShowStageDropdown(false); }}
@@ -251,7 +251,7 @@ const LedgerScreen = () => {
                                 </TouchableOpacity>
                                 
                                 {showStatusDropdown && (
-                                    <View className="absolute top-[65px] left-0 right-0 bg-[#1e2a2d] border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50">
+                                    <View className="absolute top-[70px] left-0 right-0 bg-[#36595f] border border-white/20 rounded-2xl overflow-hidden shadow-2xl z-[100]" style={{ zIndex: 100, elevation: 100 }}>
                                         {[
                                             { val: 'ALL', label: 'Todos los Estados' },
                                             { val: 'available', label: 'Disponibles' },
@@ -261,9 +261,9 @@ const LedgerScreen = () => {
                                             <TouchableOpacity 
                                                 key={i} 
                                                 onPress={() => { setLotStatusFilter(s.val); setShowStatusDropdown(false); }}
-                                                className={`px-4 py-3 border-b border-white/5 ${lotStatusFilter === s.val ? 'bg-primary/20' : ''}`}
+                                                className={`px-4 py-4 border-b border-white/10 ${lotStatusFilter === s.val ? 'bg-primary' : ''}`}
                                             >
-                                                <Text className={`${lotStatusFilter === s.val ? 'text-primary' : 'text-on-surface'} font-bold text-xs`}>
+                                                <Text className={`${lotStatusFilter === s.val ? 'text-[#1e2a2d]' : 'text-on-surface'} font-bold text-xs`}>
                                                     {s.label}
                                                 </Text>
                                             </TouchableOpacity>
@@ -275,9 +275,9 @@ const LedgerScreen = () => {
                     </View>
 
                     {isLoading ? (
-                        <ActivityIndicator color="#a8cdd4" size="large" className="mt-10" />
+                        <ActivityIndicator color="#a8cdd4" size="large" className="mt-10 z-0" style={{ zIndex: 0 }} />
                     ) : (
-                        <View style={{ zIndex: 1 }}>
+                        <View style={{ zIndex: 0, elevation: 0 }}>
                             {filteredData?.map((item, index) => (
                                 <LedgerCard key={index} item={item} />
                             ))}
