@@ -377,6 +377,50 @@ app.patch('/api/mobile/receipt/:id', authenticate, async (req: Request, res: Res
     }
 });
 
+app.get('/api/mobile/postventa/users', authenticate, async (req: Request, res: Response) => {
+    try {
+        const users = await prisma.user.findMany({
+            where: { role: 'USER' },
+            include: { purchases: { include: { lot: true } } },
+            orderBy: { createdAt: 'desc' }
+        });
+        
+        res.json(users.map(u => ({
+            id: u.id,
+            name: u.name,
+            email: u.email,
+            createdAt: u.createdAt.toISOString(),
+            reservations: u.purchases.map((r: any) => ({
+                id: r.id,
+                lotNumber: r.lot.number,
+                stage: r.lot.stage,
+                phone: r.phone,
+                rut: r.rut
+            }))
+        })));
+    } catch (e) {
+        res.status(500).json({ error: 'Error fetching users' });
+    }
+});
+
+app.post('/api/mobile/postventa/users/:id/reset-password', authenticate, async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const defaultPassword = 'Alimin2024*';
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(defaultPassword, salt);
+        
+        await prisma.user.update({
+            where: { id },
+            data: { password: hashedPassword }
+        });
+        
+        res.json({ success: true, message: 'Password reset to: Alimin2024*' });
+    } catch (e) {
+        res.status(500).json({ error: 'Failed to reset password' });
+    }
+});
+
 app.use(express.static(path.join(__dirname, '../../dist')));
 app.get('*', (req, res) => { res.sendFile(path.join(__dirname, '../../dist/index.html')); });
 app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });

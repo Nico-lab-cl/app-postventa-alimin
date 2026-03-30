@@ -120,5 +120,15 @@ export const ledgerService = {
   }): Promise<{ success: boolean; receiptId: string }> => {
     const response = await apiClient.post('mobile/postventa/payments/upload', data);
     return response.data;
+  },
+
+  getUsers: async (): Promise<any[]> => {
+    const response = await apiClient.get('mobile/postventa/users');
+    return response.data;
+  },
+
+  resetUserPassword: async (userId: string): Promise<{ success: boolean; message: string }> => {
+    const response = await apiClient.post(`mobile/postventa/users/${userId}/reset-password`);
+    return response.data;
   }
 };

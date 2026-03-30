@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { LayoutDashboard, Wallet, Bell, CheckCircle, ShieldCheck } from 'lucide-react-native';
+import { LayoutDashboard, Wallet, Bell, CheckCircle, ShieldCheck, Users } from 'lucide-react-native';
 import { View, Platform } from 'react-native';
 
 import LoginScreen from '../screens/LoginScreen';
@@ -11,6 +11,7 @@ import LedgerScreen from '../screens/LedgerScreen';
 import AlertsScreen from '../screens/AlertsScreen';
 import ReceiptsScreen from '../screens/ReceiptsScreen';
 import LedgerDetailScreen from '../screens/LedgerDetailScreen';
+import AccountManagementScreen from '../screens/AccountManagementScreen';
 import AssignOwnerScreen from '../screens/AssignOwnerScreen';
 import PaymentTransferScreen from '../screens/PaymentTransferScreen';
 import SelectClientForPaymentScreen from '../screens/SelectClientForPaymentScreen';
@@ -108,6 +109,18 @@ const MainTabs = () => {
             </View>
           ),
           tabBarLabel: 'Alertas'
+        }}
+      />
+      <Tab.Screen 
+        name="Accounts" 
+        component={AccountManagementScreen} 
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <View className={`px-4 py-1.5 rounded-2xl ${focused ? "bg-[#36595f]/30" : ""}`}>
+                <Users color={color} size={22} />
+            </View>
+          ),
+          tabBarLabel: 'Cuentas'
         }}
       />
     </Tab.Navigator>
