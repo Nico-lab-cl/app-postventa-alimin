@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert, Image, RefreshControl, Platform, ScrollView, Linking } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert, Image, RefreshControl, Platform, ScrollView, Modal, SafeAreaView } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Check, X, ArrowLeft, FileText, ShieldCheck, CheckCircle, Clock } from 'lucide-react-native';
+import { Check, X, ArrowLeft, FileText, ShieldCheck, CheckCircle, Clock, Download } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { WebView } from 'react-native-webview';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 import { ledgerService } from '../api/ledgerService';
 import { useAuth } from '../store/AuthContext';
 
@@ -11,6 +14,25 @@ const ReceiptsScreen = () => {
     const queryClient = useQueryClient();
     const { signOut } = useAuth();
     const navigation = useNavigation<any>();
+    
+    const [viewerConfig, setViewerConfig] = React.useState<{ visible: boolean, url: string, type: 'image' | 'pdf', title: string, isLoading: boolean }>({ visible: false, url: '', type: 'image', title: '', isLoading: false });
+
+    const handleDownload = async () => {
+        try {
+            setViewerConfig(prev => ({...prev, isLoading: true}));
+            const fileUri = FileSystem.documentDirectory + `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
+            const { uri } = await FileSystem.downloadAsync(viewerConfig.url, fileUri);
+            if (await Sharing.isAvailableAsync()) {
+                await Sharing.shareAsync(uri);
+            } else {
+                Alert.alert('Descargado', 'El archivo ha sido guardado exitosamente dentro de su dispositivo.');
+            }
+        } catch (e) {
+            Alert.alert('Error al procesar descarga', 'Ocurrió un problema guardando el documento, intente de nuevo.');
+        } finally {
+            setViewerConfig(prev => ({...prev, isLoading: false}));
+        }
+    };
     
     const { data, isLoading, refetch, isRefetching } = useQuery({
         queryKey: ['receipts'],
@@ -72,7 +94,7 @@ const ReceiptsScreen = () => {
                 <View className="flex-row gap-2">
                     <TouchableOpacity 
                         className="bg-black/40 px-3 py-2 rounded-xl border border-white/10 flex-row items-center gap-1.5"
-                        onPress={() => Linking.openURL(item.imageUrl)}
+                        onPress={() => setViewerConfig({ visible: true, url: item.imageUrl, type: 'image', title: `Origen Lote ${item.lotNumber}`, isLoading: false })}
                     >
                         <FileText color="#8b9293" size={14} />
                         <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-wider">Origen</Text>
@@ -81,7 +103,7 @@ const ReceiptsScreen = () => {
                     {item.status === 'APPROVED' && (
                         <TouchableOpacity 
                             className="bg-primary/10 px-3 py-2 rounded-xl border border-primary/20 flex-row items-center gap-1.5"
-                            onPress={() => Linking.openURL(`https://aliminlomasdelmar.com/api/receipts/${item.id}/pdf`)}
+                            onPress={() => setViewerConfig({ visible: true, url: `https://aliminlomasdelmar.com/api/receipts/${item.id}/pdf`, type: 'pdf', title: `Oficial Lote ${item.lotNumber}`, isLoading: false })}
                         >
                             <ShieldCheck color="#a8cdd4" size={14} />
                             <Text className="text-primary font-bold text-[10px] uppercase tracking-wider">Oficial</Text>
@@ -196,6 +218,37 @@ const ReceiptsScreen = () => {
                     </View>
                 </View>
             </ScrollView>
+
+            {/* In-App Media Viewer Modal */}
+            <Modal visible={viewerConfig.visible} animationType="slide" transparent={true}>
+                <View className="flex-1 bg-black/95">
+                    <SafeAreaView className="flex-1 mt-10">
+                        {/* Header Actions */}
+                        <View className="flex-row justify-between items-center px-4 py-4 border-b border-white/10">
+                            <TouchableOpacity onPress={() => setViewerConfig({...viewerConfig, visible: false})} className="p-2.5 bg-white/10 rounded-full">
+                                <X color="#fff" size={20} />
+                            </TouchableOpacity>
+                            <Text className="text-white font-display font-medium text-sm tracking-widest uppercase">{viewerConfig.title}</Text>
+                            <TouchableOpacity onPress={handleDownload} disabled={viewerConfig.isLoading} className="p-2.5 bg-primary/20 rounded-full border border-primary/30 ml-2">
+                                {viewerConfig.isLoading ? (
+                                    <ActivityIndicator size="small" color="#a8cdd4" />
+                                ) : (
+                                    <Download color="#a8cdd4" size={20} />
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                        
+                        {/* Canvas */}
+                        <View className="flex-1 w-full bg-neutral-900 justify-center">
+                            {viewerConfig.type === 'image' ? (
+                                <Image source={{ uri: viewerConfig.url }} className="w-full h-full" resizeMode="contain" />
+                            ) : viewerConfig.url ? (
+                                <WebView source={{ uri: viewerConfig.url }} style={{ flex: 1, backgroundColor: 'transparent' }} />
+                            ) : null}
+                        </View>
+                    </SafeAreaView>
+                </View>
+            </Modal>
         </View>
     );
 };
