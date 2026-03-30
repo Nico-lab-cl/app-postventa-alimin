@@ -58,8 +58,8 @@ const LedgerScreen = () => {
             );
         }
         
-        const label = lotStatus === 'sold' ? 'Vendido' : 'Reservado';
-        const color = lotStatus === 'sold' ? '#edc062' : '#a8cdd4';
+        const label = lotStatus === 'sold' ? 'Vendido' : 'Bloqueado';
+        const color = lotStatus === 'sold' ? '#ffb4ab' : '#8b9293';
 
         return (
             <View className="flex-row gap-2">
@@ -241,7 +241,7 @@ const LedgerScreen = () => {
                                     <Text className="text-on-surface font-bold text-xs">
                                         {lotStatusFilter === 'ALL' ? 'Todos los Estados' : 
                                          lotStatusFilter === 'available' ? 'Disponibles' : 
-                                         lotStatusFilter === 'sold' ? 'Vendidos' : 'Bloqueados/Reservados'}
+                                         lotStatusFilter === 'sold' ? 'Vendidos' : 'Bloqueados'}
                                     </Text>
                                     <ChevronRight 
                                         color="#a8cdd4" 
@@ -256,7 +256,7 @@ const LedgerScreen = () => {
                                             { val: 'ALL', label: 'Todos los Estados' },
                                             { val: 'available', label: 'Disponibles' },
                                             { val: 'sold', label: 'Vendidos' },
-                                            { val: 'reserved', label: 'Bloqueados/Reservados' }
+                                            { val: 'reserved', label: 'Bloqueados' }
                                         ].map((s, i) => (
                                             <TouchableOpacity 
                                                 key={i} 

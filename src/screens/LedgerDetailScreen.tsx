@@ -87,8 +87,8 @@ const LedgerDetailScreen = () => {
                             </View>
                             <View className="items-end gap-2">
                                 {/* Legal Status */}
-                                <View style={{ borderColor: `${entry.lotStatus === 'sold' ? '#edc062' : '#a8cdd4'}40`, backgroundColor: `${entry.lotStatus === 'sold' ? '#edc062' : '#a8cdd4'}10` }} className="px-3 py-1 rounded-full border">
-                                    <Text style={{ color: entry.lotStatus === 'sold' ? '#edc062' : '#a8cdd4' }} className="text-[8px] font-black uppercase tracking-widest">{entry.lotStatus === 'sold' ? 'Vendido' : 'Reservado'}</Text>
+                                <View style={{ borderColor: `${entry.lotStatus === 'sold' ? '#ffb4ab' : '#8b9293'}40`, backgroundColor: `${entry.lotStatus === 'sold' ? '#ffb4ab' : '#8b9293'}10` }} className="px-3 py-1 rounded-full border">
+                                    <Text style={{ color: entry.lotStatus === 'sold' ? '#ffb4ab' : '#8b9293' }} className="text-[8px] font-black uppercase tracking-widest">{entry.lotStatus === 'sold' ? 'Vendido' : 'Bloqueado'}</Text>
                                 </View>
                                 {/* Financial Status */}
                                 <View style={{ backgroundColor: `${statusInfo.color}20` }} className="px-3 py-1 rounded-full flex-row items-center gap-1 border border-white/5">

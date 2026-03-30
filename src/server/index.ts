@@ -61,7 +61,7 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
         });
 
         const data = lots.map((lot: any) => {
-            const activeRes = lot.reservations[0];
+            const activeRes = lot.status !== 'available' && lot.reservations?.length > 0 ? lot.reservations[0] : null;
             
             // Financial Defaults
             let totalPaid = 0;
