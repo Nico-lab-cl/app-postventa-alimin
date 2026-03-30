@@ -31,7 +31,7 @@ const authenticate = (req: Request, res: Response, next: any) => {
 app.post('/api/mobile/auth/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email : email.toLowerCase() } });
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
@@ -50,7 +50,6 @@ app.get('/api/mobile/postventa/summary', authenticate, async (req: Request, res:
       where: { lot: { status: { in: ['sold', 'reserved'] } } }
     });
     
-    // Simplified stats for dashboard
     const receipts = await prisma.paymentReceipt.findMany({
       where: { status: 'APPROVED' }
     });
@@ -60,7 +59,7 @@ app.get('/api/mobile/postventa/summary', authenticate, async (req: Request, res:
     res.json({
       totalCollection,
       activeContracts,
-      totalMora: 0, // Simplified for now
+      totalMora: 0,
       pendingReceipts
     });
   } catch (e) {
@@ -118,21 +117,99 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
             return {
                 customerId: resObj.id,
                 customerName: resObj.name + (resObj.last_name ? ` ${resObj.last_name}` : ''),
+                rut: resObj.rut || '',
+                email: resObj.email || '',
+                phone: resObj.phone || '',
                 lotId: lot.number,
                 stageName: `Etapa ${lot.stage}`,
+                area_m2: lot.area_m2 || 0,
+                price_total_clp: lot.price_total_clp || 0,
+                valor_cuota: lot.valor_cuota || 0,
+                pie: resObj.pie || lot.pie || 0,
+                pie_status: resObj.pie_status || 'PENDING',
+                installments_paid: resObj.installments_paid || 0,
                 totalPaid,
+                totalInvested: totalPaid,
                 pendingBalance,
                 nextDueDate: nextDueDate ? nextDueDate.toISOString() : null,
                 lateDays,
                 penaltyAmount,
-                status: penaltyAmount > 0 ? 'OVERDUE' : (pendingBalance === 0 ? 'PAID' : 'PENDING'),
+                status: penaltyAmount > 0 ? 'LATE' : (pendingBalance === 0 ? 'OK' : 'UPCOMING'),
                 badges: [resObj.is_legacy ? 'LGC' : 'NEW']
             };
         });
 
         res.json(data);
     } catch (e) {
+        console.error('Ledger error:', e);
         res.status(500).json({ error: 'Error al obtener cartera' });
+    }
+});
+
+// Assign Owner
+app.post('/api/mobile/postventa/lot/:lotId/assign', authenticate, async (req: Request, res: Response) => {
+    const { lotId } = req.params;
+    const body = req.body;
+    try {
+        // Find the lot
+        const lot = await prisma.lot.findFirst({ where: { number: lotId } });
+        if (!lot) return res.status(404).json({ error: 'Lote no encontrado' });
+
+        // Create the reservation
+        await prisma.reservation.create({
+            data: {
+                lot_id: lot.id,
+                name: body.name,
+                last_name: body.surname,
+                email: body.email.toLowerCase(),
+                phone: body.phone,
+                rut: body.rut,
+                pie: body.pieAmount,
+                pie_status: body.piePaid ? 'PAID' : 'PENDING',
+                installments_paid: 0, // Fresh owner
+                mora_frozen: body.freezeMora,
+                pipeline_stage: 'RESERVA_PAGADA'
+            }
+        });
+
+        // Update lot status
+        await prisma.lot.update({
+            where: { id: lot.id },
+            data: { 
+                status: 'sold',
+                price_total_clp: body.priceTotal,
+                valor_cuota: body.normalInstallmentValue,
+                pie: body.pieAmount
+            }
+        });
+
+        res.json({ success: true });
+    } catch (e) {
+        console.error('Assign error:', e);
+        res.status(500).json({ error: 'Error al asignar propietario' });
+    }
+});
+
+// Reset Lot
+app.delete('/api/mobile/postventa/lot/:lotId', authenticate, async (req: Request, res: Response) => {
+    const { lotId } = req.params;
+    try {
+        const lot = await prisma.lot.findFirst({ where: { number: lotId } });
+        if (!lot) return res.status(404).json({ error: 'Lote no encontrado' });
+
+        // Delete all reservations for this lot (or just the active ones)
+        await prisma.reservation.deleteMany({ where: { lot_id: lot.id } });
+
+        // Reset lot status
+        await prisma.lot.update({
+            where: { id: lot.id },
+            data: { status: 'available' }
+        });
+
+        res.json({ success: true });
+    } catch (e) {
+        console.error('Reset error:', e);
+        res.status(500).json({ error: 'Error al resetear lote' });
     }
 });
 
@@ -154,6 +231,20 @@ app.get('/api/mobile/postventa/receipts', authenticate, async (req: Request, res
         })));
     } catch (e) {
         res.status(500).json({ error: 'Error al obtener recibos' });
+    }
+});
+
+// Docs
+app.get('/api/mobile/user/docs', authenticate, async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    try {
+        // Simplified doc list
+        res.json([
+            { id: '1', title: 'Reserva', type: 'RESERVA', date: new Date().toISOString() },
+            { id: '2', title: 'Promesa', type: 'PROMESA', date: new Date().toISOString() }
+        ]);
+    } catch (e) {
+        res.status(500).json({ error: 'Error al obtener documentos' });
     }
 });
 
