@@ -85,9 +85,16 @@ const LedgerDetailScreen = () => {
                                 <Text className="text-secondary font-display font-black text-4xl tracking-tighter">{entry.lotId || 'N/A'}</Text>
                                 <Text className="text-on-surface-variant text-xs uppercase tracking-[4px] font-black mt-1">{entry.stageName || 'ETAPA'}</Text>
                             </View>
-                            <View style={{ backgroundColor: `${statusInfo.color}20` }} className="px-4 py-2 rounded-full flex-row items-center gap-2 border border-white/5">
-                                {statusInfo.icon}
-                                <Text style={{ color: statusInfo.color }} className="text-[10px] font-black uppercase tracking-widest">{statusInfo.label}</Text>
+                            <View className="items-end gap-2">
+                                {/* Legal Status */}
+                                <View style={{ borderColor: `${entry.lotStatus === 'sold' ? '#edc062' : '#a8cdd4'}40`, backgroundColor: `${entry.lotStatus === 'sold' ? '#edc062' : '#a8cdd4'}10` }} className="px-3 py-1 rounded-full border">
+                                    <Text style={{ color: entry.lotStatus === 'sold' ? '#edc062' : '#a8cdd4' }} className="text-[8px] font-black uppercase tracking-widest">{entry.lotStatus === 'sold' ? 'Vendido' : 'Reservado'}</Text>
+                                </View>
+                                {/* Financial Status */}
+                                <View style={{ backgroundColor: `${statusInfo.color}20` }} className="px-3 py-1 rounded-full flex-row items-center gap-1 border border-white/5">
+                                    {statusInfo.icon}
+                                    <Text style={{ color: statusInfo.color }} className="text-[8px] font-black uppercase tracking-widest">{statusInfo.label}</Text>
+                                </View>
                             </View>
                         </View>
                         <View className="flex-row gap-8">
