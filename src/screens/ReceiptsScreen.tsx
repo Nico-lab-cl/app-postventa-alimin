@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert, Image, RefreshControl, Platform, ScrollView } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Check, X, ArrowLeft, FileText, ShieldCheck, CheckCircle, Clock } from 'lucide-react-native';
+import { Check, X, ArrowLeft, FileText, ShieldCheck, CheckCircle, Clock, Plus } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ledgerService } from '../api/ledgerService';
 import { useAuth } from '../store/AuthContext';
@@ -9,6 +10,7 @@ import { useAuth } from '../store/AuthContext';
 const ReceiptsScreen = () => {
     const queryClient = useQueryClient();
     const { signOut } = useAuth();
+    const navigation = useNavigation<any>();
     
     const { data, isLoading, refetch, isRefetching } = useQuery({
         queryKey: ['receipts'],
@@ -139,6 +141,18 @@ const ReceiptsScreen = () => {
                             <Text className="text-3xl font-display font-black text-[#edc062] tracking-tighter">{data?.length || 0}</Text>
                         </View>
                     </View>
+
+                    {/* Nueva Transferencia Button */}
+                    <TouchableOpacity 
+                        onPress={() => navigation.navigate('SelectClientForPayment')}
+                        activeOpacity={0.8}
+                        className="bg-primary p-5 rounded-3xl items-center flex-row justify-center gap-3 mb-12 shadow-lg shadow-primary/20"
+                    >
+                        <View className="bg-black/20 p-1.5 rounded-full">
+                            <Plus color="#000" size={18} />
+                        </View>
+                        <Text className="text-black font-display font-black uppercase text-sm tracking-widest">Ingresar Transferencia</Text>
+                    </TouchableOpacity>
 
                     {/* Receipts List */}
                     <View>
