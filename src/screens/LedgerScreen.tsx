@@ -33,7 +33,7 @@ const LedgerScreen = () => {
     });
 
     const processedData = data?.map(item => {
-        const isVendido = !!item.customerId && item.pie_status === 'PAID';
+        const isVendido = !!item.customerId && item.lotStatus === 'sold';
         const computedStatus = isVendido ? 'sold' : 'available';
         return { ...item, computedStatus };
     }).sort((a, b) => {
