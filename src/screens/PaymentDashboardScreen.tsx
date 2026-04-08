@@ -19,6 +19,31 @@ const PaymentDashboardScreen = () => {
     const { clientId, lotId } = (route.params as { clientId: string, lotId: string }) || {};
 
     const [viewerConfig, setViewerConfig] = React.useState<{ visible: boolean, url: string, type: 'image' | 'pdf', title: string, isLoading: boolean }>({ visible: false, url: '', type: 'image', title: '', isLoading: false });
+    const [localBlobUrl, setLocalBlobUrl] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        if (viewerConfig.visible && viewerConfig.type === 'pdf' && Platform.OS === 'web') {
+            const fetchPdf = async () => {
+                try {
+                    setViewerConfig(prev => ({ ...prev, isLoading: true }));
+                    const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
+                    const url = window.URL.createObjectURL(response.data);
+                    setLocalBlobUrl(url);
+                } catch (e) {
+                    console.error('Error fetching PDF:', e);
+                } finally {
+                    setViewerConfig(prev => ({ ...prev, isLoading: false }));
+                }
+            };
+            fetchPdf();
+        }
+        return () => {
+            if (localBlobUrl) {
+                window.URL.revokeObjectURL(localBlobUrl);
+                setLocalBlobUrl(null);
+            }
+        };
+    }, [viewerConfig.visible, viewerConfig.url]);
 
     const handleDownload = async () => {
         if (Platform.OS === 'web') {
@@ -99,11 +124,9 @@ const PaymentDashboardScreen = () => {
 
     const { financials, account, recentReceipts } = detailData;
 
-    // Financial Calculation formatters
     const formatCurrency = (val: number | undefined) => (val ?? 0).toLocaleString('es-CL');
     const formatArea = (val: number | undefined) => (val ?? 0).toFixed(2);
     
-    // UI Helpers
     const getStatusInfo = (status: string) => {
         switch (status) {
             case 'LATE': return { color: '#ffb4ab', label: 'En Mora', icon: <AlertCircle color="#ffb4ab" size={20} /> };
@@ -136,18 +159,18 @@ const PaymentDashboardScreen = () => {
     const DocButton = ({ title, type }: { title: string, type: string }) => (
         <TouchableOpacity 
             onPress={async () => {
+                const customerId = clientId;
                 if (Platform.OS === 'web') {
-                    try {
-                        const path = `mobile/postventa/contracts/${clientId}/file?type=${type}`;
-                        const response = await apiClient.get(path, { responseType: 'blob' });
-                        const blobUrl = window.URL.createObjectURL(response.data);
-                        window.open(blobUrl, '_blank');
-                    } catch (e) {
-                        Alert.alert('Error', 'No se pudo abrir el documento.');
-                    }
+                    setViewerConfig({
+                        visible: true,
+                        url: `mobile/postventa/contracts/${customerId}/file?type=${type}`,
+                        type: 'pdf',
+                        title: title,
+                        isLoading: true
+                    });
                 } else {
                     const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
-                    Linking.openURL(`${baseUrl}mobile/postventa/contracts/${clientId}/file?type=${type}`);
+                    Linking.openURL(`${baseUrl}mobile/postventa/contracts/${customerId}/file?type=${type}`);
                 }
             }}
             className="bg-[#1e2a2d]/60 p-5 rounded-[32px] mb-4 border border-white/5 flex-row items-center justify-between"
@@ -176,7 +199,6 @@ const PaymentDashboardScreen = () => {
             <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }}>
                 <View className="px-6 pt-6">
                     
-                    {/* Tarjeta V2: Estado de la Deuda */}
                     <View className="bg-surface-container-high rounded-[32px] p-6 mb-8 border border-white/5 shadow-2xl">
                         
                         <View className="flex-row items-center gap-2 mb-6">
@@ -184,7 +206,6 @@ const PaymentDashboardScreen = () => {
                             <Text className="font-display font-bold text-xl text-on-surface">Progreso de Pago</Text>
                         </View>
 
-                        {/* Progreso */}
                         <View className="mb-6">
                             <View className="flex-row justify-between items-end mb-3">
                                 <Text className="text-on-surface-variant font-bold text-sm">{account!.installmentsPaid} de {financials.totalCuotas} Cuotas Pagadas</Text>
@@ -195,7 +216,6 @@ const PaymentDashboardScreen = () => {
                             </View>
                         </View>
                         
-                        {/* Estado Dinámico del Siguiente Vencimiento */}
                         <View className="bg-black/20 p-4 rounded-2xl border border-white/5 mb-6 shadow-inner">
                             {account!.moraStatus === 'OK' || account!.moraStatus === 'UPCOMING' ? (
                                 <View className="flex-row items-start gap-3">
@@ -225,7 +245,6 @@ const PaymentDashboardScreen = () => {
                             )}
                         </View>
 
-                        {/* Botón Pagar Ahora */}
                         {account!.hasPendingInstallmentReceipt ? (
                             <View className="bg-surface-container-highest p-4 rounded-2xl items-center border border-white/5 opacity-80 flex-row gap-3">
                                 <AlertCircle color="#c1c8c9" size={20} />
@@ -243,7 +262,6 @@ const PaymentDashboardScreen = () => {
                         
                     </View>
 
-                    {/* Resumen Inmobiliario Base */}
                     <Text className="font-display font-bold text-on-surface text-xl mb-6 ml-2">Datos del Lote</Text>
                      <View className="bg-[#1e2a2d]/60 rounded-[32px] p-6 mb-8 border border-white/5">
                         <InfoRow label="Etapa" value={`Etapa ${financials.stage}`} icon={<Layout color="#edc062" size={16} />} />
@@ -252,7 +270,6 @@ const PaymentDashboardScreen = () => {
                         <InfoRow label="Valor Cuota (Normal)" value={`$${formatCurrency(financials.valorCuotaNormal)}/mes`} icon={<Wallet color="#a8cdd4" size={16} />} />
                      </View>
 
-                    {/* Customer Data */}
                     <Text className="font-display font-bold text-on-surface text-xl mb-6 ml-2">Datos del Propietario</Text>
                     <View className="bg-[#1e2a2d]/60 rounded-[32px] p-6 mb-8 border border-white/5 flex-row items-center gap-5">
                         <View className="bg-black/30 p-4 rounded-full border border-white/10">
@@ -265,12 +282,10 @@ const PaymentDashboardScreen = () => {
                         </View>
                     </View>
 
-                    {/* Documentation */}
                     <Text className="font-display font-bold text-on-surface text-xl mb-6 ml-2">Expediente Legal</Text>
                     <DocButton title="Contrato de Reserva" type="RESERVA" />
                     <DocButton title="Promesa de Compraventa" type="PROMESA" />
 
-                    {/* Historial de Recibos Recientes */}
                     {recentReceipts && recentReceipts.length > 0 && (
                         <View className="mt-4">
                             <Text className="font-display font-bold text-on-surface text-xl mb-6 ml-2">Historial de Pagos</Text>
@@ -303,7 +318,7 @@ const PaymentDashboardScreen = () => {
 
                                     <View className="flex-row justify-between items-center border-t border-white/10 pt-4 mt-2">
                                         <TouchableOpacity 
-                                            onPress={() => setViewerConfig({ visible: true, url: receipt.receiptUrl, type: 'image', title: `Comprobante ${receipt.receiptId}`, isLoading: false })}
+                                            onPress={() => setViewerConfig({ visible: true, url: `mobile/postventa/receipts/${receipt.receiptId}/pdf`, type: 'pdf', title: `Oficial Lote ${lotId}`, isLoading: false })}
                                             className="bg-black/40 px-3 py-2 rounded-xl border border-white/10 flex-row items-center gap-1.5"
                                         >
                                             <FileText color="#8b9293" size={14} />
@@ -334,11 +349,9 @@ const PaymentDashboardScreen = () => {
                 </View>
             </ScrollView>
 
-            {/* In-App Media Viewer Modal */}
             <Modal visible={viewerConfig.visible} animationType="slide" transparent={true}>
                 <View className="flex-1 bg-black/95">
                     <SafeAreaView className="flex-1 mt-10">
-                        {/* Header Actions */}
                         <View className="flex-row justify-between items-center px-4 py-4 border-b border-white/10">
                             <TouchableOpacity onPress={() => setViewerConfig({...viewerConfig, visible: false})} className="p-2.5 bg-white/10 rounded-full">
                                 <X color="#fff" size={20} />
@@ -353,43 +366,38 @@ const PaymentDashboardScreen = () => {
                             </TouchableOpacity>
                         </View>
                         
-                        {/* Canvas */}
                         <View className="flex-1 w-full bg-neutral-900 justify-center">
-                            {viewerConfig.type === 'image' ? (
+                            {viewerConfig.isLoading ? (
+                                <ActivityIndicator color="#a8cdd4" size="large" />
+                            ) : viewerConfig.type === 'pdf' ? (
+                                Platform.OS === 'web' ? (
+                                    localBlobUrl ? (
+                                        <iframe 
+                                            src={localBlobUrl} 
+                                            style={{ width: '100%', height: '100%', border: 'none' }} 
+                                            title={viewerConfig.title}
+                                        />
+                                    ) : (
+                                        <View className="p-10 items-center">
+                                            <ActivityIndicator color="#edc062" size="small" />
+                                            <Text className="text-on-surface-variant mt-4">Previsualizando documento...</Text>
+                                        </View>
+                                    )
+                                ) : (
+                                    <View className="p-10 items-center">
+                                        <FileText color="#edc062" size={64} style={{ marginBottom: 20, opacity: 0.5 }} />
+                                        <Text className="text-on-surface font-display font-black text-xl mb-4 text-center">Documento PDF</Text>
+                                        <Text className="text-on-surface-variant text-center mb-10 text-sm">Este documento PDF debe ser visualizado externamente en dispositivos móviles.</Text>
+                                    </View>
+                                )
+                            ) : (
                                 <Image 
-                                    key={viewerConfig.url}
                                     source={{ uri: viewerConfig.url }} 
                                     className="w-full h-full" 
                                     resizeMode="contain" 
                                     style={Platform.OS === 'web' ? { width: '100%', height: '100%', minHeight: 400 } : {}}
                                 />
-                            ) : Platform.OS === 'web' ? (
-                                <View className="flex-1 items-center justify-center p-8">
-                                    <FileText color="#a8cdd4" size={64} style={{ marginBottom: 20 }} />
-                                    <Text className="text-white text-center font-display font-bold text-lg mb-2">Previsualización de Documento</Text>
-                                    <Text className="text-on-surface-variant text-center mb-10 text-sm">Para visualizar este documento PDF en la web, debe abrirlo en una nueva pestaña.</Text>
-                                    <TouchableOpacity 
-                                        onPress={async () => {
-                                            try {
-                                                setViewerConfig(prev => ({...prev, isLoading: true}));
-                                                const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
-                                                const blobUrl = window.URL.createObjectURL(response.data);
-                                                window.open(blobUrl, '_blank');
-                                            } catch (e) {
-                                                Alert.alert('Error', 'No se pudo abrir el documento.');
-                                            } finally {
-                                                setViewerConfig(prev => ({...prev, isLoading: false}));
-                                            }
-                                        }}
-                                        className="bg-primary px-10 py-5 rounded-[24px] shadow-2xl flex-row items-center gap-3"
-                                    >
-                                        <Download color="#0f353b" size={20} />
-                                        <Text className="text-[#0f353b] font-black uppercase tracking-widest text-xs">Abrir en Nueva Pestaña</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            ) : viewerConfig.url ? (
-                                <WebView source={{ uri: viewerConfig.url }} style={{ flex: 1, backgroundColor: 'transparent' }} />
-                            ) : null}
+                            )}
                         </View>
                     </SafeAreaView>
                 </View>

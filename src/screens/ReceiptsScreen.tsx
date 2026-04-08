@@ -18,13 +18,37 @@ const ReceiptsScreen = () => {
     const navigation = useNavigation<any>();
     
     const [viewerConfig, setViewerConfig] = React.useState<{ visible: boolean, url: string, type: 'image' | 'pdf', title: string, isLoading: boolean }>({ visible: false, url: '', type: 'image', title: '', isLoading: false });
+    const [localBlobUrl, setLocalBlobUrl] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        if (viewerConfig.visible && viewerConfig.type === 'pdf' && Platform.OS === 'web') {
+            const fetchPdf = async () => {
+                try {
+                    setViewerConfig(prev => ({ ...prev, isLoading: true }));
+                    const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
+                    const url = window.URL.createObjectURL(response.data);
+                    setLocalBlobUrl(url);
+                } catch (e) {
+                    console.error('Error fetching PDF:', e);
+                } finally {
+                    setViewerConfig(prev => ({ ...prev, isLoading: false }));
+                }
+            };
+            fetchPdf();
+        }
+        return () => {
+            if (localBlobUrl) {
+                window.URL.revokeObjectURL(localBlobUrl);
+                setLocalBlobUrl(null);
+            }
+        };
+    }, [viewerConfig.visible, viewerConfig.url]);
 
     const handleDownload = async () => {
         if (Platform.OS === 'web') {
             try {
                 setViewerConfig(prev => ({...prev, isLoading: true}));
                 const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
-                // Axios response.data IS the blob when responseType is 'blob'
                 const blob = response.data;
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
@@ -133,7 +157,7 @@ const ReceiptsScreen = () => {
                             onPress={() => {
                                 setViewerConfig({ 
                                     visible: true, 
-                                    url: `mobile/postventa/receipt/${item.id}/pdf`, 
+                                    url: `mobile/postventa/receipts/${item.id}/pdf`, 
                                     type: 'pdf', 
                                     title: `Oficial Lote ${item.lotNumber}`, 
                                     isLoading: false 
@@ -169,7 +193,6 @@ const ReceiptsScreen = () => {
 
     return (
         <View className="flex-1 bg-background">
-            {/* TopAppBar */}
             <View 
                 className="absolute top-0 w-full z-50 flex-row justify-between items-center px-6 h-24 bg-neutral-950/60"
                 style={{ paddingTop: Platform.OS === 'ios' ? 40 : 0 }}
@@ -198,14 +221,12 @@ const ReceiptsScreen = () => {
                 }
             >
                 <View className="px-6 max-w-5xl mx-auto w-full">
-                    {/* Hero Title */}
                     <View className="mb-10">
                         <Text className="font-display text-on-surface-variant tracking-wide uppercase text-[10px] mb-2">Auditoría Financiera</Text>
                         <Text className="font-display font-bold text-4xl tracking-tight text-on-surface mb-2">Gestión de Recibos</Text>
                         <View className="h-1 w-12 bg-primary rounded-full" />
                     </View>
 
-                    {/* Stats Section */}
                     <View className="flex-row gap-6 mb-12 h-32">
                         <View className="flex-1 bg-[#1e2a2d]/60 p-6 rounded-3xl border border-primary-container/20 justify-between overflow-hidden">
                             <View className="absolute -right-8 -top-8 w-32 h-32 bg-primary/10 rounded-full" />
@@ -224,9 +245,6 @@ const ReceiptsScreen = () => {
                         </View>
                     </View>
 
-                    {/* Nueva Transferencia Button Removed to enforce Admin Auditing Mode */}
-
-                    {/* Receipts List */}
                     <View>
                         <View className="flex-row justify-between items-end mb-8 px-2">
                             <Text className="font-display font-bold text-2xl text-on-surface">Historial de Transacciones</Text>
@@ -254,11 +272,9 @@ const ReceiptsScreen = () => {
                 </View>
             </ScrollView>
 
-            {/* In-App Media Viewer Modal */}
             <Modal visible={viewerConfig.visible} animationType="slide" transparent={true}>
                 <View className="flex-1 bg-black/95">
                     <SafeAreaView className="flex-1 mt-10">
-                        {/* Header Actions */}
                         <View className="flex-row justify-between items-center px-4 py-4 border-b border-white/10">
                             <TouchableOpacity onPress={() => setViewerConfig({...viewerConfig, visible: false})} className="p-2.5 bg-white/10 rounded-full">
                                 <X color="#fff" size={20} />
@@ -273,9 +289,31 @@ const ReceiptsScreen = () => {
                             </TouchableOpacity>
                         </View>
                         
-                        {/* Canvas */}
                         <View className="flex-1 w-full bg-neutral-900 justify-center">
-                            {viewerConfig.type === 'image' ? (
+                            {viewerConfig.isLoading ? (
+                                <ActivityIndicator color="#a8cdd4" size="large" />
+                            ) : viewerConfig.type === 'pdf' ? (
+                                Platform.OS === 'web' ? (
+                                    localBlobUrl ? (
+                                        <iframe 
+                                            src={localBlobUrl} 
+                                            style={{ width: '100%', height: '100%', border: 'none' }} 
+                                            title={viewerConfig.title}
+                                        />
+                                    ) : (
+                                        <View className="p-10 items-center">
+                                            <ActivityIndicator color="#edc062" size="small" />
+                                            <Text className="text-on-surface-variant mt-4">Previsualizando documento...</Text>
+                                        </View>
+                                    )
+                                ) : (
+                                    <View className="p-10 items-center">
+                                        <FileText color="#edc062" size={64} style={{ marginBottom: 20, opacity: 0.5 }} />
+                                        <Text className="text-on-surface font-display font-black text-xl mb-4 text-center">Documento PDF</Text>
+                                        <Text className="text-on-surface-variant text-center mb-10 text-sm">Este documento PDF debe ser visualizado externamente en dispositivos móviles.</Text>
+                                    </View>
+                                )
+                            ) : (
                                 <Image 
                                     key={viewerConfig.url}
                                     source={{ uri: viewerConfig.url }} 
@@ -283,33 +321,7 @@ const ReceiptsScreen = () => {
                                     resizeMode="contain" 
                                     style={Platform.OS === 'web' ? { width: '100%', height: '100%', minHeight: 400 } : {}}
                                 />
-                            ) : Platform.OS === 'web' ? (
-                                <View className="flex-1 items-center justify-center p-8">
-                                    <FileText color="#a8cdd4" size={64} style={{ marginBottom: 20 }} />
-                                    <Text className="text-white text-center font-display font-bold text-lg mb-2">Previsualización de Documento</Text>
-                                    <Text className="text-on-surface-variant text-center mb-10 text-sm">Para visualizar este documento PDF en la web, debe abrirlo en una nueva pestaña.</Text>
-                                    <TouchableOpacity 
-                                        onPress={async () => {
-                                            try {
-                                                setViewerConfig(prev => ({...prev, isLoading: true}));
-                                                const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
-                                                const blobUrl = window.URL.createObjectURL(response.data);
-                                                window.open(blobUrl, '_blank');
-                                            } catch (e) {
-                                                Alert.alert('Error', 'No se pudo abrir el documento.');
-                                            } finally {
-                                                setViewerConfig(prev => ({...prev, isLoading: false}));
-                                            }
-                                        }}
-                                        className="bg-primary px-10 py-5 rounded-[24px] shadow-2xl flex-row items-center gap-3"
-                                    >
-                                        <Download color="#0f353b" size={20} />
-                                        <Text className="text-[#0f353b] font-black uppercase tracking-widest text-xs">Abrir en Nueva Pestaña</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            ) : viewerConfig.url ? (
-                                <WebView source={{ uri: viewerConfig.url }} style={{ flex: 1, backgroundColor: 'transparent' }} />
-                            ) : null}
+                            )}
                         </View>
                     </SafeAreaView>
                 </View>
