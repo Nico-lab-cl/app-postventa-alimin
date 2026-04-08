@@ -101,8 +101,8 @@ export const ledgerService = {
     return response.data;
   },
 
-  verifyReceipt: async (id: string, action: 'approve' | 'reject'): Promise<void> => {
-    await apiClient.patch(`mobile/receipt/${id}`, { action });
+  verifyReceipt: async (id: string, action: 'approve' | 'reject', reason?: string): Promise<void> => {
+    await apiClient.patch(`mobile/receipt/${id}`, { action, reason });
   },
 
   getLotDetails: async (id: string): Promise<LotDetailResponse> => {

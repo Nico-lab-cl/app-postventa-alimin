@@ -374,18 +374,68 @@ app.get('/api/mobile/user/docs', authenticate, async (req: Request, res: Respons
 
 app.patch('/api/mobile/receipt/:id', authenticate, async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { action } = req.body;
+    const { action, reason } = req.body;
+    
     try {
-        const status = action === 'approve' ? 'APPROVED' : 'REJECTED';
-        const receipt = await prisma.paymentReceipt.update({ where: { id }, data: { status, processed_at: new Date() } });
-        if (status === 'APPROVED') {
+        const receipt = await prisma.paymentReceipt.findUnique({
+            where: { id },
+            include: { reservation: true }
+        });
+
+        if (!receipt) return res.status(404).json({ error: 'Recibo no encontrado' });
+
+        if (action === 'approve') {
+            const currentPaid = receipt.reservation.installments_paid || 0;
+            const count = receipt.installments_count || 1;
+            
+            let nominalNumber = null;
+            let nominalRange = null;
+
+            if (receipt.scope === 'INSTALLMENT') {
+                nominalNumber = currentPaid + 1;
+                if (count > 1) {
+                    nominalRange = `${nominalNumber}-${currentPaid + count}`;
+                }
+            }
+
+            await prisma.paymentReceipt.update({
+                where: { id },
+                data: { 
+                    status: 'APPROVED', 
+                    processed_at: new Date(),
+                    nominal_installment_number: nominalNumber,
+                    nominal_installment_range: nominalRange
+                }
+            });
+
             await prisma.reservation.update({
                 where: { id: receipt.reservation_id },
-                data: { installments_paid: { increment: receipt.scope === 'INSTALLMENT' ? 1 : 0 }, pie_status: receipt.scope === 'PIE' ? 'PAID' : undefined } as any
+                data: {
+                    installments_paid: receipt.scope === 'INSTALLMENT' ? { increment: count } : undefined,
+                    pie_status: receipt.scope === 'PIE' ? 'PAID' : undefined,
+                    pipeline_stage: receipt.scope === 'PIE' ? 'PIE_PAGADO' : 'PAGO_CUOTAS',
+                    next_payment_date: null // Reset date to force recalculation
+                }
             });
+            
+            console.log(`✅ Pago aprobado para ${receipt.reservation.name}. Siguiente cuota nominal: ${nominalNumber}`);
+        } else {
+            if (!reason) return res.status(400).json({ error: 'El motivo de rechazo es obligatorio para auditoría.' });
+
+            await prisma.paymentReceipt.update({
+                where: { id },
+                data: { 
+                    status: 'REJECTED', 
+                    processed_at: new Date(),
+                    rejection_reason: reason 
+                }
+            });
+            console.log(`❌ Pago rechazado para ${receipt.reservation.name}. Motivo: ${reason}`);
         }
+
         res.json({ success: true });
     } catch (e) {
+        console.error('Error processing receipt:', e);
         res.status(500).json({ error: 'Error al procesar recibo' });
     }
 });

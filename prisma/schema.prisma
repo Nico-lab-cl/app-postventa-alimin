@@ -52,6 +52,8 @@ model Reservation {
   mora_frozen                    Boolean   @default(false)
   is_promo                       Boolean   @default(false)
 
+  next_payment_date              DateTime?
+  
   // Relations
   lot          Lot              @relation(fields: [lot_id], references: [id])
   receipts     PaymentReceipt[]
@@ -86,7 +88,9 @@ model PaymentReceipt {
   installments_count  Int?      @default(0)
   created_at          DateTime  @default(now())
   processed_at        DateTime?
-  rejection_reason    String?
+  nominal_installment_number Int?
+  nominal_installment_range  String?
+  rejection_reason           String?
 
   // Relations
   reservation_id      String

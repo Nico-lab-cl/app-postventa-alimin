@@ -88,15 +88,16 @@ const ReceiptsScreen = () => {
     });
 
     const mutation = useMutation({
-        mutationFn: ({ id, action }: { id: string; action: 'approve' | 'reject' }) => 
-            ledgerService.verifyReceipt(id, action),
+        mutationFn: ({ id, action, reason }: { id: string; action: 'approve' | 'reject'; reason?: string }) => 
+            ledgerService.verifyReceipt(id, action, reason),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['receipts'] });
             queryClient.invalidateQueries({ queryKey: ['dashboardSummary'] });
             Alert.alert('Éxito', 'El recibo ha sido procesado correctamente');
         },
-        onError: () => {
-            Alert.alert('Error', 'No se pudo procesar el recibo');
+        onError: (err: any) => {
+            const msg = err.response?.data?.error || 'No se pudo procesar el recibo';
+            Alert.alert('Error', msg);
         }
     });
 
@@ -156,7 +157,29 @@ const ReceiptsScreen = () => {
                 {item.status === 'PENDING' && (
                     <View className="flex-row gap-2">
                         <TouchableOpacity 
-                            onPress={() => mutation.mutate({ id: item.id, action: 'reject' })}
+                            onPress={() => {
+                                if (Platform.OS === 'web') {
+                                    const reason = window.prompt('Motivo de rechazo (obligatorio):');
+                                    if (reason) mutation.mutate({ id: item.id, action: 'reject', reason });
+                                } else {
+                                    Alert.prompt(
+                                        'Rechazar Pago',
+                                        'Ingresa el motivo del rechazo para auditoría:',
+                                        [
+                                            { text: 'Cancelar', style: 'cancel' },
+                                            { 
+                                                text: 'Rechazar', 
+                                                style: 'destructive',
+                                                onPress: (reason?: string) => {
+                                                    if (reason) mutation.mutate({ id: item.id, action: 'reject', reason });
+                                                    else Alert.alert('Error', 'El motivo es obligatorio');
+                                                }
+                                            }
+                                        ],
+                                        'plain-text'
+                                    );
+                                }
+                            }}
                             className="bg-error/20 px-4 py-2 rounded-xl flex-row items-center"
                         >
                             <Text className="text-error font-bold text-[10px] uppercase tracking-wider">Rechazar</Text>
