@@ -9,6 +9,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ledgerService, LedgerEntry } from '../api/ledgerService';
 import { API_BASE_URL } from '../api/client';
+import apiClient from '../api/client';
 import { LotDetailResponse, MobileReceipt } from '../types/payment.types';
 
 const PaymentDashboardScreen = () => {
@@ -21,15 +22,26 @@ const PaymentDashboardScreen = () => {
 
     const handleDownload = async () => {
         if (Platform.OS === 'web') {
-            const link = document.createElement('a');
-            link.href = viewerConfig.url;
-            link.target = '_blank';
-            link.download = `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            try {
+                setViewerConfig(prev => ({...prev, isLoading: true}));
+                const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
+                const blob = new Blob([response.data], { type: viewerConfig.type === 'pdf' ? 'application/pdf' : 'image/jpeg' });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            } catch (e) {
+                Alert.alert('Error', 'No se pudo descargar el archivo a través de la API.');
+            } finally {
+                setViewerConfig(prev => ({...prev, isLoading: false}));
+            }
             return;
         }
+
         try {
             setViewerConfig(prev => ({...prev, isLoading: true}));
             const fileUri = FileSystem.documentDirectory + `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
@@ -123,9 +135,20 @@ const PaymentDashboardScreen = () => {
 
     const DocButton = ({ title, type }: { title: string, type: string }) => (
         <TouchableOpacity 
-            onPress={() => {
-                const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
-                Linking.openURL(`${baseUrl}contracts/${account!.reservationId}/file?type=${type}`);
+            onPress={async () => {
+                if (Platform.OS === 'web') {
+                    try {
+                        const path = `contracts/${account!.reservationId}/file?type=${type}`;
+                        const response = await apiClient.get(path, { responseType: 'blob' });
+                        const blobUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                        window.open(blobUrl, '_blank');
+                    } catch (e) {
+                        Alert.alert('Error', 'No se pudo abrir el contrato.');
+                    }
+                } else {
+                    const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
+                    Linking.openURL(`${baseUrl}contracts/${account!.reservationId}/file?type=${type}`);
+                }
             }}
             className="bg-[#1e2a2d]/60 p-5 rounded-[32px] mb-4 border border-white/5 flex-row items-center justify-between"
         >
@@ -346,7 +369,18 @@ const PaymentDashboardScreen = () => {
                                     <Text className="text-white text-center font-display font-bold text-lg mb-2">Previsualización de Documento</Text>
                                     <Text className="text-on-surface-variant text-center mb-10 text-sm">Para visualizar este documento PDF en la web, debe abrirlo en una nueva pestaña.</Text>
                                     <TouchableOpacity 
-                                        onPress={() => Linking.openURL(viewerConfig.url)}
+                                        onPress={async () => {
+                                            try {
+                                                setViewerConfig(prev => ({...prev, isLoading: true}));
+                                                const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
+                                                const blobUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                                                window.open(blobUrl, '_blank');
+                                            } catch (e) {
+                                                Alert.alert('Error', 'No se pudo abrir el documento.');
+                                            } finally {
+                                                setViewerConfig(prev => ({...prev, isLoading: false}));
+                                            }
+                                        }}
                                         className="bg-primary px-10 py-5 rounded-[24px] shadow-2xl flex-row items-center gap-3"
                                     >
                                         <Download color="#0f353b" size={20} />

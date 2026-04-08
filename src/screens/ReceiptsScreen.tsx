@@ -9,6 +9,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { ledgerService } from '../api/ledgerService';
 import { API_BASE_URL } from '../api/client';
+import apiClient from '../api/client';
 import { useAuth } from '../store/AuthContext';
 
 const ReceiptsScreen = () => {
@@ -20,15 +21,26 @@ const ReceiptsScreen = () => {
 
     const handleDownload = async () => {
         if (Platform.OS === 'web') {
-            const link = document.createElement('a');
-            link.href = viewerConfig.url;
-            link.target = '_blank';
-            link.download = `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            try {
+                setViewerConfig(prev => ({...prev, isLoading: true}));
+                const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
+                const blob = new Blob([response.data], { type: viewerConfig.type === 'pdf' ? 'application/pdf' : 'image/jpeg' });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            } catch (e) {
+                Alert.alert('Error', 'No se pudo descargar el archivo a través de la API.');
+            } finally {
+                setViewerConfig(prev => ({...prev, isLoading: false}));
+            }
             return;
         }
+
         try {
             setViewerConfig(prev => ({...prev, isLoading: true}));
             const fileUri = FileSystem.documentDirectory + `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
@@ -36,10 +48,10 @@ const ReceiptsScreen = () => {
             if (await Sharing.isAvailableAsync()) {
                 await Sharing.shareAsync(uri);
             } else {
-                Alert.alert('Descargado', 'El archivo ha sido guardado exitosamente dentro de su dispositivo.');
+                Alert.alert('Descargado', 'El archivo ha sido guardado exitosamente.');
             }
         } catch (e) {
-            Alert.alert('Error al procesar descarga', 'Ocurrió un problema guardando el documento, intente de nuevo.');
+            Alert.alert('Error', 'No se pudo procesar la descarga.');
         } finally {
             setViewerConfig(prev => ({...prev, isLoading: false}));
         }
@@ -118,10 +130,9 @@ const ReceiptsScreen = () => {
                         <TouchableOpacity 
                             className="bg-primary/10 px-3 py-2 rounded-xl border border-primary/20 flex-row items-center gap-1.5"
                             onPress={() => {
-                                const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
                                 setViewerConfig({ 
                                     visible: true, 
-                                    url: `${baseUrl}mobile/receipt/${item.id}/pdf`, 
+                                    url: `mobile/receipt/${item.id}/pdf`, 
                                     type: 'pdf', 
                                     title: `Oficial Lote ${item.lotNumber}`, 
                                     isLoading: false 
@@ -277,7 +288,18 @@ const ReceiptsScreen = () => {
                                     <Text className="text-white text-center font-display font-bold text-lg mb-2">Previsualización de Documento</Text>
                                     <Text className="text-on-surface-variant text-center mb-10 text-sm">Para visualizar este documento PDF en la web, debe abrirlo en una nueva pestaña.</Text>
                                     <TouchableOpacity 
-                                        onPress={() => Linking.openURL(viewerConfig.url)}
+                                        onPress={async () => {
+                                            try {
+                                                setViewerConfig(prev => ({...prev, isLoading: true}));
+                                                const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
+                                                const blobUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                                                window.open(blobUrl, '_blank');
+                                            } catch (e) {
+                                                Alert.alert('Error', 'No se pudo abrir el documento.');
+                                            } finally {
+                                                setViewerConfig(prev => ({...prev, isLoading: false}));
+                                            }
+                                        }}
                                         className="bg-primary px-10 py-5 rounded-[24px] shadow-2xl flex-row items-center gap-3"
                                     >
                                         <Download color="#0f353b" size={20} />
