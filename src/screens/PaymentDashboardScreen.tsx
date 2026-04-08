@@ -1,16 +1,52 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Platform, Linking, ActivityIndicator } from 'react-native';
-import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, CreditCard, Calendar, Landmark, Coins, AlertTriangle, UploadCloud } from 'lucide-react-native';
+import { View, Text, ScrollView, TouchableOpacity, Platform, Linking, ActivityIndicator, Alert, Modal, SafeAreaView, Image } from 'react-native';
+import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, CreditCard, Calendar, Landmark, Coins, AlertTriangle, UploadCloud, X, Download, CheckCircle, Clock } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { WebView } from 'react-native-webview';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ledgerService, LedgerEntry } from '../api/ledgerService';
-import { LotDetailResponse } from '../types/payment.types';
+import { LotDetailResponse, MobileReceipt } from '../types/payment.types';
 
 const PaymentDashboardScreen = () => {
     const navigation = useNavigation<any>();
+    const queryClient = useQueryClient();
     const route = useRoute();
     const { clientId, lotId } = (route.params as { clientId: string, lotId: string }) || {};
+
+    const [viewerConfig, setViewerConfig] = React.useState<{ visible: boolean, url: string, type: 'image' | 'pdf', title: string, isLoading: boolean }>({ visible: false, url: '', type: 'image', title: '', isLoading: false });
+
+    const handleDownload = async () => {
+        try {
+            setViewerConfig(prev => ({...prev, isLoading: true}));
+            const fileUri = FileSystem.documentDirectory + `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
+            const { uri } = await FileSystem.downloadAsync(viewerConfig.url, fileUri);
+            if (await Sharing.isAvailableAsync()) {
+                await Sharing.shareAsync(uri);
+            } else {
+                Alert.alert('Descargado', 'El archivo ha sido guardado exitosamente.');
+            }
+        } catch (e) {
+            Alert.alert('Error', 'No se pudo procesar la descarga.');
+        } finally {
+            setViewerConfig(prev => ({...prev, isLoading: false}));
+        }
+    };
+
+    const mutation = useMutation({
+        mutationFn: ({ id, action }: { id: string; action: 'approve' | 'reject' }) => 
+            ledgerService.verifyReceipt(id, action),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['lotDetails', clientId] });
+            queryClient.invalidateQueries({ queryKey: ['dashboardSummary'] });
+            Alert.alert('Éxito', 'El recibo ha sido procesado correctamente');
+        },
+        onError: () => {
+            Alert.alert('Error', 'No se pudo procesar el recibo');
+        }
+    });
 
     const { data: detailData, isLoading, isError } = useQuery<LotDetailResponse>({
         queryKey: ['lotDetails', clientId],
@@ -38,7 +74,7 @@ const PaymentDashboardScreen = () => {
         );
     }
 
-    const { financials, account } = detailData;
+    const { financials, account, recentReceipts } = detailData;
 
     // Financial Calculation formatters
     const formatCurrency = (val: number | undefined) => (val ?? 0).toLocaleString('es-CL');
@@ -196,8 +232,101 @@ const PaymentDashboardScreen = () => {
                     <Text className="font-display font-bold text-on-surface text-xl mb-6 ml-2">Expediente Legal</Text>
                     <DocButton title="Contrato de Reserva" type="RESERVA" />
                     <DocButton title="Promesa de Compraventa" type="PROMESA" />
+
+                    {/* Historial de Recibos Recientes */}
+                    {recentReceipts && recentReceipts.length > 0 && (
+                        <View className="mt-4">
+                            <Text className="font-display font-bold text-on-surface text-xl mb-6 ml-2">Historial de Pagos</Text>
+                            {recentReceipts.map((receipt: MobileReceipt) => (
+                                <View key={receipt.receiptId} className="bg-[#1e2a2d]/60 p-5 rounded-[32px] mb-4 border border-white/5">
+                                    <View className="flex-row justify-between items-start mb-3">
+                                        <View className="flex-row items-center gap-2">
+                                            {receipt.status === 'APPROVED' ? <CheckCircle color="#2db395" size={16} /> : 
+                                             receipt.status === 'REJECTED' ? <AlertCircle color="#ffb4ab" size={16} /> : 
+                                             <Clock color="#edc062" size={16} />}
+                                            <Text className="text-on-surface font-display font-bold text-sm">
+                                                {receipt.scope === 'PIE' ? 'Pago de Pie' : `Cuota(s) x${receipt.installmentsCount}`}
+                                            </Text>
+                                        </View>
+                                        <Text className="text-primary font-display font-black text-base">${receipt.amountClp.toLocaleString()}</Text>
+                                    </View>
+                                    
+                                    <View className="flex-row justify-between mb-4 mt-1 px-1">
+                                        <View>
+                                            <Text className="text-on-surface-variant text-[9px] uppercase font-black tracking-widest mb-1">Fecha</Text>
+                                            <Text className="text-on-surface text-xs font-mono">{new Date(receipt.createdAt).toLocaleDateString('es-CL')}</Text>
+                                        </View>
+                                        <View>
+                                            <Text className="text-on-surface-variant text-[9px] uppercase font-black tracking-widest mb-1">Estado</Text>
+                                            <Text className={`text-xs font-mono font-bold ${receipt.status === 'APPROVED' ? 'text-emerald-400' : receipt.status === 'REJECTED' ? 'text-error' : 'text-[#edc062]'}`}>
+                                                {receipt.status === 'APPROVED' ? 'Aprobado' : receipt.status === 'REJECTED' ? 'Rechazado' : 'Pendiente'}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    <View className="flex-row justify-between items-center border-t border-white/10 pt-4 mt-2">
+                                        <TouchableOpacity 
+                                            onPress={() => setViewerConfig({ visible: true, url: receipt.receiptUrl, type: 'image', title: `Comprobante ${receipt.receiptId}`, isLoading: false })}
+                                            className="bg-black/40 px-3 py-2 rounded-xl border border-white/10 flex-row items-center gap-1.5"
+                                        >
+                                            <FileText color="#8b9293" size={14} />
+                                            <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-widest">Ver Comprobante</Text>
+                                        </TouchableOpacity>
+
+                                        {receipt.status === 'PENDING' && (
+                                            <View className="flex-row gap-2">
+                                                <TouchableOpacity 
+                                                    onPress={() => mutation.mutate({ id: receipt.receiptId, action: 'reject' })}
+                                                    className="bg-error/20 px-3 py-2 rounded-xl"
+                                                >
+                                                    <Text className="text-error font-bold text-[10px] uppercase">Rechazar</Text>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity 
+                                                    onPress={() => mutation.mutate({ id: receipt.receiptId, action: 'approve' })}
+                                                    className="bg-primary/90 px-3 py-2 rounded-xl"
+                                                >
+                                                    <Text className="text-[#0f353b] font-black text-[10px] uppercase">Aprobar</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )}
+                                    </View>
+                                </View>
+                            ))}
+                        </View>
+                    )}
                 </View>
             </ScrollView>
+
+            {/* In-App Media Viewer Modal */}
+            <Modal visible={viewerConfig.visible} animationType="slide" transparent={true}>
+                <View className="flex-1 bg-black/95">
+                    <SafeAreaView className="flex-1 mt-10">
+                        {/* Header Actions */}
+                        <View className="flex-row justify-between items-center px-4 py-4 border-b border-white/10">
+                            <TouchableOpacity onPress={() => setViewerConfig({...viewerConfig, visible: false})} className="p-2.5 bg-white/10 rounded-full">
+                                <X color="#fff" size={20} />
+                            </TouchableOpacity>
+                            <Text className="text-white font-display font-medium text-sm tracking-widest uppercase">{viewerConfig.title}</Text>
+                            <TouchableOpacity onPress={handleDownload} disabled={viewerConfig.isLoading} className="p-2.5 bg-primary/20 rounded-full border border-primary/30 ml-2">
+                                {viewerConfig.isLoading ? (
+                                    <ActivityIndicator size="small" color="#a8cdd4" />
+                                ) : (
+                                    <Download color="#a8cdd4" size={20} />
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                        
+                        {/* Canvas */}
+                        <View className="flex-1 w-full bg-neutral-900 justify-center">
+                            {viewerConfig.type === 'image' ? (
+                                <Image source={{ uri: viewerConfig.url }} className="w-full h-full" resizeMode="contain" />
+                            ) : viewerConfig.url ? (
+                                <WebView source={{ uri: viewerConfig.url }} style={{ flex: 1, backgroundColor: 'transparent' }} />
+                            ) : null}
+                        </View>
+                    </SafeAreaView>
+                </View>
+            </Modal>
         </View>
     );
 };

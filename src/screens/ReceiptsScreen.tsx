@@ -66,7 +66,10 @@ const ReceiptsScreen = () => {
                      <Clock color="#edc062" size={16} />}
                      <Text className="text-on-surface font-display font-bold text-base">{item.customerName}</Text>
                 </View>
-                <Text className="text-primary font-display font-black text-sm">${item.amount.toLocaleString()}</Text>
+                <View className="items-end">
+                    <Text className="text-primary font-display font-black text-base">${item.amount.toLocaleString()}</Text>
+                    {item.rut && <Text className="text-on-surface-variant text-[9px] font-mono mt-0.5">{item.rut}</Text>}
+                </View>
             </View>
 
             <View className="flex-row justify-between mb-4 mt-1 px-1">

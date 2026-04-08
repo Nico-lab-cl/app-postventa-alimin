@@ -3,10 +3,12 @@ import { View, Text, ScrollView, TouchableOpacity, RefreshControl, Image, Platfo
 import { useQuery } from '@tanstack/react-query';
 import { Search, ArrowLeft, RefreshCcw, Landmark, BellRing, FileText, TrendingUp, Settings, Lock, LogOut, User, ChevronRight, X } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import { ledgerService } from '../api/ledgerService';
 import { useAuth } from '../store/AuthContext';
 
 const DashboardScreen = () => {
+    const navigation = useNavigation<any>();
     const { signOut } = useAuth();
     const [isProfileMenuVisible, setIsProfileMenuVisible] = React.useState(false);
     const [isPasswordModalVisible, setIsPasswordModalVisible] = React.useState(false);
@@ -106,7 +108,10 @@ const DashboardScreen = () => {
                         </View>
 
                         {/* Recibos Pendientes Card */}
-                        <View className="bg-[#1e2a2d]/60 p-6 rounded-3xl border border-primary-container/20 h-32 flex-row justify-between items-center overflow-hidden">
+                        <TouchableOpacity 
+                            onPress={() => navigation.navigate('Receipts')}
+                            className="bg-[#1e2a2d]/60 p-6 rounded-3xl border border-primary-container/20 h-32 flex-row justify-between items-center overflow-hidden active:bg-[#1e2a2d]/80"
+                        >
                             <View className="absolute -right-8 -top-8 w-32 h-32 bg-primary-container/20 rounded-full" />
                             <View>
                                 <View className="flex-row items-center gap-3">
@@ -117,8 +122,8 @@ const DashboardScreen = () => {
                                     </View>
                                 </View>
                             </View>
-                            <Text className="text-4xl font-display font-black text-primary-fixed-dim tracking-tighter">{data?.pendingReceipts || 156}</Text>
-                        </View>
+                            <Text className="text-4xl font-display font-black text-primary-fixed-dim tracking-tighter">{data?.pendingReceipts || 0}</Text>
+                        </TouchableOpacity>
                     </View>
 
                     {/* Action Section */}
@@ -132,7 +137,10 @@ const DashboardScreen = () => {
                                 <Text className="text-on-surface-variant text-xs">Última: Hace 14 minutos</Text>
                             </View>
                         </View>
-                        <TouchableOpacity className="w-full bg-secondary py-4 rounded-full shadow-lg shadow-secondary/10 items-center">
+                        <TouchableOpacity 
+                            onPress={() => navigation.navigate('Receipts')}
+                            className="w-full bg-secondary py-4 rounded-full shadow-lg shadow-secondary/10 items-center active:bg-secondary/80"
+                        >
                             <Text className="text-on-secondary font-display font-bold uppercase tracking-widest text-xs">Procesar Recibos</Text>
                         </TouchableOpacity>
                     </View>
