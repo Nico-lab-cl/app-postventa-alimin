@@ -52,6 +52,7 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
             },
             include: { 
                 reservations: { 
+                    where: { status: 'paid', pie_status: 'paid' },
                     orderBy: { created_at: 'desc' },
                     take: 1,
                     include: { receipts: { where: { status: 'APPROVED' } } }
@@ -147,7 +148,7 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
 app.get('/api/mobile/postventa/summary', authenticate, async (req: Request, res: Response) => {
   try {
     const activeContracts = await prisma.reservation.count({
-      where: { lot: { status: { in: ['sold', 'reserved'] } } }
+      where: { status: 'paid', pie_status: 'paid' }
     });
     const receipts = await prisma.paymentReceipt.findMany({ where: { status: 'APPROVED' } });
     const totalCollection = receipts.reduce((sum: number, r: any) => sum + r.amount_clp, 0);
@@ -160,15 +161,15 @@ app.get('/api/mobile/postventa/summary', authenticate, async (req: Request, res:
 app.get('/api/mobile/postventa/lot-details/:id', authenticate, async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const reservation = await prisma.reservation.findUnique({
-            where: { id },
+        const reservation = await prisma.reservation.findFirst({
+            where: { id, status: 'paid', pie_status: 'paid' },
             include: { 
                 lot: true, 
                 receipts: { orderBy: { created_at: 'desc' }, take: 10 } 
             }
         });
 
-        if (!reservation) return res.status(404).json({ error: 'Reserva no encontrada' });
+        if (!reservation) return res.status(404).json({ error: 'Reserva no encontrada o no está pagada completamente' });
 
         const lot = reservation.lot;
         

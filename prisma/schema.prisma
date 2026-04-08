@@ -35,6 +35,7 @@ model Reservation {
   email      String
   phone      String
   rut        String?
+  status     String    @default("pending") // paid, pending, cancelled
   pipeline_stage        String  @default("RESERVA_PAGADA")
   notes                 String?
   pie                   Int?      @default(0)
@@ -49,6 +50,7 @@ model Reservation {
   legacy_installment_start_date  DateTime? 
   legacy_debt_start_date         DateTime?
   mora_frozen                    Boolean   @default(false)
+  is_promo                       Boolean   @default(false)
 
   // Relations
   lot          Lot              @relation(fields: [lot_id], references: [id])
