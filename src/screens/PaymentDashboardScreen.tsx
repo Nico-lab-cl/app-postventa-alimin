@@ -25,7 +25,7 @@ const PaymentDashboardScreen = () => {
             try {
                 setViewerConfig(prev => ({...prev, isLoading: true}));
                 const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
-                const blob = new Blob([response.data], { type: viewerConfig.type === 'pdf' ? 'application/pdf' : 'image/jpeg' });
+                const blob = response.data;
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
@@ -35,7 +35,7 @@ const PaymentDashboardScreen = () => {
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
             } catch (e) {
-                Alert.alert('Error', 'No se pudo descargar el archivo a través de la API.');
+                Alert.alert('Error', 'No se pudo descargar el archivo.');
             } finally {
                 setViewerConfig(prev => ({...prev, isLoading: false}));
             }
@@ -138,16 +138,16 @@ const PaymentDashboardScreen = () => {
             onPress={async () => {
                 if (Platform.OS === 'web') {
                     try {
-                        const path = `contracts/${account!.reservationId}/file?type=${type}`;
+                        const path = `mobile/postventa/contracts/${clientId}/file?type=${type}`;
                         const response = await apiClient.get(path, { responseType: 'blob' });
-                        const blobUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                        const blobUrl = window.URL.createObjectURL(response.data);
                         window.open(blobUrl, '_blank');
                     } catch (e) {
-                        Alert.alert('Error', 'No se pudo abrir el contrato.');
+                        Alert.alert('Error', 'No se pudo abrir el documento.');
                     }
                 } else {
                     const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
-                    Linking.openURL(`${baseUrl}contracts/${account!.reservationId}/file?type=${type}`);
+                    Linking.openURL(`${baseUrl}mobile/postventa/contracts/${clientId}/file?type=${type}`);
                 }
             }}
             className="bg-[#1e2a2d]/60 p-5 rounded-[32px] mb-4 border border-white/5 flex-row items-center justify-between"
@@ -373,7 +373,7 @@ const PaymentDashboardScreen = () => {
                                             try {
                                                 setViewerConfig(prev => ({...prev, isLoading: true}));
                                                 const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
-                                                const blobUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                                                const blobUrl = window.URL.createObjectURL(response.data);
                                                 window.open(blobUrl, '_blank');
                                             } catch (e) {
                                                 Alert.alert('Error', 'No se pudo abrir el documento.');

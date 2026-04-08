@@ -24,7 +24,8 @@ const ReceiptsScreen = () => {
             try {
                 setViewerConfig(prev => ({...prev, isLoading: true}));
                 const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
-                const blob = new Blob([response.data], { type: viewerConfig.type === 'pdf' ? 'application/pdf' : 'image/jpeg' });
+                // Axios response.data IS the blob when responseType is 'blob'
+                const blob = response.data;
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
@@ -34,7 +35,7 @@ const ReceiptsScreen = () => {
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
             } catch (e) {
-                Alert.alert('Error', 'No se pudo descargar el archivo a través de la API.');
+                Alert.alert('Error', 'No se pudo descargar el archivo.');
             } finally {
                 setViewerConfig(prev => ({...prev, isLoading: false}));
             }
@@ -132,7 +133,7 @@ const ReceiptsScreen = () => {
                             onPress={() => {
                                 setViewerConfig({ 
                                     visible: true, 
-                                    url: `mobile/receipt/${item.id}/pdf`, 
+                                    url: `mobile/postventa/receipt/${item.id}/pdf`, 
                                     type: 'pdf', 
                                     title: `Oficial Lote ${item.lotNumber}`, 
                                     isLoading: false 
@@ -292,7 +293,7 @@ const ReceiptsScreen = () => {
                                             try {
                                                 setViewerConfig(prev => ({...prev, isLoading: true}));
                                                 const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
-                                                const blobUrl = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+                                                const blobUrl = window.URL.createObjectURL(response.data);
                                                 window.open(blobUrl, '_blank');
                                             } catch (e) {
                                                 Alert.alert('Error', 'No se pudo abrir el documento.');

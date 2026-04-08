@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Search, Filter, ArrowLeft, Landmark, Map, ChevronRight, TrendingUp, Edit3, Trash2, FileText, User, CheckCircle, Clock, Zap } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ledgerService, LedgerEntry } from '../api/ledgerService';
+import { API_BASE_URL } from '../api/client';
+import apiClient from '../api/client';
 import { useAuth } from '../store/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 
@@ -203,7 +205,21 @@ const LedgerScreen = () => {
                                     <Trash2 color="#ffb4ab" size={14} />
                                 </TouchableOpacity>
                                 <TouchableOpacity 
-                                    onPress={() => Linking.openURL(`https://aliminlomasdelmar.com/api/contracts/${item.customerId}/file?type=RESERVA`)}
+                                    onPress={async () => {
+                                        if (Platform.OS === 'web') {
+                                            try {
+                                                const path = `mobile/postventa/contracts/${item.customerId}/file?type=RESERVA`;
+                                                const response = await apiClient.get(path, { responseType: 'blob' });
+                                                const blobUrl = window.URL.createObjectURL(response.data);
+                                                window.open(blobUrl, '_blank');
+                                            } catch (e) {
+                                                Alert.alert('Error', 'No se pudo abrir el documento.');
+                                            }
+                                        } else {
+                                            const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
+                                            Linking.openURL(`${baseUrl}mobile/postventa/contracts/${item.customerId}/file?type=RESERVA`);
+                                        }
+                                    }}
                                     className="bg-secondary/10 px-5 py-3 rounded-2xl items-center flex-row justify-center"
                                 >
                                     <FileText color="#edc062" size={14} />

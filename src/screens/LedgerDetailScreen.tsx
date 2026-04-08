@@ -4,6 +4,9 @@ import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, Ale
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { LedgerEntry } from '../api/ledgerService';
+import { API_BASE_URL } from '../api/client';
+import apiClient from '../api/client';
+import { Alert } from 'react-native';
 
 const LedgerDetailScreen = () => {
     const navigation = useNavigation<any>();
@@ -33,7 +36,21 @@ const LedgerDetailScreen = () => {
 
     const DocButton = ({ title, type }: { title: string; type: string }) => (
         <TouchableOpacity 
-            onPress={() => Linking.openURL(`https://aliminlomasdelmar.com/api/contracts/${entry.customerId}/file?type=${type}`)}
+            onPress={async () => {
+                if (Platform.OS === 'web') {
+                    try {
+                        const path = `mobile/postventa/contracts/${entry.customerId}/file?type=${type}`;
+                        const response = await apiClient.get(path, { responseType: 'blob' });
+                        const blobUrl = window.URL.createObjectURL(response.data);
+                        window.open(blobUrl, '_blank');
+                    } catch (e) {
+                        Alert.alert('Error', 'No se pudo abrir el documento.');
+                    }
+                } else {
+                    const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
+                    Linking.openURL(`${baseUrl}mobile/postventa/contracts/${entry.customerId}/file?type=${type}`);
+                }
+            }}
             className="bg-[#1e2a2d]/60 p-5 rounded-3xl mb-4 border border-white/5 flex-row items-center justify-between"
         >
             <View className="flex-row items-center gap-4">
