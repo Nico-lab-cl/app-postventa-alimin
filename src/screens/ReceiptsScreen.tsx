@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert, Image, RefreshControl, Platform, ScrollView, Modal, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert, Image, RefreshControl, Platform, ScrollView, Modal, SafeAreaView, Linking } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Check, X, ArrowLeft, FileText, ShieldCheck, CheckCircle, Clock, Download } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -18,6 +18,16 @@ const ReceiptsScreen = () => {
     const [viewerConfig, setViewerConfig] = React.useState<{ visible: boolean, url: string, type: 'image' | 'pdf', title: string, isLoading: boolean }>({ visible: false, url: '', type: 'image', title: '', isLoading: false });
 
     const handleDownload = async () => {
+        if (Platform.OS === 'web') {
+            const link = document.createElement('a');
+            link.href = viewerConfig.url;
+            link.target = '_blank';
+            link.download = `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            return;
+        }
         try {
             setViewerConfig(prev => ({...prev, isLoading: true}));
             const fileUri = FileSystem.documentDirectory + `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
@@ -244,7 +254,26 @@ const ReceiptsScreen = () => {
                         {/* Canvas */}
                         <View className="flex-1 w-full bg-neutral-900 justify-center">
                             {viewerConfig.type === 'image' ? (
-                                <Image source={{ uri: viewerConfig.url }} className="w-full h-full" resizeMode="contain" />
+                                <Image 
+                                    key={viewerConfig.url}
+                                    source={{ uri: viewerConfig.url }} 
+                                    className="w-full h-full" 
+                                    resizeMode="contain" 
+                                    style={Platform.OS === 'web' ? { width: '100%', height: '100%', minHeight: 400 } : {}}
+                                />
+                            ) : Platform.OS === 'web' ? (
+                                <View className="flex-1 items-center justify-center p-8">
+                                    <FileText color="#a8cdd4" size={64} style={{ marginBottom: 20 }} />
+                                    <Text className="text-white text-center font-display font-bold text-lg mb-2">Previsualización de Documento</Text>
+                                    <Text className="text-on-surface-variant text-center mb-10 text-sm">Para visualizar este documento PDF en la web, debe abrirlo en una nueva pestaña.</Text>
+                                    <TouchableOpacity 
+                                        onPress={() => Linking.openURL(viewerConfig.url)}
+                                        className="bg-primary px-10 py-5 rounded-[24px] shadow-2xl flex-row items-center gap-3"
+                                    >
+                                        <Download color="#0f353b" size={20} />
+                                        <Text className="text-[#0f353b] font-black uppercase tracking-widest text-xs">Abrir en Nueva Pestaña</Text>
+                                    </TouchableOpacity>
+                                </View>
                             ) : viewerConfig.url ? (
                                 <WebView source={{ uri: viewerConfig.url }} style={{ flex: 1, backgroundColor: 'transparent' }} />
                             ) : null}
