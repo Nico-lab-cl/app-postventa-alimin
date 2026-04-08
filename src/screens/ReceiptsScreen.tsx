@@ -151,23 +151,6 @@ const ReceiptsScreen = () => {
                         <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-widest">Visualizar Comprobante</Text>
                     </TouchableOpacity>
                     
-                    {item.status === 'APPROVED' && (
-                        <TouchableOpacity 
-                            className="bg-primary/10 px-3 py-2 rounded-xl border border-primary/20 flex-row items-center gap-1.5"
-                            onPress={() => {
-                                setViewerConfig({ 
-                                    visible: true, 
-                                    url: `mobile/postventa/receipts/${item.id}/pdf`, 
-                                    type: 'pdf', 
-                                    title: `Oficial Lote ${item.lotNumber}`, 
-                                    isLoading: false 
-                                });
-                            }}
-                        >
-                            <ShieldCheck color="#a8cdd4" size={14} />
-                            <Text className="text-primary font-bold text-[10px] uppercase tracking-wider">Oficial</Text>
-                        </TouchableOpacity>
-                    )}
                 </View>
                 
                 {item.status === 'PENDING' && (
