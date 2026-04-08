@@ -280,7 +280,7 @@ const PaymentDashboardScreen = () => {
                                             className="bg-black/40 px-3 py-2 rounded-xl border border-white/10 flex-row items-center gap-1.5"
                                         >
                                             <FileText color="#8b9293" size={14} />
-                                            <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-widest">Ver Comprobante</Text>
+                                            <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-widest">Visualizar Comprobante</Text>
                                         </TouchableOpacity>
 
                                         {receipt.status === 'PENDING' && (
