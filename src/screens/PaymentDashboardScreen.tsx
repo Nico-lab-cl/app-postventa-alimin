@@ -8,6 +8,7 @@ import * as Sharing from 'expo-sharing';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ledgerService, LedgerEntry } from '../api/ledgerService';
+import { API_BASE_URL } from '../api/client';
 import { LotDetailResponse, MobileReceipt } from '../types/payment.types';
 
 const PaymentDashboardScreen = () => {
@@ -120,10 +121,13 @@ const PaymentDashboardScreen = () => {
         </View>
     );
 
-    const DocButton = ({ title, type }: { title: string; type: string }) => (
+    const DocButton = ({ title, type }: { title: string, type: string }) => (
         <TouchableOpacity 
-            onPress={() => Linking.openURL(`https://aliminlomasdelmar.com/api/contracts/${account!.reservationId}/file?type=${type}`)}
-            className="bg-[#1e2a2d]/60 p-5 rounded-3xl mb-4 border border-white/5 flex-row items-center justify-between"
+            onPress={() => {
+                const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
+                Linking.openURL(`${baseUrl}contracts/${account!.reservationId}/file?type=${type}`);
+            }}
+            className="bg-[#1e2a2d]/60 p-5 rounded-[32px] mb-4 border border-white/5 flex-row items-center justify-between"
         >
             <View className="flex-row items-center gap-4">
                 <View className="bg-primary/10 p-2.5 rounded-xl">
