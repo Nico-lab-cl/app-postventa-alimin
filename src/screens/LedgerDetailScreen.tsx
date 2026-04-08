@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Platform, Linking } from 'react-native';
-import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, Landmark } from 'lucide-react-native';
+import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, Landmark, AlertTriangle, Clock } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { LedgerEntry } from '../api/ledgerService';
@@ -34,6 +34,44 @@ const LedgerDetailScreen = () => {
         </View>
     );
 
+    const StatusBadge = ({ status }: { status: string }) => {
+        switch (status) {
+            case 'LATE':
+                return (
+                    <View className="bg-error/10 px-3 py-1 rounded-full border border-error/20 flex-row items-center gap-1">
+                        <AlertCircle color="#ffb4ab" size={8} />
+                        <Text className="text-error text-[8px] font-black uppercase tracking-widest">En Mora</Text>
+                    </View>
+                );
+            case 'GRACE':
+                return (
+                    <View className="bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 flex-row items-center gap-1">
+                        <AlertTriangle color="#edc062" size={8} />
+                        <Text className="text-amber-400 text-[8px] font-black uppercase tracking-widest">Gracia</Text>
+                    </View>
+                );
+            case 'UPCOMING':
+                return (
+                    <View className="bg-primary/10 px-3 py-1 rounded-full border border-primary/20 flex-row items-center gap-1">
+                        <Clock color="#a8cdd4" size={8} />
+                        <Text className="text-primary text-[8px] font-black uppercase tracking-widest">Próximo</Text>
+                    </View>
+                );
+            case 'OK':
+                return (
+                    <View className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex-row items-center gap-1">
+                        <CheckCircle2 color="#2db395" size={8} />
+                        <Text className="text-emerald-400 text-[8px] font-black uppercase tracking-widest">Al Día</Text>
+                    </View>
+                );
+            default:
+                return (
+                    <View className="bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                        <Text className="text-on-surface-variant text-[8px] font-black uppercase tracking-widest">Disponible</Text>
+                    </View>
+                );
+        }
+    };
     const DocButton = ({ title, type }: { title: string; type: string }) => (
         <TouchableOpacity 
             onPress={async () => {
@@ -68,8 +106,12 @@ const LedgerDetailScreen = () => {
             <View className="px-6 h-28 flex-row items-center justify-between z-50 bg-neutral-950/60 pb-2" style={{ paddingTop: Platform.OS === 'ios' ? 44 : 20 }}>
                 <TouchableOpacity onPress={() => navigation.goBack()} className="flex-row items-center gap-2">
                     <ArrowLeft color="#a8cdd4" size={24} />
-                    <Text className="font-display font-black text-[#edc062] tracking-tighter text-xl uppercase">Lote {entry.lotId}</Text>
+                    <View>
+                        <Text className="font-display font-black text-[#edc062] tracking-tighter text-xl uppercase leading-none">Lote {entry.lotId}</Text>
+                        <Text className="text-on-surface-variant text-[8px] uppercase tracking-widest font-black">{entry.stageName}</Text>
+                    </View>
                 </TouchableOpacity>
+                <StatusBadge status={entry.status} />
             </View>
 
             <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }}>

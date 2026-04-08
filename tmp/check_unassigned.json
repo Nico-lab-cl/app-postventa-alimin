@@ -1,0 +1,78 @@
+﻿[
+  {
+    "id": 35,
+    "number": "35",
+    "stage": 1,
+    "area_m2": 390,
+    "price_total_clp": 43990000,
+    "reservation_amount_clp": 500000,
+    "status": "sold",
+    "cuotas": 77,
+    "pie": 2000000,
+    "valor_cuota": 550000,
+    "last_installment_amount": 190000,
+    "updated_at": "2026-02-26T01:03:02.388Z",
+    "reservations": [
+      {
+        "id": "468bd4c5-05a5-43e1-b30e-b883c0b332af",
+        "lot_id": 35,
+        "name": "Nicole Martinez",
+        "last_name": null,
+        "email": "nicolemc176@gmail.com",
+        "phone": "+56974380942",
+        "rut": "17.283.718-2",
+        "pipeline_stage": "RESERVA_PAGADA",
+        "notes": null,
+        "pie": 0,
+        "extra_paid_amount": 0,
+        "pending_amount": 0,
+        "pie_status": "PENDING",
+        "installments_paid": 0,
+        "created_at": "2026-02-25T15:53:43.957Z",
+        "is_legacy": false,
+        "legacy_installment_start_date": null,
+        "legacy_debt_start_date": null,
+        "mora_frozen": false,
+        "buyer_id": null
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "number": "10",
+    "stage": 1,
+    "area_m2": 200,
+    "price_total_clp": 35990000,
+    "reservation_amount_clp": 500000,
+    "status": "sold",
+    "cuotas": 63,
+    "pie": 1500000,
+    "valor_cuota": 550000,
+    "last_installment_amount": 390000,
+    "updated_at": "2026-04-04T19:46:49.256Z",
+    "reservations": [
+      {
+        "id": "a297182a-106f-4af9-ad55-1e930b15caae",
+        "lot_id": 10,
+        "name": "Jershon brandon Hern├índez alamana",
+        "last_name": null,
+        "email": "hernandezjershon2412@gmail.com",
+        "phone": "940179353",
+        "rut": "20.560.522-3",
+        "pipeline_stage": "RESERVA_PAGADA",
+        "notes": null,
+        "pie": 0,
+        "extra_paid_amount": 0,
+        "pending_amount": 0,
+        "pie_status": "PENDING",
+        "installments_paid": 0,
+        "created_at": "2026-03-21T18:30:47.307Z",
+        "is_legacy": false,
+        "legacy_installment_start_date": null,
+        "legacy_debt_start_date": null,
+        "mora_frozen": false,
+        "buyer_id": null
+      }
+    ]
+  }
+]

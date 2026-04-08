@@ -4,7 +4,7 @@ import path from 'path';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
-import { getInstallmentDueDate, calculateTotalInterest, calculateDailyInterest } from '../lib/financials';
+import { getInstallmentDueDate, calculateTotalInterest } from '../lib/financials';
 
 const prisma = new PrismaClient();
 const app = express();
@@ -69,7 +69,7 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
             let nextDueDate = null;
             let lateDays = 0;
             let penaltyAmount = 0;
-            let status: 'OK' | 'LATE' | 'UPCOMING' | 'AVAILABLE' = 'AVAILABLE';
+            let status: 'OK' | 'LATE' | 'UPCOMING' | 'AVAILABLE' | 'GRACE' = 'AVAILABLE';
 
             if (activeRes) {
                 totalPaid = activeRes.receipts?.reduce((sum: number, r: any) => sum + r.amount_clp, 0) || 0;
@@ -83,21 +83,26 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
                     nextDueDate = getInstallmentDueDate(baseDate, paidCuotas + 1, activeRes.is_legacy);
                     
                     penaltyAmount = calculateTotalInterest(
-                        lot.price_total_clp || 0,
-                        lot.area_m2 || 200,
                         nextDueDate,
                         activeRes.is_legacy,
                         new Date(),
-                        activeRes.mora_frozen,
-                        activeRes.legacy_debt_start_date
+                        activeRes.mora_frozen
                     );
 
+                    const now = new Date();
+                    const diffToday = now.getTime() - nextDueDate.getTime();
+                    lateDays = Math.ceil(diffToday / (1000 * 60 * 60 * 24));
+
                     if (penaltyAmount > 0) {
-                        const daily = calculateDailyInterest(lot.price_total_clp || 0, lot.area_m2 || 200);
-                        lateDays = Math.round(penaltyAmount / daily);
+                        status = 'LATE';
+                    } else if (lateDays > 0 && lateDays <= 5) {
+                        status = 'GRACE';
+                    } else if (lateDays >= -5 && lateDays <= 0) {
+                        status = 'UPCOMING';
+                    } else {
+                        status = 'OK';
                     }
                 }
-                status = penaltyAmount > 0 ? 'LATE' : (pendingBalance === 0 ? 'OK' : 'UPCOMING');
             }
 
             return {
@@ -123,7 +128,11 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
                 penaltyAmount,
                 status: activeRes ? status : 'AVAILABLE',
                 lotStatus: lot.status, // sold, reserved, available
-                badges: activeRes ? [activeRes.is_legacy ? 'LGC' : 'NEW'] : []
+                badges: activeRes ? [
+                    ...(activeRes.is_legacy ? ['LGC'] : []),
+                    ...(activeRes.pie_status === 'PAID' ? ['PIE'] : []),
+                    'RES'
+                ] : []
             };
         });
 
@@ -168,7 +177,7 @@ app.get('/api/mobile/postventa/lot-details/:id', authenticate, async (req: Reque
         let nextDueDate = null;
         let lateDays = 0;
         let penaltyAmount = 0;
-        let status: 'OK' | 'LATE' | 'UPCOMING' | 'AVAILABLE' = 'OK';
+        let status: 'OK' | 'LATE' | 'UPCOMING' | 'AVAILABLE' | 'GRACE' = 'OK';
 
         const paidCuotas = reservation.installments_paid || 0;
         const totalCuotas = lot.cuotas || 0;
@@ -178,21 +187,24 @@ app.get('/api/mobile/postventa/lot-details/:id', authenticate, async (req: Reque
             nextDueDate = getInstallmentDueDate(baseDate, paidCuotas + 1, reservation.is_legacy);
             
             penaltyAmount = calculateTotalInterest(
-                lot.price_total_clp || 0,
-                lot.area_m2 || 200,
                 nextDueDate,
                 reservation.is_legacy,
                 new Date(),
-                reservation.mora_frozen,
-                reservation.legacy_debt_start_date
+                reservation.mora_frozen
             );
 
+            const now = new Date();
+            const diffToday = now.getTime() - nextDueDate.getTime();
+            lateDays = Math.ceil(diffToday / (1000 * 60 * 60 * 24));
+
             if (penaltyAmount > 0) {
-                const daily = calculateDailyInterest(lot.price_total_clp || 0, lot.area_m2 || 200);
-                lateDays = Math.round(penaltyAmount / daily);
                 status = 'LATE';
+            } else if (lateDays > 0 && lateDays <= 5) {
+                status = 'GRACE';
+            } else if (lateDays >= -5 && lateDays <= 0) {
+                status = 'UPCOMING';
             } else {
-                status = pendingBalance === 0 ? 'OK' : 'UPCOMING';
+                status = 'OK';
             }
         }
 

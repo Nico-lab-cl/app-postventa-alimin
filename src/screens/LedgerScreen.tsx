@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, RefreshControl, Image, Platform, Alert, Linking } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, Filter, ArrowLeft, Landmark, Map, ChevronRight, TrendingUp, Edit3, Trash2, FileText, User, CheckCircle, Clock, Zap } from 'lucide-react-native';
+import { Search, Filter, ArrowLeft, Landmark, Map, ChevronRight, TrendingUp, Edit3, Trash2, FileText, User, CheckCircle2, Clock, Zap, AlertTriangle, AlertCircle } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ledgerService, LedgerEntry } from '../api/ledgerService';
 import { API_BASE_URL } from '../api/client';
@@ -74,28 +74,48 @@ const LedgerScreen = () => {
         );
     };
 
-    const StatusBadge = ({ computedStatus, isPaid }: { computedStatus: string, isPaid: boolean }) => {
-        if (computedStatus === 'sold') {
+    const StatusBadge = ({ status, moraFrozen }: { status: string, moraFrozen: boolean }) => {
+        if (status === 'AVAILABLE') {
             return (
-                <View className="flex-row gap-2">
-                    {isPaid && (
-                        <View className="bg-primary/10 px-3 py-1 rounded-full border border-primary/20 flex-row items-center gap-1">
-                            <CheckCircle color="#a8cdd4" size={8} />
-                            <Text className="text-primary text-[8px] font-black uppercase tracking-widest">Pagado</Text>
-                        </View>
-                    )}
-                    <View className="border border-[#ffb4ab]/40 bg-[#ffb4ab]/10 px-3 py-1 rounded-full">
-                        <Text className="text-[#ffb4ab] text-[8px] font-black uppercase tracking-widest">Vendido</Text>
-                    </View>
+                <View className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                    <Text className="text-emerald-400 text-[8px] font-black uppercase tracking-widest">Disponible</Text>
                 </View>
             );
         }
 
-        return (
-            <View className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                <Text className="text-emerald-400 text-[8px] font-black uppercase tracking-widest">Disponible</Text>
-            </View>
-        );
+        const normalizedStatus = moraFrozen ? 'OK' : status;
+
+        switch (normalizedStatus) {
+            case 'LATE':
+                return (
+                    <View className="bg-error/10 px-3 py-1 rounded-full border border-error/20 flex-row items-center gap-1">
+                        <AlertCircle color="#ffb4ab" size={8} />
+                        <Text className="text-error text-[8px] font-black uppercase tracking-widest">En Mora</Text>
+                    </View>
+                );
+            case 'GRACE':
+                return (
+                    <View className="bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 flex-row items-center gap-1">
+                        <AlertTriangle color="#edc062" size={8} />
+                        <Text className="text-amber-400 text-[8px] font-black uppercase tracking-widest">Gracia</Text>
+                    </View>
+                );
+            case 'UPCOMING':
+                return (
+                    <View className="bg-primary/10 px-3 py-1 rounded-full border border-primary/20 flex-row items-center gap-1">
+                        <Clock color="#a8cdd4" size={8} />
+                        <Text className="text-primary text-[8px] font-black uppercase tracking-widest">Próximo</Text>
+                    </View>
+                );
+            case 'OK':
+            default:
+                return (
+                    <View className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 flex-row items-center gap-1">
+                        <CheckCircle2 color="#2db395" size={8} />
+                        <Text className="text-emerald-400 text-[8px] font-black uppercase tracking-widest">Al Día</Text>
+                    </View>
+                );
+        }
     };
 
     const LedgerCard = ({ item }: { item: LedgerEntry & { computedStatus: string } }) => {
@@ -111,7 +131,16 @@ const LedgerScreen = () => {
                             <Text className="text-secondary font-display font-black text-2xl tracking-tighter">{item.lotId}</Text>
                             <Text className="text-on-surface-variant text-[10px] uppercase tracking-widest font-black">{item.stageName}</Text>
                         </View>
-                        <StatusBadge computedStatus={item.computedStatus} isPaid={isPaid} />
+                        <View className="items-end gap-2">
+                            <StatusBadge status={isAvailable ? 'AVAILABLE' : item.status} moraFrozen={false} />
+                            {!isAvailable && item.badges && item.badges.length > 0 && (
+                                <View className="flex-row gap-1">
+                                    {item.badges.map(b => (
+                                        <Text key={b} className="text-[7px] font-black text-on-surface-variant opacity-50 bg-white/5 px-1.5 py-0.5 rounded">{b}</Text>
+                                    ))}
+                                </View>
+                            )}
+                        </View>
                     </View>
 
                     {/* Contextual Content Segment */}

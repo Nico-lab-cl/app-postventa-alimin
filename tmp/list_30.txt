@@ -1,0 +1,31 @@
+﻿Current Count: 30
+Lote: 34, Name: Marcela Navarrete
+Lote: 13, Name: Jose Domingo Torres Prieto
+Lote: 29, Name: ROMINA DURAN MU├æOZ
+Lote: 4, Name: Alejandra Beiza
+Lote: 30, Name: Mayerling Pinto 
+Lote: 44, Name: Karina Astorga
+Lote: 3, Name: Ricardo Salazar Horta
+Lote: 47, Name: Monica Rios
+Lote: 16, Name: Nicolas Andres Correa Irribarra
+Lote: 17, Name: Carolina del Carmen Rojas Donoso
+Lote: 32, Name: Gloria Sauzo
+Lote: 31, Name: Luis Gilberto S├ínchez Alfaro
+Lote: 20, Name: Alexis Patricio Leiva pardo
+Lote: 33, Name: Marcelo Alejandro Marquez Aldana
+Lote: 1, Name: Macarena Carrasco
+Lote: 46, Name: Pamela Salazar
+Lote: 43, Name: Paola Zu├▒iga
+Lote: 9, Name: Eduardo Contreras Ibarra
+Lote: 45, Name: Nicole Leyton
+Lote: 8, Name: Guillermo
+Lote: 42, Name: Eduardo Arroyo
+Lote: 41, Name: Karen Andrea Gonzalez Isamit
+Lote: 2, Name: Luisa Molina
+Lote: 5, Name: Francisca
+Lote: 36, Name: Soledad Bravo Lopez
+Lote: 37, Name: Eugenia Rojas
+Lote: 6, Name: Paola Riquelme
+Lote: 40, Name: Maria jose vergara diaz
+Lote: 39, Name: Bernardita Herrera
+Lote: 38, Name: Jessica Aravena

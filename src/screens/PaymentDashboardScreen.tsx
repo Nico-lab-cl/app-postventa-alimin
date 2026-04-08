@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Platform, Linking, ActivityIndicator, Alert, Modal, SafeAreaView, Image } from 'react-native';
-import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, CreditCard, Calendar, Landmark, Coins, AlertTriangle, UploadCloud, X, Download, CheckCircle, Clock } from 'lucide-react-native';
+import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, Landmark, ShieldCheck, Download, X, ExternalLink, Calendar, MapPin, Eye, AlertTriangle, Shield, Gavel, Files, Clock, Coins, Upload } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { WebView } from 'react-native-webview';
 import * as FileSystem from 'expo-file-system';
@@ -123,6 +123,7 @@ const PaymentDashboardScreen = () => {
     }
 
     const { financials, account, recentReceipts } = detailData;
+    const { entry } = (route.params as { entry: any }) || {};
 
     const formatCurrency = (val: number | undefined) => (val ?? 0).toLocaleString('es-CL');
     const formatArea = (val: number | undefined) => (val ?? 0).toFixed(2);
@@ -130,17 +131,16 @@ const PaymentDashboardScreen = () => {
     const getStatusInfo = (status: string) => {
         switch (status) {
             case 'LATE': return { color: '#ffb4ab', label: 'En Mora', icon: <AlertCircle color="#ffb4ab" size={20} /> };
-            case 'GRACE': return { color: '#edc062', label: 'En Período de Gracia', icon: <AlertTriangle color="#edc062" size={20} /> };
-            case 'UPCOMING': return { color: '#a8cdd4', label: 'Próximo Cobro', icon: <CheckCircle2 color="#a8cdd4" size={20} /> };
-            case 'OK': return { color: '#a8cdd4', label: 'Al Día', icon: <CheckCircle2 color="#a8cdd4" size={20} /> };
+            case 'GRACE': return { color: '#edc062', label: 'Periodo Gracia', icon: <AlertTriangle color="#edc062" size={20} /> };
+            case 'UPCOMING': return { color: '#a8cdd4', label: 'Próximo Cobro', icon: <Clock color="#a8cdd4" size={20} /> };
+            case 'OK': return { color: '#2db395', label: 'Al Día', icon: <CheckCircle2 color="#2db395" size={20} /> };
             default: return { color: '#c1c8c9', label: 'Disponible', icon: <AlertCircle color="#c1c8c9" size={20} /> };
         }
     };
     
     const DateFormatter = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'long' });
     const formattedDueDate = account?.nextDueDate ? DateFormatter.format(new Date(account.nextDueDate)) : 'Sin Vencimiento';
-    const graceDate = account?.nextDueDate ? new Date(new Date(account.nextDueDate).setDate(new Date(account.nextDueDate).getDate() + 5)) : null;
-
+    
     const statusInfo = getStatusInfo(account!.moraStatus || 'OK');
     const investmentProgress = financials.totalCuotas > 0 
         ? Math.round((account!.installmentsPaid / financials.totalCuotas) * 100) 
@@ -199,11 +199,23 @@ const PaymentDashboardScreen = () => {
             <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }}>
                 <View className="px-6 pt-6">
                     
-                    <View className="bg-surface-container-high rounded-[32px] p-6 mb-8 border border-white/5 shadow-2xl">
+                    <View className="bg-surface-container-high rounded-[32px] p-6 mb-8 border border-white/5 shadow-2xl overflow-hidden relative">
+                        <View className="absolute top-0 right-0 p-4 opacity-10">
+                            <Landmark color={statusInfo.color} size={120} />
+                        </View>
                         
-                        <View className="flex-row items-center gap-2 mb-6">
-                            <Wallet color="#edc062" size={20} />
-                            <Text className="font-display font-bold text-xl text-on-surface">Progreso de Pago</Text>
+                        <View className="flex-row items-center justify-between mb-6">
+                            <View className="flex-row items-center gap-2">
+                                <View className="p-2.5 rounded-xl" style={{ backgroundColor: `${statusInfo.color}15` }}>
+                                    {statusInfo.icon}
+                                </View>
+                                <Text className="font-display font-bold text-xl text-on-surface">Estado de Cuenta</Text>
+                            </View>
+                            <View className="bg-white/5 px-4 py-2 rounded-2xl border border-white/10 flex-row gap-2">
+                                {entry?.badges?.includes('RES') && <Text className="text-[9px] font-black text-primary">RES</Text>}
+                                {entry?.badges?.includes('PRM') && <Text className="text-[9px] font-black text-secondary">PRM</Text>}
+                                {entry?.badges?.includes('GST') && <Text className="text-[9px] font-black text-on-surface-variant">GST</Text>}
+                            </View>
                         </View>
 
                         <View className="mb-6">
@@ -216,30 +228,45 @@ const PaymentDashboardScreen = () => {
                             </View>
                         </View>
                         
-                        <View className="bg-black/20 p-4 rounded-2xl border border-white/5 mb-6 shadow-inner">
-                            {account!.moraStatus === 'OK' || account!.moraStatus === 'UPCOMING' ? (
-                                <View className="flex-row items-start gap-3">
-                                    <View className="bg-emerald-500/20 p-2 rounded-full"><CheckCircle2 color="#2db395" size={18} /></View>
-                                    <View>
-                                        <Text className="text-emerald-400 font-bold uppercase text-[10px] tracking-widest mb-1">Cuenta al día</Text>
-                                        <Text className="text-on-surface font-headline font-black">Próximo cobro: {formattedDueDate}</Text>
+                        <View className="bg-black/20 p-5 rounded-2xl border border-white/5 mb-6 shadow-inner">
+                            {account!.moraStatus === 'LATE' ? (
+                                <View>
+                                    <View className="flex-row items-center gap-2 mb-3">
+                                        <AlertTriangle color="#ffb4ab" size={16} />
+                                        <Text className="text-[#ffb4ab] font-bold text-sm">Atraso de {account!.lateDays} días</Text>
+                                    </View>
+                                    <View className="flex-row justify-between items-center bg-error/10 p-3 rounded-xl border border-error/20">
+                                        <View>
+                                            <Text className="text-on-surface-variant text-[9px] uppercase font-black">Multa Acumulada</Text>
+                                            <Text className="text-error font-black text-lg">${formatCurrency(account!.penaltyAmountClp)}</Text>
+                                        </View>
+                                        <View className="h-8 w-px bg-error/20 mx-2" />
+                                        <View className="flex-1 items-end">
+                                            <Text className="text-on-surface-variant text-[9px] uppercase font-black">Total con Cuota</Text>
+                                            <Text className="text-on-surface font-black text-lg">${formatCurrency(account!.penaltyAmountClp + financials.valorCuotaNormal)}</Text>
+                                        </View>
                                     </View>
                                 </View>
                             ) : account!.moraStatus === 'GRACE' ? (
-                                <View className="flex-row items-start gap-3">
-                                    <View className="bg-amber-500/20 p-2 rounded-full"><AlertTriangle color="#f59e0b" size={18} /></View>
+                                <View className="flex-row items-center gap-3">
+                                    <Clock color="#edc062" size={24} />
                                     <View>
-                                        <Text className="text-amber-400 font-bold uppercase text-[10px] tracking-widest mb-1">Período de Gracia</Text>
-                                        {graceDate && <Text className="text-on-surface font-bold text-xs">Tienes hasta el <Text className="font-black text-amber-500">{DateFormatter.format(graceDate)}</Text> sin multas por atraso.</Text>}
+                                        <Text className="text-[#edc062] font-black text-sm uppercase">Días de Gracia</Text>
+                                        <Text className="text-on-surface-variant text-xs">Venció el día 5. Sin multa hasta el día 10.</Text>
                                     </View>
                                 </View>
                             ) : (
-                                <View className="flex-row items-start gap-3 border-l-2 border-error pl-3">
-                                    <View className="bg-error/20 p-2 rounded-full"><AlertCircle color="#ffb4ab" size={18} /></View>
-                                    <View className="flex-1">
-                                        <Text className="text-error font-bold uppercase text-[10px] tracking-widest mb-1">Deuda Vencida</Text>
-                                        <Text className="text-on-surface font-bold text-xs mb-1">Tienes {account!.lateDays} días de retraso. Se ha acumulado interés mora.</Text>
-                                        <Text className="text-error font-black text-lg">+ ${formatCurrency(account!.penaltyAmountClp)} CLP</Text>
+                                <View className="flex-row items-start gap-3">
+                                    {account!.moraStatus === 'UPCOMING' ? (
+                                        <Clock color="#a8cdd4" size={20} />
+                                    ) : (
+                                        <CheckCircle2 color="#2db395" size={20} />
+                                    )}
+                                    <View>
+                                        <Text className={`font-black uppercase text-sm ${account!.moraStatus === 'UPCOMING' ? 'text-[#a8cdd4]' : 'text-[#2db395]'}`}>
+                                            {account!.moraStatus === 'UPCOMING' ? 'Próximo Vencimiento' : 'Cuenta al Día'}
+                                        </Text>
+                                        <Text className="text-on-surface-variant text-xs">{formattedDueDate}</Text>
                                     </View>
                                 </View>
                             )}
@@ -255,7 +282,7 @@ const PaymentDashboardScreen = () => {
                                 onPress={() => navigation.navigate('PaymentTransfer', { financials, account })}
                                 className="bg-primary p-4 rounded-2xl items-center flex-row justify-center gap-3 active:bg-primary/80"
                             >
-                                <UploadCloud color="#000" size={20} />
+                                <Upload color="#000" size={20} />
                                 <Text className="text-black font-display font-black uppercase text-sm tracking-widest">Declarar Transferencia</Text>
                             </TouchableOpacity>
                         )}
@@ -293,7 +320,7 @@ const PaymentDashboardScreen = () => {
                                 <View key={receipt.receiptId} className="bg-[#1e2a2d]/60 p-5 rounded-[32px] mb-4 border border-white/5">
                                     <View className="flex-row justify-between items-start mb-3">
                                         <View className="flex-row items-center gap-2">
-                                            {receipt.status === 'APPROVED' ? <CheckCircle color="#2db395" size={16} /> : 
+                                            {receipt.status === 'APPROVED' ? <CheckCircle2 color="#2db395" size={16} /> : 
                                              receipt.status === 'REJECTED' ? <AlertCircle color="#ffb4ab" size={16} /> : 
                                              <Clock color="#edc062" size={16} />}
                                             <Text className="text-on-surface font-display font-bold text-sm">
