@@ -129,8 +129,10 @@ const MainTabs = () => {
 
 import { useAuth } from '../store/AuthContext';
 
+import ProjectSelectorScreen from '../screens/ProjectSelectorScreen';
+
 const RootNavigator = () => {
-  const { userToken, isLoading } = useAuth();
+  const { userToken, isLoading, activeProject } = useAuth();
 
   if (isLoading) {
     return (
@@ -143,6 +145,8 @@ const RootNavigator = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {userToken == null ? (
           <Stack.Screen name="Login" component={LoginScreen} />
+        ) : !activeProject ? (
+          <Stack.Screen name="ProjectSelector" component={ProjectSelectorScreen} />
         ) : (
           <>
             <Stack.Screen name="Main" component={MainTabs} />
