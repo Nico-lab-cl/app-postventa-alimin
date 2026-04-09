@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Platform, Linking, ActivityIndicator } from 'react-native';
-import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, Landmark, AlertTriangle, Clock, Receipt, Coins, History, ShieldCheck, BadgeInfo, CalendarDays } from 'lucide-react-native';
+import { ArrowLeft, User, Phone, Mail, FileText, ChevronRight, CheckCircle2, AlertCircle, Layout, Wallet, Landmark, AlertTriangle, Clock, Receipt, Coins, History, ShieldCheck, BadgeInfo, CalendarDays, MessageCircle } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
@@ -220,17 +220,30 @@ const LedgerDetailScreen = () => {
                                     </View>
                                 </View>
                                 
-                                <View className="flex-row justify-between">
+                                <View className="flex-row justify-between flex-wrap gap-y-2">
                                     <TouchableOpacity 
                                         onPress={() => Linking.openURL(`tel:${entry.phone}`)}
-                                        className="flex-1 bg-white/5 p-3 rounded-2xl flex-row items-center justify-center gap-2 mr-2 border border-white/5"
+                                        className="flex-1 bg-white/5 p-3 rounded-2xl flex-row items-center justify-center gap-2 mr-2 border border-white/5 min-w-[30%]"
                                     >
                                         <Phone color="#a8cdd4" size={14} />
                                         <Text className="text-on-surface text-[10px] font-black uppercase tracking-widest">Llamar</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity 
+                                        onPress={() => {
+                                             let cleanPhone = entry.phone ? entry.phone.replace(/[^0-9]/g, '') : '';
+                                             if (cleanPhone && !cleanPhone.startsWith('56')) {
+                                                 cleanPhone = '56' + cleanPhone; // Asumiendo código Chile por defecto
+                                             }
+                                             Linking.openURL(`whatsapp://send?phone=${cleanPhone}`);
+                                        }}
+                                        className="flex-1 bg-emerald-500/10 p-3 rounded-2xl flex-row items-center justify-center gap-2 mr-2 border border-emerald-500/20 min-w-[30%]"
+                                    >
+                                        <MessageCircle color="#2db395" size={14} />
+                                        <Text className="text-emerald-400 text-[10px] font-black uppercase tracking-widest">WhatsApp</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity 
                                         onPress={() => Linking.openURL(`mailto:${entry.email}`)}
-                                        className="flex-1 bg-white/5 p-3 rounded-2xl flex-row items-center justify-center gap-2 border border-white/5"
+                                        className="flex-1 bg-white/5 p-3 rounded-2xl flex-row items-center justify-center gap-2 border border-white/5 min-w-[30%]"
                                     >
                                         <Mail color="#a8cdd4" size={14} />
                                         <Text className="text-on-surface text-[10px] font-black uppercase tracking-widest">Email</Text>
