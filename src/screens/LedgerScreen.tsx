@@ -67,9 +67,12 @@ const LedgerScreen = () => {
 
         if (isExcluded) return acc; // Lo ignoramos por completo si está en lista negra
 
-        // Validación estricta de "Vendido" (Similar a hasAssignedUser del Backend)
-        const isVendido = !!item.customerId && item.lotStatus === 'sold';
-        const computedStatus = isVendido ? 'sold' : 'available';
+        // Validación 1:1 con tu Script de Base de datos:
+        // Si tiene RASTROS de un comprador (CustomerID no nulo), lo forzamos a ser "Vendido/Asignado"
+        // sin depender ciegamente del lotStatus que la API pudiese traer mal catalogado como 'reserved'
+        const hasAssignedUser = !!item.customerId && item.customerId !== 'null' && String(item.customerId).trim() !== '';
+        
+        const computedStatus = hasAssignedUser ? 'sold' : 'available';
 
         acc.push({ ...item, computedStatus });
         return acc;
