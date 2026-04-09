@@ -5,11 +5,13 @@ import path from 'path';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { getInstallmentDueDate, calculateTotalInterest } from '../lib/financials';
 
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
-} as any);
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'alimin-secret-key-2026';

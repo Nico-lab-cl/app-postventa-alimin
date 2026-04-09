@@ -29,6 +29,8 @@
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "@prisma/client": "^7.7.0",
+    "@prisma/adapter-pg": "^7.7.0",
+    "pg": "^8.11.5",
     "dotenv": "^16.4.5",
     "react-native-web": "~0.21.0",
     "react-dom": "19.2.0",
@@ -44,6 +46,7 @@
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/bcryptjs": "^2.4.6",
+    "@types/pg": "^8.11.5",
     "@types/node": "^20.12.7"
   },
   "private": true
