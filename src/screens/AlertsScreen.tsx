@@ -26,9 +26,19 @@ const AlertsScreen = () => {
         OK: { color: '#2db395', label: 'Al Día', icon: CheckCircle2, bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' },
     };
 
-    // Excluimos explícitamente a los clientes que tienen el pie 'PENDING'.
-    // Mantenemos los 'PAID' y cualquier valor por defecto/vacío (como los lotes Legacy).
-    const validData = data?.filter(item => item.pie_status !== 'PENDING') || [];
+    // Para que un cliente entre a la validación de Mora, 
+    // debe tener al menos una prueba innegable de tener contrato activo:
+    // O que explícitamente diga PAID, o que tenga dinero invertido real en la inmobiliaria.
+    // Jose Diaz bombal (0 pesos, 0 Cuotas) no pasa esto.
+    const validData = data?.filter(item => {
+        const isExplicitlyPaid = item.pie_status === 'PAID';
+        const hasPutMoney = item.totalInvested > 0;
+        const isExplicitlyPending = item.pie_status === 'PENDING';
+
+        if (isExplicitlyPending) return false;
+        
+        return isExplicitlyPaid || hasPutMoney;
+    }) || [];
 
     const counts = {
         LATE: validData.filter(i => i.status === 'LATE').length || 0,
