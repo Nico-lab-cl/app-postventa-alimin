@@ -39,7 +39,6 @@ export interface DashboardSummary {
 }
 
 export interface AssignmentData {
-  // Personal Data
   name: string;
   surname: string;
   rut: string;
@@ -54,21 +53,54 @@ export interface AssignmentData {
     region: string;
     commune: string;
   };
-  // Financials
   priceTotal: number;
   reservationAmount: number;
   pieAmount: number;
   piePaid: boolean;
-  // Installments
   installmentCount: number;
   normalInstallmentValue: number;
   lastInstallmentValue: number;
   firstInstallmentDate: string;
-  // Extra Logic
   isPromotion: boolean;
   freezeMora: boolean;
   operationalCosts: boolean;
   exceptionalRanges: { start: number; end: number; value: number }[];
+}
+
+export interface LegacyAssignmentData {
+  name: string;
+  last_name: string;
+  rut: string;
+  email: string;
+  phone: string;
+  marital_status: string;
+  profession: string;
+  nationality: string;
+  address_street: string;
+  address_number: string;
+  address_commune: string;
+  address_region: string;
+  advisor: string;
+  observation: string;
+  price_total_clp: number;
+  reservation_amount_clp: number;
+  pie: number;
+  extra_paid_amount: number;
+  pending_amount: number;
+  cuotas: number;
+  valor_cuota: number;
+  last_installment_amount: number;
+  legacy_installment_ranges: any[]; 
+  isPiePaid: boolean;
+  is_promo: boolean;
+  mora_frozen: boolean;
+  has_operational_expenses: boolean;
+  reserva_firmada: boolean;
+  compraventa_firmada: boolean;
+  legacy_current_installment: number;
+  legacy_installment_start_date: string;
+  next_payment_date: string;
+  legacy_debt_start_date: string;
 }
 
 export const ledgerService = {
@@ -94,6 +126,10 @@ export const ledgerService = {
 
   assignOwner: async (lotId: string, data: AssignmentData): Promise<void> => {
     await apiClient.post(`mobile/postventa/lot/${lotId}/assign`, data);
+  },
+
+  assignLegacyOwner: async (lotId: string, data: LegacyAssignmentData): Promise<void> => {
+    await apiClient.post(`mobile/postventa/lot/${lotId}/legacy-assign`, data);
   },
 
   resetLot: async (lotId: string): Promise<void> => {

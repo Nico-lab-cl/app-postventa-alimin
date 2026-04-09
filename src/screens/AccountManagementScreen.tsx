@@ -4,9 +4,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Search, UserCog, Mail, KeyRound, MapPin, Phone } from 'lucide-react-native';
 import { useAuth } from '../store/AuthContext';
 import { ledgerService } from '../api/ledgerService';
+import { useNavigation } from '@react-navigation/native';
 
 const AccountManagementScreen = () => {
     const { signOut } = useAuth();
+    const navigation = useNavigation<any>();
     const queryClient = useQueryClient();
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -91,6 +93,24 @@ const AccountManagementScreen = () => {
                 )}
 
                 <View className="border-t border-white/10 pt-4 flex-row justify-end gap-2 mt-2">
+                    <TouchableOpacity 
+                        className="bg-secondary/10 border border-secondary/20 px-4 py-3 rounded-xl flex-row items-center gap-2"
+                        onPress={() => {
+                            // Extraer el primer lote válido
+                            const firstLot = user.reservations.find((r: any) => 
+                                (r.pie_status === 'PAID') || (r.status === 'sold' || r.lotStatus === 'sold')
+                            ) || user.reservations[0];
+
+                            navigation.navigate('ClientFinancialAnalysis', { 
+                                user: user,
+                                lotId: firstLot ? firstLot.lotNumber : null 
+                            });
+                        }}
+                    >
+                        <UserCog color="#edc062" size={14} />
+                        <Text className="text-secondary font-bold text-[10px] uppercase tracking-widest">Análisis Financiero</Text>
+                    </TouchableOpacity>
+
                     <TouchableOpacity 
                         className="bg-error/20 px-4 py-3 rounded-xl flex-row items-center gap-2"
                         onPress={() => handleResetPassword(user.id, user.name)}

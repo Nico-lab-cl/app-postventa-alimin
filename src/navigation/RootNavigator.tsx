@@ -16,6 +16,7 @@ import AssignOwnerScreen from '../screens/AssignOwnerScreen';
 import PaymentTransferScreen from '../screens/PaymentTransferScreen';
 import SelectClientForPaymentScreen from '../screens/SelectClientForPaymentScreen';
 import PaymentDashboardScreen from '../screens/PaymentDashboardScreen';
+import ClientFinancialAnalysisScreen from '../screens/ClientFinancialAnalysisScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -152,6 +153,7 @@ const RootNavigator = () => {
             <Stack.Screen name="Main" component={MainTabs} />
             <Stack.Screen name="LedgerDetail" component={LedgerDetailScreen} />
             <Stack.Screen name="AssignOwner" component={AssignOwnerScreen} />
+            <Stack.Screen name="ClientFinancialAnalysis" component={ClientFinancialAnalysisScreen} />
             <Stack.Screen name="SelectClientForPayment" component={SelectClientForPaymentScreen} options={{ presentation: 'modal' }} />
             <Stack.Screen name="PaymentDashboard" component={PaymentDashboardScreen} />
             <Stack.Screen name="PaymentTransfer" component={PaymentTransferScreen} options={{ presentation: 'modal' }} />
