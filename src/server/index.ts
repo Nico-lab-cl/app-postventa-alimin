@@ -9,7 +9,7 @@ import { getInstallmentDueDate, calculateTotalInterest } from '../lib/financials
 
 const prisma = new PrismaClient({
   datasourceUrl: process.env.DATABASE_URL,
-});
+} as any);
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'alimin-secret-key-2026';
