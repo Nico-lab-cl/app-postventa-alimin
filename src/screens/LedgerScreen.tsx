@@ -70,10 +70,10 @@ const LedgerScreen = () => {
 
         if (isExcluded) return acc; // Lo ignoramos por completo si está en lista negra
 
-        // Validación 1:1 con tu Script de Base de datos (Prisma relacional):
-        // Como ya matamos a la Etapa 4 y a la lista negra desde arriba (que causaban el inflado a 67),
-        // ahora sólo validamos la presencia nativa del ForeignKey del Cliente (hasAssignedUser)
-        // para absorber los 50 terrenos exactos ignorando el flag engañoso que pudiese traer la app.
+        // Validación 1:1 con tu Métrica Relacional BBDD de 50 Compradores Asignados ("hasAssignedUser"):
+        // Eliminado el bug espantoso de la etiqueta "lotStatus===sold" (que estaba descartando a 2 de tus 
+        // compradores dejándolos como 'reserved' y sepultándonos en 48), ahora basamos la presencia 
+        // únicamente en el customerId, idéntico a tu Prisma en consola.
         const isVendido = !!item.customerId && item.customerId !== 'null' && String(item.customerId).trim() !== '';
         
         const computedStatus = isVendido ? 'sold' : 'available';
