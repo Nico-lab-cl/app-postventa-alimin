@@ -8,11 +8,7 @@ import { PrismaClient } from '@prisma/client';
 import { getInstallmentDueDate, calculateTotalInterest } from '../lib/financials';
 
 const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
+  datasourceUrl: process.env.DATABASE_URL,
 });
 const app = express();
 const PORT = process.env.PORT || 3000;
