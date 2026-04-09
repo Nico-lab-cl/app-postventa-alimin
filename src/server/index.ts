@@ -60,7 +60,7 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
                     where: { status: 'paid', pie_status: 'paid' },
                     orderBy: { created_at: 'desc' },
                     take: 1,
-                    include: { receipts: { where: { status: 'APPROVED' } } }
+                    include: { receipts: true }
                 }
             },
             orderBy: { number: 'asc' }
@@ -99,10 +99,16 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
                     const diffToday = now.getTime() - nextDueDate.getTime();
                     lateDays = Math.ceil(diffToday / (1000 * 60 * 60 * 24));
 
-                    if (penaltyAmount > 0) {
+                    const now = new Date();
+                    const diffToday = now.getTime() - nextDueDate.getTime();
+                    lateDays = Math.ceil(diffToday / (1000 * 60 * 60 * 24));
+
+                    const hasPending = activeRes.receipts?.some((r: any) => r.status === 'PENDING') || false;
+
+                    if (penaltyAmount > 0 && !hasPending) {
                         status = 'LATE';
-                    } else if (lateDays > 0 && lateDays <= 5) {
-                        status = 'GRACE';
+                    } else if (hasPending || (lateDays > 0 && lateDays <= 5)) {
+                        status = (hasPending) ? 'OK' : 'GRACE'; // Si hay pago pendiente, lo mostramos como OK (en revision)
                     } else if (lateDays >= -5 && lateDays <= 0) {
                         status = 'UPCOMING';
                     } else {
@@ -133,6 +139,7 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
                 lateDays,
                 penaltyAmount,
                 status: activeRes ? status : 'AVAILABLE',
+                hasPendingReceipt: activeRes ? (activeRes.receipts?.some((r: any) => r.status === 'PENDING') || false) : false,
                 lotStatus: lot.status, // sold, reserved, available
                 badges: activeRes ? [
                     ...(activeRes.is_legacy ? ['LGC'] : []),
@@ -152,13 +159,34 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
 // Rest of endpoints (Summary, Receipts, Assign, Reset, Docs...)
 app.get('/api/mobile/postventa/summary', authenticate, async (req: Request, res: Response) => {
   try {
-    const activeContracts = await prisma.reservation.count({
-      where: { status: 'paid', pie_status: 'paid' }
+    const activeContractsList = await prisma.reservation.findMany({
+      where: { status: 'paid', pie_status: 'paid' },
+      include: { lot: true, receipts: { where: { status: 'APPROVED' } } }
     });
+
+    // Simple Mora Calculation (Sum of penalties for all contracts that would be LATE)
+    let totalMora = 0;
+    for (const res of activeContractsList) {
+        const paidCuotas = res.installments_paid || 0;
+        if (paidCuotas < (res.lot.cuotas || 0)) {
+            const baseDate = res.legacy_installment_start_date || res.created_at;
+            const nextDueDate = getInstallmentDueDate(baseDate, paidCuotas + 1, res.is_legacy);
+            const penalty = calculateTotalInterest(nextDueDate, res.is_legacy, new Date(), res.mora_frozen);
+            
+            // Check if there are ALSO pending receipts for this reservation specifically
+            const hasPending = await prisma.paymentReceipt.count({ where: { reservation_id: res.id, status: 'PENDING' } }) > 0;
+            
+            if (penalty > 0 && !hasPending) {
+                totalMora += penalty;
+            }
+        }
+    }
+
     const receipts = await prisma.paymentReceipt.findMany({ where: { status: 'APPROVED' } });
     const totalCollection = receipts.reduce((sum: number, r: any) => sum + r.amount_clp, 0);
     const pendingReceipts = await prisma.paymentReceipt.count({ where: { status: 'PENDING' } });
-    res.json({ totalCollection, activeContracts, totalMora: 0, pendingReceipts });
+    
+    res.json({ totalCollection, activeContracts: activeContractsList.length, totalMora, pendingReceipts });
   } catch (e) {
     res.status(500).json({ error: 'Error al obtener resumen' });
   }

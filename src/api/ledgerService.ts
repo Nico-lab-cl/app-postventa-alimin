@@ -27,6 +27,7 @@ export interface LedgerEntry {
   badges: string[]; // RES, COM, PRM, GST
   isMoraFrozen?: boolean;
   is_legacy?: boolean;
+  hasPendingReceipt?: boolean;
   receipts?: any[];
 }
 
