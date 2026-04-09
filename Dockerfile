@@ -1,5 +1,5 @@
 # Stage 1:# Build stage
-FROM node:20-slim AS build
+FROM node:22-slim AS build
 WORKDIR /app
 RUN apt-get update && apt-get install -y openssl python3 make g++ && rm -rf /var/lib/apt/lists/*
 COPY package*.json ./
@@ -11,7 +11,7 @@ RUN npx expo export --platform web
 RUN npx tsc -p tsconfig.server.json
 
 # Production stage
-FROM node:20-slim
+FROM node:22-slim
 WORKDIR /app
 RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/dist ./dist
