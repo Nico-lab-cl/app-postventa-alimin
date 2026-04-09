@@ -25,18 +25,19 @@ const AccountManagementScreen = () => {
         }
     });
 
-    // Filtro financiero estricto para Análisis:
-    // Solo clientes con un terreno asignado, formalizado (no solo reservado) y que tengan su pie registrado como 'PAID'
+    // Filtro financiero ajustado para Análisis:
+    // Exigiremos que el cliente tenga por lo menos 1 lote asignado.
+    // Además, EXCLUIREMOS aquellos que digan explícitamente no haber pagado.
+    // (Aseguramos que no borre a los clientes con estatus incompletos heredados de bases antiguas)
     const validAccounts = users?.filter((u: any) => {
         if (!u.reservations || u.reservations.length === 0) return false;
         
-        // Verifica si tiene algún lote que cumpla los criterios financieros
-        return u.reservations.some((r: any) => 
-            // Debe tener estado de cuenta que afirme un pie_status pagado
-            (r.pie_status === 'PAID') || 
-            // O también aceptamos históricamente a los que tengan su lote ya "vendido" oficial
-            (r.status === 'sold' || r.lotStatus === 'sold')
+        const allPending = u.reservations.every((r: any) => 
+            r.pie_status === 'PENDING' || r.piePaid === false || r.status === 'pending'
         );
+        
+        // Si no son TODOS obligatoriamente "pendientes", lo dejamos pasar para no blanquear el listado
+        return !allPending;
     }) || [];
 
     const filteredUsers = validAccounts.filter((u: any) => 
