@@ -46,18 +46,41 @@ const LedgerScreen = () => {
         },
     });
 
-    const processedData = data?.map(item => {
+    const excludedLots = [
+        { stage: "1", number: "28" },
+        { stage: "2", number: "1" },
+        { stage: "2", number: "29" },
+        { stage: "3", number: "26" },
+        { stage: "3", number: "27" },
+        { stage: "3", number: "43" }
+    ];
+
+    const processedData = (data || []).reduce((acc: any[], item) => {
+        // Obtenemos solo el número extraído del lotId (asumiendo que viene como "1", "28", etc)
+        const lotNumberStr = item.lotId.replace(/\D/g, '');
+        const stageStr = item.stageName?.replace(/\D/g, '') || item.stageName;
+
+        // Comprobación de Lista Negra (Pruebas del desarrollador)
+        const isExcluded = excludedLots.some(
+            (ex) => ex.stage === stageStr && ex.number === lotNumberStr
+        );
+
+        if (isExcluded) return acc; // Lo ignoramos por completo si está en lista negra
+
+        // Validación estricta de "Vendido" (Similar a hasAssignedUser del Backend)
         const isVendido = !!item.customerId && item.lotStatus === 'sold';
         const computedStatus = isVendido ? 'sold' : 'available';
-        return { ...item, computedStatus };
-    }).sort((a, b) => {
+
+        acc.push({ ...item, computedStatus });
+        return acc;
+    }, []).sort((a, b) => {
         const numA = parseInt(a.lotId.replace(/\D/g, ''), 10);
         const numB = parseInt(b.lotId.replace(/\D/g, ''), 10);
         if (isNaN(numA) || isNaN(numB)) {
             return a.lotId.localeCompare(b.lotId);
         }
         return numA - numB;
-    }) || [];
+    });
 
     const summaryCounts = {
         sold: processedData.filter(i => i.computedStatus === 'sold').length,
