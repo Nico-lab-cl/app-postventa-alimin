@@ -3,7 +3,7 @@ FROM node:22-slim AS build
 WORKDIR /app
 RUN apt-get update && apt-get install -y openssl python3 make g++ && rm -rf /var/lib/apt/lists/*
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . .
 RUN npx prisma generate
 RUN npx expo export --platform web
