@@ -26,14 +26,16 @@ const AlertsScreen = () => {
         OK: { color: '#2db395', label: 'Al Día', icon: CheckCircle2, bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' },
     };
 
+    const validData = data?.filter(item => item.pie_status === 'PAID') || [];
+
     const counts = {
-        LATE: data?.filter(i => i.status === 'LATE').length || 0,
-        GRACE: data?.filter(i => i.status === 'GRACE').length || 0,
-        UPCOMING: data?.filter(i => i.status === 'UPCOMING').length || 0,
-        OK: data?.filter(i => i.status === 'OK').length || 0,
+        LATE: validData.filter(i => i.status === 'LATE').length || 0,
+        GRACE: validData.filter(i => i.status === 'GRACE').length || 0,
+        UPCOMING: validData.filter(i => i.status === 'UPCOMING').length || 0,
+        OK: validData.filter(i => i.status === 'OK').length || 0,
     };
 
-    const filteredAlerts = data?.filter(item => item.status === filterType) || [];
+    const filteredAlerts = validData.filter(item => item.status === filterType);
 
     const AlertCard = ({ item }: { item: LedgerEntry }) => {
         const config = statusConfig[item.status === 'OK' && item.isMoraFrozen ? 'OK' : filterType];
