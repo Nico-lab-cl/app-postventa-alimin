@@ -70,12 +70,14 @@ const LedgerScreen = () => {
 
         if (isExcluded) return acc; // Lo ignoramos por completo si está en lista negra
 
-        // Validación 1:1 con tu Métrica Relacional BBDD de 50 Compradores Asignados ("hasAssignedUser"):
-        // Eliminado el bug espantoso de la etiqueta "lotStatus===sold" (que estaba descartando a 2 de tus 
-        // compradores dejándolos como 'reserved' y sepultándonos en 48), ahora basamos la presencia 
-        // únicamente en el customerId, idéntico a tu Prisma en consola.
-        const isVendido = !!item.customerId && item.customerId !== 'null' && String(item.customerId).trim() !== '';
+        // VALIDACIÓN DE SEGURIDAD ESTRICTA (FRONTEND)
+        // EXIGIMOS que el estado de la API móvil provenga textualmente como 'sold'.
+        // Si no incluimos esto, la API permite colarse a lotes 'available' o 'reserved' 
+        // de etapas nulas que aún conservan Keys, originando el falso contador de 67 o 64.
+        const isVendido = item.lotStatus === 'sold';
         
+        // Si el lote está vendido, mantiene 'sold', sino es 'available'. La presencia 
+        // de !!item.customerId sólo debe ser un efecto visual, no una métrica de filtro.
         const computedStatus = isVendido ? 'sold' : 'available';
 
         acc.push({ ...item, computedStatus });
