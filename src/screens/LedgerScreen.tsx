@@ -60,6 +60,9 @@ const LedgerScreen = () => {
         const lotNumberStr = item.lotId.replace(/\D/g, '');
         const stageStr = item.stageName?.replace(/\D/g, '') || item.stageName;
 
+        // IGNORAR POR COMPLETO ETAPA 4 SEGÚN INSTRUCCIÓN EXPLÍCITA
+        if (stageStr === '4' || stageStr === 'ETAPA 4') return acc;
+
         // Comprobación de Lista Negra (Pruebas del desarrollador)
         const isExcluded = excludedLots.some(
             (ex) => ex.stage === stageStr && ex.number === lotNumberStr
@@ -68,11 +71,10 @@ const LedgerScreen = () => {
         if (isExcluded) return acc; // Lo ignoramos por completo si está en lista negra
 
         // Validación 1:1 con tu Script de Base de datos:
-        // Si tiene RASTROS de un comprador (CustomerID no nulo), lo forzamos a ser "Vendido/Asignado"
-        // sin depender ciegamente del lotStatus que la API pudiese traer mal catalogado como 'reserved'
-        const hasAssignedUser = !!item.customerId && item.customerId !== 'null' && String(item.customerId).trim() !== '';
+        // Restringimos a la condicional estricta donde en prisma el status = 'sold' Y donde existe el comprador.
+        const isVendido = !!item.customerId && item.lotStatus === 'sold';
         
-        const computedStatus = hasAssignedUser ? 'sold' : 'available';
+        const computedStatus = isVendido ? 'sold' : 'available';
 
         acc.push({ ...item, computedStatus });
         return acc;
