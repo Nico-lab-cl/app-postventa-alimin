@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, RefreshControl, Image, Platform, Alert, Linking } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, Filter, ArrowLeft, Landmark, Map, ChevronRight, TrendingUp, Edit3, Trash2, FileText, User, CheckCircle2, Clock, Zap, AlertTriangle, AlertCircle } from 'lucide-react-native';
+import { Search, Filter, ArrowLeft, Landmark, Map, ChevronRight, TrendingUp, Edit3, Trash2, FileText, User, CheckCircle2, Clock, Zap, AlertTriangle, AlertCircle, Phone, Mail } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ledgerService, LedgerEntry } from '../api/ledgerService';
 import { API_BASE_URL } from '../api/client';
@@ -195,20 +195,42 @@ const LedgerScreen = () => {
                             {/* Owner Segment */}
                             <TouchableOpacity 
                                 onPress={() => navigation.navigate('LedgerDetail', { entry: item })}
-                                className="flex-row items-center gap-3 mb-6 p-4 rounded-2xl bg-white/5"
+                                className="flex-col gap-3 mb-6 p-5 rounded-2xl bg-white/5 border border-white/5"
                             >
-                                <View className="bg-primary/20 p-2.5 rounded-xl">
-                                    <User color="#a8cdd4" size={18} />
+                                <View className="flex-row items-center gap-3">
+                                    <View className="bg-primary/20 p-3 rounded-xl border border-primary/20">
+                                        <User color="#a8cdd4" size={20} />
+                                    </View>
+                                    <View className="flex-1">
+                                        <Text className="text-on-surface font-headline font-black text-sm leading-tight mb-0.5">
+                                            {item.customerName}
+                                        </Text>
+                                        <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest text-[#edc062]">
+                                            {item.rut}
+                                        </Text>
+                                    </View>
+                                    <ChevronRight color="rgba(193, 200, 201, 0.2)" size={16} />
                                 </View>
-                                <View className="flex-1">
-                                    <Text className="text-on-surface font-headline font-bold text-sm leading-tight">
-                                        {item.customerName}
-                                    </Text>
-                                    <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest">
-                                        {item.rut}
-                                    </Text>
-                                </View>
-                                <ChevronRight color="rgba(193, 200, 201, 0.2)" size={16} />
+                                
+                                {(item.email || item.phone) && (
+                                    <View className="flex-row flex-wrap gap-x-4 gap-y-2 mt-2 pt-3 border-t border-white/5 disabled">
+                                        {item.email && (
+                                            <View className="flex-row items-center gap-1.5 flex-1 min-w-[120px]">
+                                                <Mail color="#a8cdd4" size={10} />
+                                                <Text className="text-on-surface-variant text-[9px] tracking-wider truncate border-b border-transparent">{item.email}</Text>
+                                            </View>
+                                        )}
+                                        {item.phone && (
+                                            <TouchableOpacity 
+                                                className="flex-row items-center gap-1.5 bg-primary/10 px-2 py-1 rounded border border-primary/20"
+                                                onPress={() => Linking.openURL(`tel:${item.phone}`)}
+                                            >
+                                                <Phone color="#a8cdd4" size={10} />
+                                                <Text className="text-primary text-[9px] font-black tracking-wider">{item.phone}</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    </View>
+                                )}
                             </TouchableOpacity>
 
                             {/* Info Grid */}
