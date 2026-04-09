@@ -99,10 +99,6 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
                     const diffToday = now.getTime() - nextDueDate.getTime();
                     lateDays = Math.ceil(diffToday / (1000 * 60 * 60 * 24));
 
-                    const now = new Date();
-                    const diffToday = now.getTime() - nextDueDate.getTime();
-                    lateDays = Math.ceil(diffToday / (1000 * 60 * 60 * 24));
-
                     const hasPending = activeRes.receipts?.some((r: any) => r.status === 'PENDING') || false;
 
                     if (penaltyAmount > 0 && !hasPending) {
