@@ -7,7 +7,7 @@ import { ledgerService, LedgerEntry } from '../api/ledgerService';
 import { API_BASE_URL } from '../api/client';
 import apiClient from '../api/client';
 import { useAuth } from '../store/AuthContext';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 const LedgerScreen = () => {
     const navigation = useNavigation<any>();
@@ -24,7 +24,19 @@ const LedgerScreen = () => {
     const { data, isLoading, refetch, isRefetching } = useQuery({
         queryKey: ['ledger', stage],
         queryFn: () => ledgerService.getLedger(stage),
+        // Actualizamos de forma automática y pasiva la base de terrenos cada 10 segundos
+        // para dar esa sensación de "Tiempo Real" a las reservas entrantes.
+        refetchInterval: 10000,
+        refetchOnMount: true,
     });
+
+    // Asegura "Tiempo Real" forzado y sincronización inmediata cada que el usuario
+    // entra a la pestaña de terrenos.
+    useFocusEffect(
+        React.useCallback(() => {
+            refetch();
+        }, [refetch])
+    );
 
     const resetLotMutation = useMutation({
         mutationFn: (lotId: string) => ledgerService.resetLot(lotId),
