@@ -25,10 +25,24 @@ const AccountManagementScreen = () => {
         }
     });
 
-    const filteredUsers = users?.filter((u: any) => 
+    // Filtro financiero estricto para Análisis:
+    // Solo clientes con un terreno asignado, formalizado (no solo reservado) y que tengan su pie registrado como 'PAID'
+    const validAccounts = users?.filter((u: any) => {
+        if (!u.reservations || u.reservations.length === 0) return false;
+        
+        // Verifica si tiene algún lote que cumpla los criterios financieros
+        return u.reservations.some((r: any) => 
+            // Debe tener estado de cuenta que afirme un pie_status pagado
+            (r.pie_status === 'PAID') || 
+            // O también aceptamos históricamente a los que tengan su lote ya "vendido" oficial
+            (r.status === 'sold' || r.lotStatus === 'sold')
+        );
+    }) || [];
+
+    const filteredUsers = validAccounts.filter((u: any) => 
         u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
         u.email.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || [];
+    );
 
     const handleResetPassword = (userId: string, name: string) => {
         Alert.alert(
