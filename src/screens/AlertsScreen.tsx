@@ -26,7 +26,9 @@ const AlertsScreen = () => {
         OK: { color: '#2db395', label: 'Al Día', icon: CheckCircle2, bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' },
     };
 
-    const validData = data?.filter(item => item.pie_status === 'PAID') || [];
+    // Excluimos explícitamente a los clientes que tienen el pie 'PENDING'.
+    // Mantenemos los 'PAID' y cualquier valor por defecto/vacío (como los lotes Legacy).
+    const validData = data?.filter(item => item.pie_status !== 'PENDING') || [];
 
     const counts = {
         LATE: validData.filter(i => i.status === 'LATE').length || 0,
