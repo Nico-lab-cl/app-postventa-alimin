@@ -36,7 +36,7 @@ const AlertsScreen = () => {
     const filteredAlerts = data?.filter(item => item.status === filterType) || [];
 
     const AlertCard = ({ item }: { item: LedgerEntry }) => {
-        const config = statusConfig[filterType];
+        const config = statusConfig[item.status === 'OK' && item.isMoraFrozen ? 'OK' : filterType];
         const Icon = config.icon;
 
         return (
@@ -53,23 +53,36 @@ const AlertsScreen = () => {
                         </View>
                         <View>
                             <Text className="text-on-surface font-display font-bold text-xl tracking-tight leading-tight">{item.customerName}</Text>
-                            <Text className="text-secondary font-display font-black text-[10px] uppercase tracking-[2px] mt-1">{item.lotId}</Text>
+                            <View className="flex-row items-center gap-2 mt-1">
+                                <Text className="text-secondary font-display font-black text-[10px] uppercase tracking-[2px]">{item.lotId}</Text>
+                                {item.isMoraFrozen && (
+                                    <View className="bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
+                                        <Text className="text-primary text-[7px] font-black uppercase tracking-tighter">Frozen</Text>
+                                    </View>
+                                )}
+                            </View>
                         </View>
                     </View>
-                    <View className={`${config.bg} px-3 py-1.5 rounded-full`}>
-                        <Text className={`${config.text} font-display font-black text-[10px] uppercase tracking-widest`}>
-                            {filterType === 'LATE' ? `${item.lateDays} Días` : filterType === 'OK' ? 'Saneado' : 'Pendiente'}
-                        </Text>
+                    <View className="items-end gap-1">
+                        <View className={`${config.bg} px-3 py-1.5 rounded-full`}>
+                            <Text className={`${config.text} font-display font-black text-[10px] uppercase tracking-widest`}>
+                                {item.status === 'LATE' ? `${item.lateDays} Días` : item.status === 'OK' ? 'Saneado' : 'Pendiente'}
+                            </Text>
+                        </View>
+                        <View className="flex-row mt-1">
+                            {item.is_legacy && <View className="w-2 h-2 rounded-full bg-amber-400 mr-1" />}
+                            {item.pie_status === 'PAID' && <View className="w-2 h-2 rounded-full bg-emerald-400 mr-1" />}
+                        </View>
                     </View>
                 </View>
 
                 <View className="flex-row justify-between items-end">
                     <View>
                         <Text className="text-on-surface-variant text-[10px] font-black uppercase tracking-[1px] mb-1">
-                            {filterType === 'LATE' ? 'Mora Acumulada' : 'Total Invertido'}
+                            {item.status === 'LATE' ? 'Mora Acumulada' : 'Total Invertido'}
                         </Text>
                         <Text className={`${config.text} font-display font-black text-3xl tracking-tighter`}>
-                            ${(filterType === 'LATE' ? item.penaltyAmount : item.totalInvested).toLocaleString()} 
+                            ${(item.status === 'LATE' && !item.isMoraFrozen ? item.penaltyAmount : item.totalInvested).toLocaleString()} 
                             <Text className="text-xs font-normal opacity-40 italic ml-1">CLP</Text>
                         </Text>
                     </View>

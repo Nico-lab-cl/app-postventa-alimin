@@ -25,6 +25,9 @@ export interface LedgerEntry {
   status: 'LATE' | 'GRACE' | 'UPCOMING' | 'OK' | 'AVAILABLE';
   lotStatus: 'sold' | 'reserved' | 'available';
   badges: string[]; // RES, COM, PRM, GST
+  isMoraFrozen?: boolean;
+  is_legacy?: boolean;
+  receipts?: any[];
 }
 
 export interface DashboardSummary {

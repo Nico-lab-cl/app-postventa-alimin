@@ -1,18 +1,27 @@
 import React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import RootNavigator from './src/navigation/RootNavigator';
-import "./global.css";
-
-const queryClient = new QueryClient();
-
-import { AuthProvider } from './src/store/AuthContext';
+import { SafeAreaView, StatusBar, StyleSheet, Platform } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <RootNavigator />
-      </AuthProvider>
-    </QueryClientProvider>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <WebView 
+        source={{ uri: 'https://postventa.aliminlomasdelmar.com' }} 
+        style={{ flex: 1 }}
+        startInLoadingState={true}
+        domStorageEnabled={true}
+        javaScriptEnabled={true}
+        allowsBackForwardNavigationGestures={true}
+      />
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+  },
+});
