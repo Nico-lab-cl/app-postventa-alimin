@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert, Image, RefreshControl, Platform, ScrollView, Modal, SafeAreaView, Linking } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert, Image, RefreshControl, Platform, ScrollView, Modal, SafeAreaView, Linking, TextInput } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Check, X, ArrowLeft, FileText, ShieldCheck, CheckCircle, Clock, Download } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -19,6 +19,7 @@ const ReceiptsScreen = () => {
     
     const [viewerConfig, setViewerConfig] = React.useState<{ visible: boolean, url: string, type: 'image' | 'pdf', title: string, isLoading: boolean }>({ visible: false, url: '', type: 'image', title: '', isLoading: false });
     const [localBlobUrl, setLocalBlobUrl] = React.useState<string | null>(null);
+    const [rejectionModal, setRejectionModal] = React.useState<{ visible: boolean, id: string, reason: string }>({ visible: false, id: '', reason: '' });
 
     React.useEffect(() => {
         if (viewerConfig.visible && viewerConfig.type === 'pdf' && Platform.OS === 'web') {
@@ -93,6 +94,8 @@ const ReceiptsScreen = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['receipts'] });
             queryClient.invalidateQueries({ queryKey: ['dashboardSummary'] });
+            queryClient.invalidateQueries({ queryKey: ['ledger', 'ALERTS'] });
+            setRejectionModal({ visible: false, id: '', reason: '' });
             Alert.alert('Éxito', 'El recibo ha sido procesado correctamente');
         },
         onError: (err: any) => {
@@ -157,39 +160,23 @@ const ReceiptsScreen = () => {
                 {item.status === 'PENDING' && (
                     <View className="flex-row gap-2">
                         <TouchableOpacity 
-                            onPress={() => {
-                                if (Platform.OS === 'web') {
-                                    const reason = window.prompt('Motivo de rechazo (obligatorio):');
-                                    if (reason) mutation.mutate({ id: item.id, action: 'reject', reason });
-                                } else {
-                                    Alert.prompt(
-                                        'Rechazar Pago',
-                                        'Ingresa el motivo del rechazo para auditoría:',
-                                        [
-                                            { text: 'Cancelar', style: 'cancel' },
-                                            { 
-                                                text: 'Rechazar', 
-                                                style: 'destructive',
-                                                onPress: (reason?: string) => {
-                                                    if (reason) mutation.mutate({ id: item.id, action: 'reject', reason });
-                                                    else Alert.alert('Error', 'El motivo es obligatorio');
-                                                }
-                                            }
-                                        ],
-                                        'plain-text'
-                                    );
-                                }
-                            }}
-                            className="bg-error/20 px-4 py-2 rounded-xl flex-row items-center"
+                            onPress={() => setRejectionModal({ visible: true, id: item.id, reason: '' })}
+                            disabled={mutation.isLoading}
+                            className="bg-error/10 px-4 py-2 rounded-xl flex-row items-center border border-error/20"
                         >
                             <Text className="text-error font-bold text-[10px] uppercase tracking-wider">Rechazar</Text>
                         </TouchableOpacity>
                         
                         <TouchableOpacity 
                             onPress={() => mutation.mutate({ id: item.id, action: 'approve' })}
-                            className="bg-primary/90 px-4 py-2 rounded-xl flex-row items-center shadow-lg shadow-primary/20"
+                            disabled={mutation.isLoading}
+                            className="bg-primary/90 px-5 py-2 rounded-xl flex-row items-center shadow-lg shadow-primary/20"
                         >
-                            <Text className="text-[#0f353b] font-black justify-center items-center text-[10px] uppercase tracking-wider">Aprobar</Text>
+                            {mutation.isLoading ? (
+                                <ActivityIndicator size="small" color="#0f353b" />
+                            ) : (
+                                <Text className="text-[#0f353b] font-black text-[10px] uppercase tracking-wider">Aprobar</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
                 )}
@@ -330,6 +317,60 @@ const ReceiptsScreen = () => {
                             )}
                         </View>
                     </SafeAreaView>
+                </View>
+            </Modal>
+
+            {/* Rejection Modal */}
+            <Modal visible={rejectionModal.visible} animationType="fade" transparent={true}>
+                <View className="flex-1 bg-black/80 justify-center items-center p-6">
+                    <View className="bg-[#1e2a2d] w-full max-w-sm p-8 rounded-[40px] border border-error/30 shadow-2xl">
+                        <View className="bg-error/10 self-center p-4 rounded-3xl mb-6">
+                            <X color="#ffb4ab" size={32} />
+                        </View>
+                        <Text className="text-on-surface font-display font-bold text-2xl text-center mb-2">Rechazar Pago</Text>
+                        <Text className="text-on-surface-variant text-center mb-8 text-xs leading-relaxed">
+                            Por favor, describe el motivo del rechazo. Este mensaje será visible para el cliente y quedará registrado en el historial.
+                        </Text>
+                        
+                        <View className="bg-black/20 rounded-2xl p-4 mb-8 border border-white/5">
+                            <TextInput 
+                                placeholder="Ej: Comprobante ilegible / Monto insuficiente"
+                                placeholderTextColor="#8b9293"
+                                className="text-on-surface font-body text-sm"
+                                multiline
+                                numberOfLines={3}
+                                value={rejectionModal.reason}
+                                onChangeText={(text) => setRejectionModal(prev => ({ ...prev, reason: text }))}
+                                style={{ textAlignVertical: 'top' }}
+                            />
+                        </View>
+
+                        <View className="flex-row gap-4">
+                            <TouchableOpacity 
+                                onPress={() => setRejectionModal({ visible: false, id: '', reason: '' })}
+                                className="flex-1 py-4 rounded-2xl bg-white/5 items-center"
+                            >
+                                <Text className="text-on-surface-variant font-bold text-xs uppercase tracking-widest">Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                onPress={() => {
+                                    if (!rejectionModal.reason.trim()) {
+                                        Alert.alert('Error', 'Debes ingresar un motivo');
+                                        return;
+                                    }
+                                    mutation.mutate({ id: rejectionModal.id, action: 'reject', reason: rejectionModal.reason });
+                                }}
+                                disabled={mutation.isLoading}
+                                className="flex-2 py-4 rounded-2xl bg-error items-center flex-row justify-center gap-2 px-8"
+                            >
+                                {mutation.isLoading ? (
+                                    <ActivityIndicator size="small" color="#fff" />
+                                ) : (
+                                    <Text className="text-white font-black text-xs uppercase tracking-widest">Rechazar</Text>
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
             </Modal>
         </View>
