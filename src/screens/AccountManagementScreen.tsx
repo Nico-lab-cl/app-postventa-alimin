@@ -39,26 +39,31 @@ const AccountManagementScreen = () => {
     const validAccounts = users?.filter((u: any) => {
         if (!u.reservations || u.reservations.length === 0) return false;
         
-        // Sincronización lógica: Solo mostramos clientes que posean al menos 
-        // UN lote legítimo (Vendido, fuera de Etapa 4 y fuera de lista negra).
-        const hasValidSoldLot = u.reservations.some((r: any) => {
-            const lotNumberStr = String(r.lotNumber || '').replace(/\D/g, '');
-            const stageStr = String(r.stage || r.stageName || r.lotId || '').replace(/\D/g, '');
+        // Sincronización robusta: 1. Excluir Etapa 4 y Lista Negra. 2. Validar que NO esté pendiente.
+        const hasValidActiveLot = u.reservations.some((r: any) => {
+            // Normalizar Stage y Lote (Soportamos r.stage, r.stageName, r.lotNumber, r.lotId)
+            const lotNum = String(r.lotNumber || r.lotId || '').replace(/\D/g, '');
+            const stg = String(r.stage || r.stageName || '').replace(/\D/g, '');
 
-            // 1. Exclusión de Etapa 4
-            if (stageStr === '4') return false;
+            // 1. Exclusión de Etapa 4 e inconsistentes
+            if (stg === '4' || !lotNum) return false;
 
             // 2. Exclusión de Lista Negra
             const isExcluded = excludedLots.some(
-                (ex) => ex.stage === stageStr && ex.number === lotNumberStr
+                (ex) => ex.stage === stg && ex.number === lotNum
             );
             if (isExcluded) return false;
 
-            // 3. Validación de estatus Vendido o Pie Pagado
-            return r.status === 'sold' || r.lotStatus === 'sold' || r.pie_status === 'PAID';
+            // 3. Validación de estatus (No ser una reserva fantasma o pendiente de pago inicial)
+            // Según instrucción: "Lote asignado, pagado y pie pagado"
+            const statusStr = String(r.status || r.lotStatus || '').toLowerCase();
+            const isStatusValid = statusStr === 'sold' || statusStr === 'paid' || statusStr === 'confirmed';
+            const isPieValid = r.pie_status === 'PAID' || r.piePaid === true || r.totalPaid > 0;
+
+            return isStatusValid && isPieValid;
         });
         
-        return hasValidSoldLot;
+        return hasValidActiveLot;
     }) || [];
 
     const filteredUsers = validAccounts.filter((u: any) => 

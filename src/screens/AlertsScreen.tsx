@@ -50,8 +50,9 @@ const AlertsScreen = () => {
         );
         if (isExcluded) return acc;
 
-        // 3. Validación estricta de Vendido
-        if (item.lotStatus !== 'sold') return acc;
+        // 3. Validación de estatus (Soportamos paid y confirmed para no perder a los 50 reales)
+        const statusStr = String(item.lotStatus || '').toLowerCase();
+        if (statusStr !== 'sold' && statusStr !== 'paid' && statusStr !== 'confirmed') return acc;
 
         // 4. Validación de inversión real (Evita clientes con 0 cuotas y 0 pie)
         const isExplicitlyPaid = item.pie_status === 'PAID';
