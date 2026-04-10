@@ -27,19 +27,38 @@ const AccountManagementScreen = () => {
         }
     });
 
-    // Filtro financiero ajustado para Análisis:
-    // Exigiremos que el cliente tenga por lo menos 1 lote asignado.
-    // Además, EXCLUIREMOS aquellos que digan explícitamente no haber pagado.
-    // (Aseguramos que no borre a los clientes con estatus incompletos heredados de bases antiguas)
+    const excludedLots = [
+        { stage: "1", number: "28" },
+        { stage: "2", number: "1" },
+        { stage: "2", number: "29" },
+        { stage: "3", number: "26" },
+        { stage: "3", number: "27" },
+        { stage: "3", number: "43" }
+    ];
+
     const validAccounts = users?.filter((u: any) => {
         if (!u.reservations || u.reservations.length === 0) return false;
         
-        const allPending = u.reservations.every((r: any) => 
-            r.pie_status === 'PENDING' || r.piePaid === false || r.status === 'pending'
-        );
+        // Sincronización lógica: Solo mostramos clientes que posean al menos 
+        // UN lote legítimo (Vendido, fuera de Etapa 4 y fuera de lista negra).
+        const hasValidSoldLot = u.reservations.some((r: any) => {
+            const lotNumberStr = String(r.lotNumber || '').replace(/\D/g, '');
+            const stageStr = String(r.stage || r.stageName || r.lotId || '').replace(/\D/g, '');
+
+            // 1. Exclusión de Etapa 4
+            if (stageStr === '4') return false;
+
+            // 2. Exclusión de Lista Negra
+            const isExcluded = excludedLots.some(
+                (ex) => ex.stage === stageStr && ex.number === lotNumberStr
+            );
+            if (isExcluded) return false;
+
+            // 3. Validación de estatus Vendido o Pie Pagado
+            return r.status === 'sold' || r.lotStatus === 'sold' || r.pie_status === 'PAID';
+        });
         
-        // Si no son TODOS obligatoriamente "pendientes", lo dejamos pasar para no blanquear el listado
-        return !allPending;
+        return hasValidSoldLot;
     }) || [];
 
     const filteredUsers = validAccounts.filter((u: any) => 

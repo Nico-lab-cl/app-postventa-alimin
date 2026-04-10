@@ -26,19 +26,43 @@ const AlertsScreen = () => {
         OK: { color: '#2db395', label: 'Al Día', icon: CheckCircle2, bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' },
     };
 
-    // Para que un cliente entre a la validación de Mora, 
-    // debe tener al menos una prueba innegable de tener contrato activo:
-    // O que explícitamente diga PAID, o que tenga dinero invertido real en la inmobiliaria.
-    // Jose Diaz bombal (0 pesos, 0 Cuotas) no pasa esto.
-    const validData = data?.filter(item => {
+    const excludedLots = [
+        { stage: "1", number: "28" },
+        { stage: "2", number: "1" },
+        { stage: "2", number: "29" },
+        { stage: "3", number: "26" },
+        { stage: "3", number: "27" },
+        { stage: "3", number: "43" }
+    ];
+
+    // Sincronización de lógica con Terrenos:
+    // Solo permitimos clientes con lotes SOLD reales, fuera Etapa 4 y Lista Negra.
+    const validData = (data || []).reduce((acc: LedgerEntry[], item) => {
+        const lotNumberStr = item.lotId.replace(/\D/g, '');
+        const stageStr = item.stageName?.replace(/\D/g, '') || item.stageName;
+
+        // 1. Exclusión de Etapa 4
+        if (stageStr === '4' || stageStr === 'ETAPA 4') return acc;
+
+        // 2. Exclusión de Lista Negra
+        const isExcluded = excludedLots.some(
+            (ex) => ex.stage === stageStr && ex.number === lotNumberStr
+        );
+        if (isExcluded) return acc;
+
+        // 3. Validación estricta de Vendido
+        if (item.lotStatus !== 'sold') return acc;
+
+        // 4. Validación de inversión real (Evita clientes con 0 cuotas y 0 pie)
         const isExplicitlyPaid = item.pie_status === 'PAID';
         const hasPutMoney = item.totalInvested > 0;
-        const isExplicitlyPending = item.pie_status === 'PENDING';
-
-        if (isExplicitlyPending) return false;
         
-        return isExplicitlyPaid || hasPutMoney;
-    }) || [];
+        if (isExplicitlyPaid || hasPutMoney) {
+            acc.push(item);
+        }
+        
+        return acc;
+    }, []);
 
     const counts = {
         LATE: validData.filter(i => i.status === 'LATE').length || 0,
