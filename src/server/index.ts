@@ -57,7 +57,7 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
             },
             include: { 
                 reservations: { 
-                    where: { status: 'paid', pie_status: 'paid' },
+                    where: { status: { in: ['sold', 'paid', 'confirmed'] } },
                     orderBy: { created_at: 'desc' },
                     take: 1,
                     include: { receipts: true }

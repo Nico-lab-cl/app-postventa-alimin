@@ -87,7 +87,7 @@ const AlertsScreen = () => {
         if (isExcluded) return acc;
         const statusStr = String(item.lotStatus || '').toLowerCase();
         if (statusStr !== 'sold' && statusStr !== 'paid' && statusStr !== 'confirmed') return acc;
-        if (item.pie_status === 'PAID' || item.totalInvested > 0) acc.push(item);
+        acc.push(item);
         return acc;
     }, []);
 
