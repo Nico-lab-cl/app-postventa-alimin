@@ -487,7 +487,10 @@ app.get('/api/mobile/postventa/users', authenticate, async (req: Request, res: R
                 lotNumber: r.lot.number,
                 stage: r.lot.stage,
                 phone: r.phone,
-                rut: r.rut
+                rut: r.rut,
+                status: r.status,
+                pie_status: r.pie_status,
+                lotStatus: r.lot.status
             }))
         })));
     } catch (e) {

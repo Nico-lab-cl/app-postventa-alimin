@@ -152,11 +152,11 @@ const AccountManagementScreen = () => {
             <View 
                 className="absolute top-0 w-full z-50 flex-col pt-16 pb-4 bg-neutral-950/90 px-6 backdrop-blur-md border-b border-primary/10"
             >
-                <View className="flex-row justify-between items-center mb-6">
+                 <View className="flex-row justify-between items-center mb-6">
                     <Text className="font-display font-black text-[#edc062] tracking-tighter text-2xl uppercase">Gestión de Cuentas</Text>
                     <View className="flex-row items-center gap-3 bg-[#36595f]/30 px-4 py-2 rounded-full border border-primary/20">
                          <UserCog color="#edc062" size={16} />
-                         <Text className="text-white font-mono font-bold text-xs">{users?.length || 0} Usuarios</Text>
+                         <Text className="text-white font-mono font-bold text-xs">{validAccounts.length} Clientes Activos</Text>
                     </View>
                 </View>
 
