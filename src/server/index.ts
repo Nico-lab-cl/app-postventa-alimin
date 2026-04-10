@@ -473,7 +473,7 @@ app.get('/api/mobile/postventa/users', authenticate, async (req: Request, res: R
     try {
         const users = await prisma.user.findMany({
             where: { role: 'USER' },
-            include: { purchases: { include: { lot: true } } },
+            include: { purchases: { include: { lot: true, receipts: true } } },
             orderBy: { createdAt: 'desc' }
         });
         
@@ -482,16 +482,24 @@ app.get('/api/mobile/postventa/users', authenticate, async (req: Request, res: R
             name: u.name,
             email: u.email,
             createdAt: u.createdAt.toISOString(),
-            reservations: u.purchases.map((r: any) => ({
-                id: r.id,
-                lotNumber: r.lot.number,
-                stage: r.lot.stage,
-                phone: r.phone,
-                rut: r.rut,
-                status: r.status,
-                pie_status: r.pie_status,
-                lotStatus: r.lot.status
-            }))
+            reservations: u.purchases.map((r: any) => {
+                const totalPaid = (r.receipts || [])
+                    .filter((rec: any) => rec.status === 'APPROVED')
+                    .reduce((sum: number, rec: any) => sum + rec.amount_clp, 0);
+                
+                return {
+                    id: r.id,
+                    lotNumber: r.lot.number,
+                    stage: r.lot.stage,
+                    phone: r.phone,
+                    rut: r.rut,
+                    status: r.status,
+                    pie_status: r.pie_status,
+                    lotStatus: r.lot.status,
+                    piePaid: r.pie_status === 'paid' || r.pie_status === 'PAID',
+                    totalPaid: totalPaid
+                };
+            })
         })));
     } catch (e) {
         res.status(500).json({ error: 'Error fetching users' });

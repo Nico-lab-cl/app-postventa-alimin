@@ -54,13 +54,16 @@ const AccountManagementScreen = () => {
             );
             if (isExcluded) return false;
 
-            // 3. Validación de estatus (No ser una reserva fantasma o pendiente de pago inicial)
-            // Según instrucción: "Lote asignado, pagado y pie pagado"
+            // 3. Validación de estatus (Lote asignado y pagado/en proceso)
             const statusStr = String(r.status || r.lotStatus || '').toLowerCase();
-            const isStatusValid = statusStr === 'sold' || statusStr === 'paid' || statusStr === 'confirmed';
-            const isPieValid = r.pie_status === 'PAID' || r.piePaid === true || r.totalPaid > 0;
+            const pieStatusStr = String(r.pie_status || '').toLowerCase();
+            
+            // Un lote es válido si está explícitamente vendido/pagado 
+            // O si tiene dinero invertido real (> 0) lo que confirma trato vigente.
+            const isStatusValid = ['sold', 'paid', 'confirmed', 'reservado', 'reserved'].includes(statusStr);
+            const hasMoney = r.totalPaid > 0 || pieStatusStr === 'paid';
 
-            return isStatusValid && isPieValid;
+            return isStatusValid && (hasMoney || statusStr === 'sold');
         });
         
         return hasValidActiveLot;
