@@ -128,6 +128,7 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
                 pie: activeRes?.pie || lot.pie || 0,
                 pie_status: activeRes?.pie_status || 'PENDING',
                 installments_paid: activeRes?.installments_paid || 0,
+                total_cuotas: lot.cuotas || 0,
                 totalPaid,
                 totalInvested: totalPaid,
                 pendingBalance,

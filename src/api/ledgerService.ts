@@ -16,6 +16,7 @@ export interface LedgerEntry {
   pie: number;
   pie_status: 'PAID' | 'PENDING';
   installments_paid: number;
+  total_cuotas: number;
   totalPaid: number;
   totalInvested: number;
   pendingBalance: number;
