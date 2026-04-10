@@ -36,17 +36,14 @@ const AccountManagementScreen = () => {
         { stage: "3", number: "43" }
     ];
 
-    const validAccounts = users?.filter((u: any) => {
-        if (!u.reservations || u.reservations.length === 0) return false;
-        
-        // Sincronización robusta: 1. Excluir Etapa 4 y Lista Negra. 2. Validar que NO esté pendiente.
-        const hasValidActiveLot = u.reservations.some((r: any) => {
-            // Normalizar Stage y Lote (Soportamos r.stage, r.stageName, r.lotNumber, r.lotId)
+    const validAccounts = users?.map((u: any) => {
+        // Filtramos las reservas de cada usuario para aplicar la lógica de Etapa 4 y Lista Negra
+        const validReservations = (u.reservations || []).filter((r: any) => {
             const lotNum = String(r.lotNumber || r.lotId || '').replace(/\D/g, '');
             const stg = String(r.stage || r.stageName || '').replace(/\D/g, '');
 
-            // 1. Exclusión de Etapa 4 e inconsistentes
-            if (stg === '4' || !lotNum) return false;
+            // 1. Exclusión de Etapa 4
+            if (stg === '4') return false;
 
             // 2. Exclusión de Lista Negra
             const isExcluded = excludedLots.some(
@@ -54,20 +51,18 @@ const AccountManagementScreen = () => {
             );
             if (isExcluded) return false;
 
-            // 3. Validación de estatus (Lote asignado y pagado/en proceso)
+            // 3. Validación de estatus: Solo excluimos si es explícitamente "disponible" o "pendiente" sin pagos.
             const statusStr = String(r.status || r.lotStatus || '').toLowerCase();
             const pieStatusStr = String(r.pie_status || '').toLowerCase();
-            
-            // Un lote es válido si está explícitamente vendido/pagado 
-            // O si tiene dinero invertido real (> 0) lo que confirma trato vigente.
-            const isStatusValid = ['sold', 'paid', 'confirmed', 'reservado', 'reserved'].includes(statusStr);
-            const hasMoney = r.totalPaid > 0 || pieStatusStr === 'paid';
+            const isInvalid = statusStr === 'available' || (statusStr === 'pending' && pieStatusStr === 'pending' && (r.totalPaid || 0) === 0);
 
-            return isStatusValid && (hasMoney || statusStr === 'sold');
+            return !isInvalid;
         });
-        
-        return hasValidActiveLot;
-    }) || [];
+
+        return { ...u, validReservations };
+    }).filter((u: any) => u.validReservations.length > 0) || [];
+
+    const totalValidLots = validAccounts.reduce((sum, u) => sum + u.validReservations.length, 0);
 
     const filteredUsers = validAccounts.filter((u: any) => 
         u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -86,8 +81,9 @@ const AccountManagementScreen = () => {
     };
 
     const UserCard = ({ user }: { user: any }) => {
-        const primaryPhone = user.reservations.length > 0 ? user.reservations[0].phone : null;
-        const lots = user.reservations.map((r: any) => `Lote ${r.lotNumber} (E${r.stage})`).join(', ');
+        const primaryPhone = user.validReservations.length > 0 ? user.validReservations[0].phone : null;
+        const lots = user.validReservations.map((r: any) => `Lote ${r.lotNumber} (E${r.stage})`).join(', ');
+        const totalUserLots = user.validReservations.length;
 
         return (
             <View className="bg-[#1c2a2d]/90 p-5 rounded-3xl mb-4 border border-white/5 mx-6 shadow-xl">
@@ -108,7 +104,7 @@ const AccountManagementScreen = () => {
                         )}
                     </View>
                     <View className="bg-primary/20 px-3 py-1.5 rounded-xl border border-primary/30">
-                        <Text className="text-primary font-bold text-[10px] uppercase tracking-wider">{user.reservations.length} TERRENOS</Text>
+                        <Text className="text-primary font-bold text-[10px] uppercase tracking-wider">{totalUserLots} TERRENOS</Text>
                     </View>
                 </View>
 
@@ -124,13 +120,13 @@ const AccountManagementScreen = () => {
                         className="bg-secondary/10 border border-secondary/20 px-4 py-3 rounded-xl flex-row items-center gap-2"
                         onPress={() => {
                             // Extraer el primer lote válido
-                            const firstLot = user.reservations.find((r: any) => 
-                                (r.pie_status === 'PAID') || (r.status === 'sold' || r.lotStatus === 'sold')
-                            ) || user.reservations[0];
+                            const firstLot = user.validReservations.find((r: any) => 
+                                (r.pie_status === 'PAID') || (['sold', 'paid', 'confirmed'].includes(String(r.status || '').toLowerCase()))
+                            ) || user.validReservations[0];
 
                             navigation.navigate('ClientFinancialAnalysis', { 
                                 user: user,
-                                lotId: firstLot ? firstLot.lotNumber : null 
+                                lotId: firstLot ? (firstLot.lotNumber || firstLot.lotId) : null 
                             });
                         }}
                     >
@@ -159,7 +155,13 @@ const AccountManagementScreen = () => {
                     <Text className="font-display font-black text-[#edc062] tracking-tighter text-2xl uppercase">Gestión de Cuentas</Text>
                     <View className="flex-row items-center gap-3 bg-[#36595f]/30 px-4 py-2 rounded-full border border-primary/20">
                          <UserCog color="#edc062" size={16} />
-                         <Text className="text-white font-mono font-bold text-xs">{validAccounts.length} Clientes Activos</Text>
+                         <View className="flex-row items-baseline gap-1">
+                            <Text className="text-white font-mono font-bold text-xs">{validAccounts.length}</Text>
+                            <Text className="text-white/40 font-mono text-[8px] uppercase">Clientes</Text>
+                            <Text className="text-white/60 mx-1">|</Text>
+                            <Text className="text-white font-mono font-bold text-xs">{totalValidLots}</Text>
+                            <Text className="text-white/40 font-mono text-[8px] uppercase">Terrenos</Text>
+                         </View>
                     </View>
                 </View>
 
