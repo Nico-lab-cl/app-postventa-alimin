@@ -186,23 +186,47 @@ const AlertsScreen = () => {
                     <ProgressBar progress={progress} color={config.color} />
                 </View>
 
-                <View className="flex-row justify-between items-end bg-black/20 p-4 rounded-2xl border border-white/5">
-                    <View>
-                        <Text className="text-white/40 text-[8px] font-black uppercase tracking-[2px] mb-1">
-                            {item.status === 'LATE' && !item.isMoraFrozen ? 'Penalización' : 'Inversión'}
-                        </Text>
+                <View className="flex-row justify-between mb-4 gap-4">
+                    <View className="flex-1 bg-black/20 p-3 rounded-2xl border border-white/5">
+                        <Text className="text-white/40 text-[7px] font-black uppercase tracking-[2px] mb-1">Monto Cuota</Text>
                         <View className="flex-row items-baseline gap-1">
-                            <Text className={`${config.text} font-display font-black text-2xl tracking-tighter`}>
-                                ${(item.status === 'LATE' && !item.isMoraFrozen ? item.penaltyAmount : item.totalInvested).toLocaleString()}
+                            <Text className="text-white font-display font-black text-xl tracking-tighter">
+                                ${item.valor_cuota.toLocaleString()}
                             </Text>
-                            <Text className="text-white/20 text-[10px] uppercase font-bold">CLP</Text>
                         </View>
+                    </View>
+                    <View className="flex-1 bg-black/20 p-3 rounded-2xl border border-white/5">
+                        <Text className="text-white/40 text-[7px] font-black uppercase tracking-[2px] mb-1">Vencimiento</Text>
+                        <View className="flex-row items-center gap-1">
+                            <Clock color={config.color} size={10} />
+                            <Text className={`${config.text} font-mono font-black text-xs uppercase`}>
+                                {item.nextDueDate ? new Date(item.nextDueDate).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }) : '---'}
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+
+                {item.status === 'LATE' && !item.isMoraFrozen && (
+                    <View className="mb-4 bg-red-500/10 p-3 rounded-2xl border border-red-500/20 flex-row justify-between items-center">
+                        <View>
+                            <Text className="text-red-400/60 text-[7px] font-black uppercase tracking-[2px] mb-0.5">Penalización acumulada</Text>
+                            <Text className="text-red-400 font-display font-black text-lg tracking-tighter">${item.penaltyAmount.toLocaleString()} CLP</Text>
+                        </View>
+                        <AlertCircle color="#ff4d4d" size={20} opacity={0.5} />
+                    </View>
+                )}
+
+                <View className="flex-row justify-between items-center bg-white/5 p-4 rounded-2xl">
+                    <View className="flex-row items-center gap-2">
+                         <TrendingUp color={CYBER_TEAL} size={14} />
+                         <Text className="text-[#a8cdd4] font-mono font-bold text-[9px] uppercase">Contrato Activo</Text>
                     </View>
                     <TouchableOpacity 
                         onPress={() => navigation.navigate('LedgerDetail', { entry: item })}
-                        className="bg-white/5 p-2 rounded-xl"
+                        className="bg-white/5 p-2 rounded-xl flex-row items-center gap-2"
                     >
-                        <ChevronRight color={ALIMIN_GOLD} size={18} />
+                        <Text className="text-secondary font-display font-black text-[9px] uppercase tracking-widest">Detalles</Text>
+                        <ChevronRight color={ALIMIN_GOLD} size={16} />
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
