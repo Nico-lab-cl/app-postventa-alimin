@@ -138,6 +138,26 @@ app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any)
                 status: activeRes ? status : 'AVAILABLE',
                 hasPendingReceipt: activeRes ? (activeRes.receipts?.some((r: any) => r.status === 'PENDING') || false) : false,
                 lotStatus: lot.status, // sold, reserved, available
+                
+                // --- Digital Dossier Fields (Hydration) ---
+                marital_status: activeRes?.marital_status || 'SOLTERO/A',
+                profession: activeRes?.profession || '',
+                nationality: activeRes?.nationality || 'CHILENA',
+                address_street: activeRes?.address_street || '',
+                address_number: activeRes?.address_number || '',
+                address_commune: activeRes?.address_commune || '',
+                address_region: activeRes?.address_region || '',
+                advisor: activeRes?.advisor || 'Sin Asignar',
+                observation: activeRes?.observation || '',
+                extra_paid_amount: activeRes?.extra_paid_amount || 0,
+                pending_amount: activeRes?.pending_amount || 0,
+                manual_documents: activeRes?.manual_documents || [],
+                is_legacy: activeRes?.is_legacy || false,
+                is_promo: (activeRes as any)?.is_promo || false,
+                mora_frozen: activeRes?.mora_frozen || false,
+                legacy_current_installment: activeRes?.legacy_current_installment || 0,
+                legacy_installment_start_date: activeRes?.legacy_installment_start_date || null,
+
                 badges: activeRes ? [
                     ...(activeRes.is_legacy ? ['LGC'] : []),
                     ...(activeRes.pie_status === 'PAID' ? ['PIE'] : []),
@@ -192,7 +212,7 @@ app.get('/api/mobile/postventa/lot-details/:id', authenticate, async (req: Reque
     try {
         const { id } = req.params;
         const reservation = await prisma.reservation.findFirst({
-            where: { id, status: 'paid', pie_status: 'paid' },
+            where: { id }, // Non-restrictive fetch
             include: { 
                 lot: true, 
                 receipts: { orderBy: { created_at: 'desc' }, take: 10 } 
@@ -633,11 +653,47 @@ app.get('/api/mobile/postventa/users', authenticate, async (req: Request, res: R
                     stage: r.lot.stage,
                     phone: r.phone,
                     rut: r.rut,
+                    email: r.email,
+                    name: r.name,
+                    last_name: r.last_name,
                     status: r.status,
                     pie_status: r.pie_status,
                     lotStatus: r.lot.status,
                     piePaid: r.pie_status === 'paid' || r.pie_status === 'PAID',
-                    totalPaid: totalPaid
+                    totalPaid: totalPaid,
+                    
+                    // Financial (Essential for Analysis Screen)
+                    price_total_clp: r.lot.price_total_clp || 0,
+                    valor_cuota: r.lot.valor_cuota || 0,
+                    cuotas: r.lot.cuotas || 0,
+                    pie: r.pie || r.lot.pie || 0,
+                    last_installment_amount: r.lot.last_installment_amount || 0,
+                    reservation_amount_clp: r.lot.reservation_amount_clp || 500000,
+
+                    // Demographic
+                    marital_status: r.marital_status || 'SOLTERO/A',
+                    profession: r.profession || '',
+                    nationality: r.nationality || 'CHILENA',
+                    
+                    // Address
+                    address_street: r.address_street || '',
+                    address_number: r.address_number || '',
+                    address_commune: r.address_commune || '',
+                    address_region: r.address_region || '',
+
+                    // Commercial
+                    advisor: r.advisor || 'Sin Asignar',
+                    observation: r.observation || '',
+                    extra_paid_amount: r.extra_paid_amount || 0,
+                    pending_amount: r.pending_amount || 0,
+                    manual_documents: r.manual_documents || [],
+                    is_legacy: r.is_legacy || false,
+                    is_promo: (r as any).is_promo || false,
+                    mora_frozen: r.mora_frozen || false,
+                    legacy_current_installment: r.legacy_current_installment || 0,
+                    legacy_installment_start_date: r.legacy_installment_start_date || null,
+                    legacy_debt_start_date: r.legacy_debt_start_date || null,
+                    legacy_installment_ranges: r.legacy_installment_ranges || []
                 };
             })
         })));
