@@ -9,13 +9,17 @@ import { API_BASE_URL } from '../api/client';
 import apiClient from '../api/client';
 import { Alert } from 'react-native';
 
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+
 const LedgerDetailScreen = () => {
     const navigation = useNavigation<any>();
     const route = useRoute();
     const { entry: initialEntry } = (route.params as { entry: LedgerEntry }) || {};
 
-    // For better experience, we can fetch the latest details or use the passed entry
-    // In this case, initialEntry already has almost everything from the ledger list
+    const [isUploading, setIsUploading] = React.useState(false);
+    const [localDocuments, setLocalDocuments] = React.useState<any[]>(initialEntry?.manual_documents || []);
+
     const entry = initialEntry;
 
     if (!entry) {
@@ -34,13 +38,44 @@ const LedgerDetailScreen = () => {
         return date.toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric' });
     };
 
-    const InfoRow = ({ label, value, icon, valueColor = "text-on-surface" }: { label: string; value: string | number; icon?: React.ReactNode; valueColor?: string }) => (
+    const handleUploadDocument = async () => {
+        try {
+            const result = await DocumentPicker.getDocumentAsync({
+                type: ['application/pdf', 'image/*'],
+                copyToCacheDirectory: true
+            });
+
+            if (result.canceled) return;
+
+            const file = result.assets[0];
+            setIsUploading(true);
+
+            // Convert to base64
+            const base64 = await FileSystem.readAsStringAsync(file.uri, { encoding: FileSystem.EncodingType.Base64 });
+
+            await ledgerService.uploadDocument(entry.lotId, {
+                name: file.name,
+                category: 'MANUAL',
+                fileBase64: base64
+            });
+
+            setLocalDocuments([...localDocuments, { name: file.name, url: 'UPLOADING...', category: 'MANUAL', uploadedAt: new Date().toISOString() }]);
+            Alert.alert('Éxito', 'Documento subido correctamente.');
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'No se pudo subir el documento.');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const InfoRow = ({ label, value, icon, valueColor = "text-on-surface" }: { label: string; value: string | number | null | undefined; icon?: React.ReactNode; valueColor?: string }) => (
         <View className="flex-row items-center justify-between py-4 border-b border-white/5">
             <View className="flex-row items-center gap-3">
                 {icon}
                 <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest">{label}</Text>
             </View>
-            <Text className={`${valueColor} font-headline font-bold text-sm tracking-tight`}>{value}</Text>
+            <Text className={`${valueColor} font-headline font-bold text-sm tracking-tight flex-1 text-right ml-4`} numberOfLines={1}>{value || '-'}</Text>
         </View>
     );
 
@@ -97,19 +132,28 @@ const LedgerDetailScreen = () => {
         }
     };
 
-    const DocButton = ({ title, type, icon }: { title: string; type: string; icon?: any }) => {
+    const DocButton = ({ title, type, icon, url }: { title: string; type: string; icon?: any; url?: string }) => {
         const Icon = icon || FileText;
         return (
             <TouchableOpacity 
                 onPress={async () => {
+                    if (url) {
+                         if (url.startsWith('https') || url.startsWith('http') || url.startsWith('data:')) {
+                             Linking.openURL(url);
+                             return;
+                         }
+                    }
                     const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
                     Linking.openURL(`${baseUrl}mobile/postventa/contracts/${entry.customerId}/file?type=${type}`);
                 }}
                 className="bg-[#1e2a2d]/60 p-5 rounded-3xl mb-4 border border-white/5 flex-row items-center justify-between"
             >
-                <View className="flex-row items-center gap-4">
+                <View className="flex-row items-center gap-4 flex-1">
                     <View className="bg-primary/10 p-2.5 rounded-xl"><Icon color="#a8cdd4" size={20} /></View>
-                    <Text className="text-on-surface font-bold text-sm tracking-tight">{title}</Text>
+                    <View className="flex-1">
+                        <Text className="text-on-surface font-bold text-sm tracking-tight" numberOfLines={1}>{title}</Text>
+                        <Text className="text-on-surface-variant text-[8px] uppercase tracking-widest">{type}</Text>
+                    </View>
                 </View>
                 <ChevronRight color="rgba(193, 200, 201, 0.4)" size={18} />
             </TouchableOpacity>
@@ -154,27 +198,6 @@ const LedgerDetailScreen = () => {
                         </View>
                     </View>
 
-                    {/* Mora Section (Only if late) */}
-                    {entry.penaltyAmount > 0 && !entry.isMoraFrozen && (
-                        <View className="bg-error/10 p-6 rounded-[32px] mb-8 border border-error/20 overflow-hidden relative">
-                            <View className="absolute -right-8 -top-8 bg-error/10 w-24 h-24 rounded-full" />
-                            <View className="flex-row items-center gap-3 mb-4">
-                                <AlertCircle color="#ffb4ab" size={24} />
-                                <Text className="text-error font-display font-black text-lg tracking-tight uppercase">Alerta de Mora</Text>
-                            </View>
-                            <View className="flex-row justify-between items-end">
-                                <View>
-                                    <Text className="text-on-surface-variant text-[10px] font-black uppercase tracking-widest mb-1">Multa Acumulada</Text>
-                                    <Text className="text-on-surface font-display font-black text-3xl tracking-tighter">${formatCurrency(entry.penaltyAmount)}</Text>
-                                </View>
-                                <View className="items-end">
-                                    <Text className="text-on-surface-variant text-[10px] font-black uppercase tracking-widest mb-1">Días de Retraso</Text>
-                                    <Text className="text-error font-display font-black text-2xl tracking-tighter">{entry.lateDays} Días</Text>
-                                </View>
-                            </View>
-                        </View>
-                    )}
-
                     {/* Ficha de Cobro */}
                     <Text className="font-display font-bold text-on-surface text-xl mb-4 ml-2">Ficha de Cobro</Text>
                     <View className="bg-[#1e2a2d]/60 rounded-[32px] p-6 mb-8 border border-white/5">
@@ -185,27 +208,22 @@ const LedgerDetailScreen = () => {
                             valueColor="text-amber-400"
                         />
                         <InfoRow 
+                            label="Valor Cuota" 
+                            value={`$${formatCurrency(entry.valor_cuota)}`} 
+                            icon={<Wallet color="#a8cdd4" size={16} />} 
+                        />
+                        <InfoRow 
                             label="Estado del Pie" 
                             value={entry.pie_status === 'PAID' ? 'Saneado' : 'Pendiente'} 
                             icon={<Receipt color={entry.pie_status === 'PAID' ? "#2db395" : "#edc062"} size={16} />} 
                             valueColor={entry.pie_status === 'PAID' ? "text-emerald-400" : "text-amber-400"}
-                        />
-                        <InfoRow 
-                            label="Cuotas Pagadas" 
-                            value={`${entry.installments_paid} Cuotas`} 
-                            icon={<Coins color="#a8cdd4" size={16} />} 
-                        />
-                         <InfoRow 
-                            label="Valor Cuota" 
-                            value={`$${formatCurrency(entry.valor_cuota)}`} 
-                            icon={<Wallet color="#a8cdd4" size={16} />} 
                         />
                     </View>
 
                     {/* Customer Data */}
                     {entry.customerId ? (
                         <>
-                            <Text className="font-display font-bold text-on-surface text-xl mb-4 ml-2">Datos del Propietario</Text>
+                            <Text className="font-display font-bold text-on-surface text-xl mb-4 ml-2">Expediente del Cliente</Text>
                             <View className="bg-[#1e2a2d]/60 rounded-[32px] p-6 mb-8 border border-white/5">
                                 <View className="flex-row items-center gap-5 mb-6">
                                     <View className="bg-black/30 p-4 rounded-full border border-white/10">
@@ -219,8 +237,17 @@ const LedgerDetailScreen = () => {
                                         </View>
                                     </View>
                                 </View>
+
+                                {/* Perfil Demográfico */}
+                                <InfoRow label="Nacionalidad" value={entry.nationality} icon={<BadgeInfo color="#a8cdd4" size={14} />} />
+                                <InfoRow label="Profesión" value={entry.profession} icon={<FileText color="#a8cdd4" size={14} />} />
+                                <InfoRow label="Estado Civil" value={entry.marital_status} icon={<User color="#a8cdd4" size={14} />} />
                                 
-                                <View className="flex-row justify-between flex-wrap gap-y-2">
+                                {/* Dirección */}
+                                <InfoRow label="Ciudad/Comuna" value={entry.address_commune} icon={<Landmark color="#a8cdd4" size={14} />} />
+                                <InfoRow label="Dirección" value={`${entry.address_street || ''} ${entry.address_number || ''}`} icon={<Landmark color="#a8cdd4" size={14} />} />
+
+                                <View className="flex-row justify-between flex-wrap gap-y-2 mt-6">
                                     <TouchableOpacity 
                                         onPress={() => Linking.openURL(`tel:${entry.phone}`)}
                                         className="flex-1 bg-white/5 p-3 rounded-2xl flex-row items-center justify-center gap-2 mr-2 border border-white/5 min-w-[30%]"
@@ -232,7 +259,7 @@ const LedgerDetailScreen = () => {
                                         onPress={() => {
                                              let cleanPhone = entry.phone ? entry.phone.replace(/[^0-9]/g, '') : '';
                                              if (cleanPhone && !cleanPhone.startsWith('56')) {
-                                                 cleanPhone = '56' + cleanPhone; // Asumiendo código Chile por defecto
+                                                 cleanPhone = '56' + cleanPhone;
                                              }
                                              Linking.openURL(`whatsapp://send?phone=${cleanPhone}`);
                                         }}
@@ -241,20 +268,40 @@ const LedgerDetailScreen = () => {
                                         <MessageCircle color="#2db395" size={14} />
                                         <Text className="text-emerald-400 text-[10px] font-black uppercase tracking-widest">WhatsApp</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity 
-                                        onPress={() => Linking.openURL(`mailto:${entry.email}`)}
-                                        className="flex-1 bg-white/5 p-3 rounded-2xl flex-row items-center justify-center gap-2 border border-white/5 min-w-[30%]"
-                                    >
-                                        <Mail color="#a8cdd4" size={14} />
-                                        <Text className="text-on-surface text-[10px] font-black uppercase tracking-widest">Email</Text>
-                                    </TouchableOpacity>
+                                </View>
+                            </View>
+
+                            {/* Intelligence & Comments */}
+                            <Text className="font-display font-bold text-on-surface text-xl mb-4 ml-2">Inteligencia Comercial</Text>
+                            <View className="bg-[#1e2a2d]/60 rounded-[32px] p-6 mb-8 border border-white/5">
+                                <InfoRow label="Asesor Asignado" value={entry.advisor} icon={<ShieldCheck color="#edc062" size={14} />} valueColor="text-[#edc062]" />
+                                <View className="mt-4">
+                                    <Text className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest mb-2">Observaciones de Postventa</Text>
+                                    <View className="bg-black/20 p-4 rounded-2xl border border-white/5">
+                                        <Text className="text-on-surface text-xs leading-relaxed">{entry.observation || 'Sin observaciones registradas.'}</Text>
+                                    </View>
                                 </View>
                             </View>
 
                             {/* Expediente Legal */}
-                            <Text className="font-display font-bold text-on-surface text-xl mb-4 ml-2">Expediente Legal</Text>
+                            <View className="flex-row items-center justify-between mb-4 px-2">
+                                <Text className="font-display font-bold text-on-surface text-xl">Expediente Digital</Text>
+                                <TouchableOpacity 
+                                    onPress={handleUploadDocument}
+                                    disabled={isUploading}
+                                    className="bg-primary/20 px-4 py-2 rounded-xl border border-primary/30 flex-row items-center gap-2"
+                                >
+                                    {isUploading ? <ActivityIndicator size="small" color="#a8cdd4" /> : <FileText color="#a8cdd4" size={14} />}
+                                    <Text className="text-primary text-[10px] font-black uppercase tracking-widest">Subir Doc</Text>
+                                </TouchableOpacity>
+                            </View>
+                            
                             <DocButton title="Contrato de Reserva" type="RESERVA" icon={FileText} />
                             <DocButton title="Promesa de Compraventa" type="PROMESA" icon={FileText} />
+                            
+                            {localDocuments.map((doc, idx) => (
+                                <DocButton key={idx} title={doc.name} type={doc.category} icon={ShieldCheck} url={doc.url} />
+                            ))}
 
                             {/* Actions */}
                             <TouchableOpacity 
@@ -269,7 +316,7 @@ const LedgerDetailScreen = () => {
                          <View className="bg-black/20 p-12 rounded-[40px] border border-dashed border-white/10 items-center justify-center mt-6">
                              <Layout color="#a8cdd4" size={48} className="mb-4 opacity-50" />
                              <Text className="text-on-surface font-display font-bold text-xl mb-2">Lote Disponible</Text>
-                             <Text className="text-on-surface-variant text-center text-xs font-body opacity-60">Este lote aún no tiene un propietario asignado ni registros financieros activos.</Text>
+                             <Text className="text-on-surface-variant text-center text-xs font-body opacity-60">Este lote aún no tiene un propietario asignado.</Text>
                          </View>
                     )}
                 </View>

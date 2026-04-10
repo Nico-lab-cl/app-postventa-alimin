@@ -30,6 +30,20 @@ export interface LedgerEntry {
   is_legacy?: boolean;
   hasPendingReceipt?: boolean;
   receipts?: any[];
+
+  // Profile Data
+  marital_status?: string;
+  profession?: string;
+  nationality?: string;
+  address_street?: string;
+  address_number?: string;
+  address_commune?: string;
+  address_region?: string;
+  advisor?: string;
+  observation?: string;
+  extra_paid_amount?: number;
+  pending_amount?: number;
+  manual_documents?: { name: string; url: string; category: string; uploadedAt: string }[];
 }
 
 export interface DashboardSummary {
@@ -131,6 +145,10 @@ export const ledgerService = {
 
   assignLegacyOwner: async (lotId: string, data: LegacyAssignmentData): Promise<void> => {
     await apiClient.post(`mobile/postventa/lot/${lotId}/legacy-assign`, data);
+  },
+
+  uploadDocument: async (lotId: string, doc: { name: string; category: string; fileBase64: string }): Promise<void> => {
+    await apiClient.post(`mobile/postventa/lot/${lotId}/documents`, doc);
   },
 
   resetLot: async (lotId: string): Promise<void> => {

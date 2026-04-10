@@ -260,13 +260,32 @@ app.get('/api/mobile/postventa/lot-details/:id', authenticate, async (req: Reque
                 isLegacy: reservation.is_legacy || false,
                 legacyInstallmentRanges: parsedLegacyRanges,
                 legacyDebtStartDate: reservation.legacy_debt_start_date || null,
-                legacyInstallmentStartDate: reservation.legacy_installment_start_date || null
+                legacyInstallmentStartDate: reservation.legacy_installment_start_date || null,
+                
+                // Demographic Data
+                marital_status: reservation.marital_status,
+                profession: reservation.profession,
+                nationality: reservation.nationality,
+                
+                // Address Data
+                address_street: reservation.address_street,
+                address_number: reservation.address_number,
+                address_commune: reservation.address_commune,
+                address_region: reservation.address_region,
+
+                // Commercial / Postventa Data
+                advisor: reservation.advisor,
+                observation: reservation.observation,
+                extra_paid_amount: reservation.extra_paid_amount || 0,
+                pending_amount: reservation.pending_amount || 0,
+                manual_documents: reservation.manual_documents || []
             },
             account: {
                 reservationId: reservation.id,
                 clientName: `${reservation.name} ${reservation.last_name || ''}`.trim(),
                 clientEmail: reservation.email,
                 clientPhone: reservation.phone,
+                rut: reservation.rut,
                 pieStatus: reservation.pie_status || 'PENDING',
                 installmentsPaid: reservation.installments_paid || 0,
                 totalPaidClp: totalPaid,
@@ -343,9 +362,21 @@ app.post('/api/mobile/postventa/lot/:lotId/assign', authenticate, async (req: Re
                 rut: body.rut,
                 pie: body.pieAmount,
                 pie_status: body.piePaid ? 'PAID' : 'PENDING',
+                status: 'paid', // Mark as paid for sold logic
                 installments_paid: 0,
                 mora_frozen: body.freezeMora,
-                pipeline_stage: 'RESERVA_PAGADA'
+                pipeline_stage: 'RESERVA_PAGADA',
+                
+                // Demographic
+                marital_status: body.maritalStatus,
+                profession: body.profession,
+                nationality: body.nationality,
+                
+                // Address
+                address_street: body.address?.street,
+                address_number: body.address?.number,
+                address_commune: body.address?.commune,
+                address_region: body.address?.region
             }
         });
         await prisma.lot.update({
@@ -354,7 +385,79 @@ app.post('/api/mobile/postventa/lot/:lotId/assign', authenticate, async (req: Re
         });
         res.json({ success: true });
     } catch (e) {
+        console.error('Error in assign:', e);
         res.status(500).json({ error: 'Error al asignar propietario' });
+    }
+});
+
+app.post('/api/mobile/postventa/lot/:lotId/legacy-assign', authenticate, async (req: Request, res: Response) => {
+    const { lotId } = req.params;
+    const body = req.body;
+    try {
+        const lot = await prisma.lot.findFirst({ where: { number: lotId } });
+        if (!lot) return res.status(404).json({ error: 'Lote no encontrado' });
+        
+        // Remove existing if any (reset)
+        await prisma.reservation.deleteMany({ where: { lot_id: lot.id } });
+
+        await prisma.reservation.create({
+            data: {
+                lot_id: lot.id,
+                name: body.name,
+                last_name: body.last_name,
+                email: body.email.toLowerCase(),
+                phone: body.phone,
+                rut: body.rut,
+                status: 'paid',
+                pipeline_stage: 'PAGO_CUOTAS',
+                is_legacy: true,
+                legacy_current_installment: body.legacy_current_installment,
+                legacy_installment_start_date: body.legacy_installment_start_date ? new Date(body.legacy_installment_start_date) : null,
+                legacy_debt_start_date: body.legacy_debt_start_date ? new Date(body.legacy_debt_start_date) : null,
+                legacy_installment_ranges: body.legacy_installment_ranges,
+                next_payment_date: body.next_payment_date ? new Date(body.next_payment_date) : null,
+                pie: body.pie,
+                pie_status: body.isPiePaid ? 'PAID' : 'PENDING',
+                installments_paid: body.legacy_current_installment - 1,
+                mora_frozen: body.mora_frozen || false,
+                is_promo: body.is_promo || false,
+                has_operational_expenses: body.has_operational_expenses || false,
+                
+                // Demographic
+                marital_status: body.marital_status || body.maritalStatus,
+                profession: body.profession,
+                nationality: body.nationality,
+                
+                // Address
+                address_street: body.address_street,
+                address_number: body.address_number,
+                address_commune: body.address_commune,
+                address_region: body.address_region,
+                
+                // Commercial
+                advisor: body.advisor,
+                observation: body.observation,
+                extra_paid_amount: body.extra_paid_amount || 0,
+                pending_amount: body.pending_amount || 0
+            }
+        });
+
+        await prisma.lot.update({
+            where: { id: lot.id },
+            data: { 
+                status: 'sold', 
+                price_total_clp: body.price_total_clp, 
+                valor_cuota: body.valor_cuota, 
+                pie: body.pie, 
+                cuotas: body.cuotas,
+                last_installment_amount: body.last_installment_amount
+            }
+        });
+
+        res.json({ success: true });
+    } catch (e) {
+        console.error('Error in legacy assign:', e);
+        res.status(500).json({ error: 'Error al realizar asignación legacy' });
     }
 });
 
@@ -391,6 +494,42 @@ app.get('/api/mobile/postventa/receipts', authenticate, async (req: Request, res
         })));
     } catch (e) {
         res.status(500).json({ error: 'Error al obtener recibos' });
+    }
+});
+
+app.post('/api/mobile/postventa/lot/:lotId/documents', authenticate, async (req: Request, res: Response) => {
+    const { lotId } = req.params;
+    const { name, category, fileBase64 } = req.body;
+
+    try {
+        const lot = await prisma.lot.findFirst({ where: { number: lotId } });
+        if (!lot) return res.status(404).json({ error: 'Lote no encontrado' });
+
+        const reservation = await prisma.reservation.findFirst({ where: { lot_id: lot.id } });
+        if (!reservation) return res.status(404).json({ error: 'Reserva no encontrada' });
+
+        // En un entorno real, subiríamos fileBase64 a S3/GCS y guardaríamos la URL.
+        // Aquí simularemos guardando el base64 o una URL ficticia si es muy grande.
+        // Pero para este demo, guardaremos un link simulado.
+        const newDoc = {
+            name,
+            category: category || 'GENERAL',
+            url: fileBase64.length > 500 ? `data:application/pdf;base64,${fileBase64.substring(0, 100)}...` : fileBase64, // Simulación
+            uploadedAt: new Date().toISOString()
+        };
+
+        const currentDocs = (reservation.manual_documents as any[]) || [];
+        await prisma.reservation.update({
+            where: { id: reservation.id },
+            data: {
+                manual_documents: [...currentDocs, newDoc]
+            }
+        });
+
+        res.json({ success: true, document: newDoc });
+    } catch (e) {
+        console.error('Error uploading document:', e);
+        res.status(500).json({ error: 'Error al subir documento' });
     }
 });
 

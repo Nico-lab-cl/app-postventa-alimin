@@ -27,49 +27,49 @@ const ClientFinancialAnalysisScreen = () => {
     // Form State (35 Variables Estrictas)
     const [formData, setFormData] = useState<LegacyAssignmentData>({
         // 1. Datos Personales
-        name: user?.name?.split(' ')[0] || '',
-        last_name: user?.name?.split(' ').slice(1).join(' ') || '',
-        rut: user?.rut || '',
-        email: user?.email || '',
+        name: user?.name?.split(' ')[0] || activeRes?.name || '',
+        last_name: user?.name?.split(' ').slice(1).join(' ') || activeRes?.last_name || '',
+        rut: user?.rut || activeRes?.rut || '',
+        email: user?.email || activeRes?.email || '',
         phone: activeRes?.phone || '',
-        marital_status: 'SOLTERO/A',
-        profession: '',
-        nationality: 'CHILENA',
-        address_street: '',
-        address_number: '',
-        address_commune: '',
-        address_region: '',
+        marital_status: activeRes?.marital_status || 'SOLTERO/A',
+        profession: activeRes?.profession || '',
+        nationality: activeRes?.nationality || 'CHILENA',
+        address_street: activeRes?.address_street || '',
+        address_number: activeRes?.address_number || '',
+        address_commune: activeRes?.address_commune || '',
+        address_region: activeRes?.address_region || '',
         
         // 2. Seguimiento Web
-        advisor: 'Sin Asignar',
-        observation: '',
+        advisor: activeRes?.advisor || 'Sin Asignar',
+        observation: activeRes?.observation || '',
 
         // 3. Valores Fijos e Ingresos Anexos
-        price_total_clp: activeRes?.priceTotal || 0,
-        reservation_amount_clp: 500000,
+        price_total_clp: activeRes?.price_total_clp || activeRes?.priceTotal || 0,
+        reservation_amount_clp: activeRes?.reservation_amount_clp || 500000,
         pie: activeRes?.pie || 0,
-        extra_paid_amount: 0,
-        pending_amount: 0,
+        extra_paid_amount: activeRes?.extra_paid_amount || 0,
+        pending_amount: activeRes?.pending_amount || 0,
 
         // 4. Configuración Dinámica de Cuotas
-        cuotas: activeRes?.totalInstallments || 82,
-        valor_cuota: activeRes?.valueInstallment || 0,
-        last_installment_amount: 0,
-        legacy_installment_ranges: [],
+        cuotas: activeRes?.cuotas || activeRes?.totalInstallments || 82,
+        valor_cuota: activeRes?.valor_cuota || activeRes?.valueInstallment || 0,
+        last_installment_amount: activeRes?.last_installment_amount || 0,
+        legacy_installment_ranges: activeRes?.legacy_installment_ranges || [],
 
         // 5. Flags
-        isPiePaid: activeRes?.pie_status === 'PAID',
-        is_promo: false,
-        mora_frozen: activeRes?.freezeMora || false,
-        has_operational_expenses: false,
-        reserva_firmada: false,
-        compraventa_firmada: false,
+        isPiePaid: activeRes?.pie_status === 'PAID' || activeRes?.isPiePaid,
+        is_promo: activeRes?.is_promo || false,
+        mora_frozen: activeRes?.mora_frozen || activeRes?.freezeMora || false,
+        has_operational_expenses: activeRes?.has_operational_expenses || false,
+        reserva_firmada: activeRes?.reserva_firmada || false,
+        compraventa_firmada: activeRes?.compraventa_firmada || false,
 
         // 6. Fechas
-        legacy_current_installment: 1,
-        legacy_installment_start_date: new Date().toISOString().split('T')[0],
-        next_payment_date: '',
-        legacy_debt_start_date: ''
+        legacy_current_installment: activeRes?.legacy_current_installment || 1,
+        legacy_installment_start_date: activeRes?.legacy_installment_start_date ? new Date(activeRes.legacy_installment_start_date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        next_payment_date: activeRes?.next_payment_date ? new Date(activeRes.next_payment_date).toISOString().split('T')[0] : '',
+        legacy_debt_start_date: activeRes?.legacy_debt_start_date ? new Date(activeRes.legacy_debt_start_date).toISOString().split('T')[0] : ''
     });
 
     const updateField = (field: keyof LegacyAssignmentData, value: any) => {
