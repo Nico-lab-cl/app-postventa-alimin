@@ -25,6 +25,8 @@ const AlertsScreen = () => {
     const [filterType, setFilterType] = useState<AlertStatus>('LATE');
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 8;
 
     const { data, isLoading, refetch, isRefetching } = useQuery({
         queryKey: ['ledger', 'ALERTS'],
@@ -105,6 +107,22 @@ const AlertsScreen = () => {
                              item.email.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesStatus && matchesSearch;
     });
+
+    const totalPages = Math.ceil(filteredAlerts.length / ITEMS_PER_PAGE);
+    const paginatedAlerts = filteredAlerts.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE, 
+        currentPage * ITEMS_PER_PAGE
+    );
+
+    const handleFilterChange = (type: AlertStatus) => {
+        setFilterType(type);
+        setCurrentPage(1);
+    };
+
+    const handleSearchChange = (query: string) => {
+        setSearchQuery(query);
+        setCurrentPage(1);
+    };
 
     const exportToCSV = async () => {
         if (validData.length === 0) return;
@@ -241,7 +259,7 @@ const AlertsScreen = () => {
 
         return (
             <TouchableOpacity 
-                onPress={() => setFilterType(type)}
+                onPress={() => handleFilterChange(type)}
                 className={`px-5 py-4 rounded-3xl mr-3 flex-row items-center gap-3 border ${isActive ? `${config.border} bg-white/5 shadow-2xl` : 'border-white/5 bg-[#1c2a2d]/20 opacity-40'}`}
                 style={isActive ? { shadowColor: config.color, elevation: 5 } : {}}
             >
@@ -292,10 +310,10 @@ const AlertsScreen = () => {
                             placeholderTextColor="rgba(255,255,255,0.3)"
                             className="flex-1 ml-3 text-white font-mono text-sm h-6"
                             value={searchQuery}
-                            onChangeText={setSearchQuery}
+                            onChangeText={handleSearchChange}
                         />
                         {searchQuery.length > 0 && (
-                            <TouchableOpacity onPress={() => setSearchQuery('')}>
+                            <TouchableOpacity onPress={() => handleSearchChange('')}>
                                 <X color="#a8cdd4" size={16} />
                             </TouchableOpacity>
                         )}
@@ -305,7 +323,7 @@ const AlertsScreen = () => {
 
             <ScrollView 
                 className="flex-1" 
-                contentContainerStyle={{ paddingBottom: 120, paddingTop: isSearchVisible ? 180 : 120 }}
+                contentContainerStyle={{ paddingBottom: 150, paddingTop: isSearchVisible ? 180 : 120 }}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={statusConfig[filterType].color} />
@@ -339,7 +357,7 @@ const AlertsScreen = () => {
                             <ActivityIndicator color={statusConfig[filterType].color} size="large" className="mt-10" />
                         ) : (
                             <View>
-                                {filteredAlerts.map((item) => (
+                                {paginatedAlerts.map((item) => (
                                     <AlertCard key={item.lotId} item={item} />
                                 ))}
 
@@ -348,6 +366,32 @@ const AlertsScreen = () => {
                                         <ShieldCheck color="#3f6066" size={48} strokeWidth={1} />
                                         <Text className="text-white/40 text-lg text-center font-display font-black mt-6 uppercase tracking-widest">Sin Pendientes</Text>
                                         <Text className="text-white/20 text-center font-mono text-[10px] mt-2">Todo el sector {statusConfig[filterType].label} se encuentra saneado.</Text>
+                                    </View>
+                                )}
+
+                                {/* Paginación */}
+                                {totalPages > 1 && (
+                                    <View className="mt-10 flex-row justify-between items-center bg-[#1c2a2d]/40 p-4 rounded-3xl border border-white/5">
+                                        <TouchableOpacity 
+                                            onPress={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                            disabled={currentPage === 1}
+                                            className={`px-4 py-2 rounded-xl bg-white/5 ${currentPage === 1 ? 'opacity-20' : 'active:bg-white/10'}`}
+                                        >
+                                            <Text className="text-white font-display font-black text-[10px] uppercase">Anterior</Text>
+                                        </TouchableOpacity>
+                                        
+                                        <View className="items-center">
+                                            <Text className="text-white/40 font-mono text-[8px] uppercase tracking-widest mb-0.5">Página</Text>
+                                            <Text className="text-white font-mono font-black text-xs">{currentPage} de {totalPages}</Text>
+                                        </View>
+
+                                        <TouchableOpacity 
+                                            onPress={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                            disabled={currentPage === totalPages}
+                                            className={`px-4 py-2 rounded-xl bg-white/5 ${currentPage === totalPages ? 'opacity-20' : 'active:bg-white/10'}`}
+                                        >
+                                            <Text className="text-white font-display font-black text-[10px] uppercase">Siguiente</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 )}
                             </View>
@@ -360,4 +404,5 @@ const AlertsScreen = () => {
 };
 
 export default AlertsScreen;
+
 
