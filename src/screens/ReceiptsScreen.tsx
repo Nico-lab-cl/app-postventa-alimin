@@ -11,6 +11,7 @@ import { ledgerService } from '../api/ledgerService';
 import { API_BASE_URL } from '../api/client';
 import apiClient from '../api/client';
 import { useAuth } from '../store/AuthContext';
+import { storage } from '../utils/storage';
 
 const ReceiptsScreen = () => {
     const queryClient = useQueryClient();
@@ -20,10 +21,17 @@ const ReceiptsScreen = () => {
     const [viewerConfig, setViewerConfig] = React.useState<{ visible: boolean, url: string, type: 'image' | 'pdf', title: string, isLoading: boolean }>({ visible: false, url: '', type: 'image', title: '', isLoading: false });
     const [localBlobUrl, setLocalBlobUrl] = React.useState<string | null>(null);
     const [rejectionModal, setRejectionModal] = React.useState<{ visible: boolean, id: string, reason: string }>({ visible: false, id: '', reason: '' });
+    const { userToken } = useAuth();
 
     const getFileConfig = (url: string) => {
         if (!url) return { url: '', type: 'image' as const };
-        const absoluteUrl = url.startsWith('http') ? url : `${API_BASE_URL.endsWith('/') ? API_BASE_URL : API_BASE_URL + '/'}${url.startsWith('/') ? url.substring(1) : url}`;
+        
+        let baseUrl = API_BASE_URL;
+        // Many backends serve static files at root, but API at /api/
+        if (baseUrl.endsWith('/api/')) baseUrl = baseUrl.replace(/\/api\/$/, '/');
+        else if (baseUrl.endsWith('/api')) baseUrl = baseUrl.replace(/\/api$/, '/');
+        
+        const absoluteUrl = url.startsWith('http') ? url : `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${url.startsWith('/') ? url.substring(1) : url}`;
         const isPdf = absoluteUrl.toLowerCase().split('?')[0].endsWith('.pdf');
         return { url: absoluteUrl, type: (isPdf ? 'pdf' : 'image') as const };
     };
@@ -77,13 +85,23 @@ const ReceiptsScreen = () => {
         try {
             setViewerConfig(prev => ({...prev, isLoading: true}));
             const fileUri = FileSystem.documentDirectory + `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
-            const { uri } = await FileSystem.downloadAsync(viewerConfig.url, fileUri);
+            
+            const token = await storage.getItem('userToken');
+            const { uri } = await FileSystem.downloadAsync(
+                viewerConfig.url, 
+                fileUri,
+                {
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                }
+            );
+            
             if (await Sharing.isAvailableAsync()) {
                 await Sharing.shareAsync(uri);
             } else {
                 Alert.alert('Descargado', 'El archivo ha sido guardado exitosamente.');
             }
         } catch (e) {
+            console.error('Download error:', e);
             Alert.alert('Error', 'No se pudo procesar la descarga.');
         } finally {
             setViewerConfig(prev => ({...prev, isLoading: false}));
@@ -335,10 +353,17 @@ const ReceiptsScreen = () => {
                             ) : (
                                 <Image 
                                     key={viewerConfig.url}
-                                    source={{ uri: viewerConfig.url }} 
-                                    className="w-full h-full" 
+                                    source={{ 
+                                        uri: viewerConfig.url,
+                                        headers: userToken ? { 'Authorization': `Bearer ${userToken}` } : {}
+                                    }} 
+                                    className="flex-1 w-full h-full" 
                                     resizeMode="contain" 
-                                    style={Platform.OS === 'web' ? { width: '100%', height: '100%', minHeight: 400 } : {}}
+                                    style={Platform.OS === 'web' ? { width: '100%', height: '100%', minHeight: 400 } : { flex: 1, width: '100%', height: '100%' }}
+                                    onError={(e) => {
+                                        console.error('Image load error:', e.nativeEvent.error);
+                                        Alert.alert('Error', 'No se pudo cargar la imagen del comprobante.');
+                                    }}
                                 />
                             )}
                         </View>
