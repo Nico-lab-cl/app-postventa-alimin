@@ -205,7 +205,7 @@ const ReceiptsScreen = () => {
             </View>
 
             <View className="flex-row flex-wrap justify-between items-center border-t border-white/10 pt-4 mt-2 gap-y-3">
-                <View className="flex-row gap-2 min-w-[140px]">
+                <View className="flex-row gap-2 flex-wrap">
                     <TouchableOpacity 
                         className="bg-black/40 px-3 py-2 rounded-xl border border-white/10 flex-row items-center gap-1.5"
                         onPress={() => {
@@ -220,8 +220,22 @@ const ReceiptsScreen = () => {
                         }}
                     >
                         <FileText color="#8b9293" size={14} />
-                        <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-widest">Ver Comprobante</Text>
+                        <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-widest">Ver Cliente</Text>
                     </TouchableOpacity>
+
+                    {item.status === 'APPROVED' && (
+                        <TouchableOpacity 
+                            className="bg-emerald-500/10 px-3 py-2 rounded-xl border border-emerald-500/20 flex-row items-center gap-1.5"
+                            onPress={() => {
+                                const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
+                                const receiptUrl = `${baseUrl}receipt/${item.id}/pdf?token=${userToken}`;
+                                Linking.openURL(receiptUrl);
+                            }}
+                        >
+                            <ShieldCheck color="#2db395" size={14} />
+                            <Text className="text-emerald-400 font-bold text-[10px] uppercase tracking-widest">Recibo Oficial</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
                 
                 {item.status === 'PENDING' && (
