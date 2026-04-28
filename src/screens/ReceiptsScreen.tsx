@@ -21,6 +21,13 @@ const ReceiptsScreen = () => {
     const [localBlobUrl, setLocalBlobUrl] = React.useState<string | null>(null);
     const [rejectionModal, setRejectionModal] = React.useState<{ visible: boolean, id: string, reason: string }>({ visible: false, id: '', reason: '' });
 
+    const getFileConfig = (url: string) => {
+        if (!url) return { url: '', type: 'image' as const };
+        const absoluteUrl = url.startsWith('http') ? url : `${API_BASE_URL.endsWith('/') ? API_BASE_URL : API_BASE_URL + '/'}${url.startsWith('/') ? url.substring(1) : url}`;
+        const isPdf = absoluteUrl.toLowerCase().split('?')[0].endsWith('.pdf');
+        return { url: absoluteUrl, type: (isPdf ? 'pdf' : 'image') as const };
+    };
+
     React.useEffect(() => {
         if (viewerConfig.visible && viewerConfig.type === 'pdf' && Platform.OS === 'web') {
             const fetchPdf = async () => {
@@ -145,16 +152,24 @@ const ReceiptsScreen = () => {
                 </View>
             </View>
 
-            <View className="flex-row justify-between items-center border-t border-white/10 pt-4 mt-2">
-                <View className="flex-row gap-2">
+            <View className="flex-row flex-wrap justify-between items-center border-t border-white/10 pt-4 mt-2 gap-y-3">
+                <View className="flex-row gap-2 min-w-[140px]">
                     <TouchableOpacity 
                         className="bg-black/40 px-3 py-2 rounded-xl border border-white/10 flex-row items-center gap-1.5"
-                        onPress={() => setViewerConfig({ visible: true, url: item.imageUrl, type: 'image', title: `Origen Lote ${item.lotNumber}`, isLoading: false })}
+                        onPress={() => {
+                            const config = getFileConfig(item.imageUrl);
+                            setViewerConfig({ 
+                                visible: true, 
+                                url: config.url, 
+                                type: config.type, 
+                                title: `Origen Lote ${item.lotNumber}`, 
+                                isLoading: false 
+                            });
+                        }}
                     >
                         <FileText color="#8b9293" size={14} />
-                        <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-widest">Visualizar Comprobante</Text>
+                        <Text className="text-on-surface-variant font-bold text-[10px] uppercase tracking-widest">Ver Comprobante</Text>
                     </TouchableOpacity>
-                    
                 </View>
                 
                 {item.status === 'PENDING' && (
@@ -162,7 +177,7 @@ const ReceiptsScreen = () => {
                         <TouchableOpacity 
                             onPress={() => setRejectionModal({ visible: true, id: item.id, reason: '' })}
                             disabled={mutation.isLoading}
-                            className="bg-error/10 px-4 py-2 rounded-xl flex-row items-center border border-error/20"
+                            className="bg-error/10 px-3 py-2 rounded-xl flex-row items-center border border-error/20"
                         >
                             <Text className="text-error font-bold text-[10px] uppercase tracking-wider">Rechazar</Text>
                         </TouchableOpacity>
@@ -170,7 +185,7 @@ const ReceiptsScreen = () => {
                         <TouchableOpacity 
                             onPress={() => mutation.mutate({ id: item.id, action: 'approve' })}
                             disabled={mutation.isLoading}
-                            className="bg-primary/90 px-5 py-2 rounded-xl flex-row items-center shadow-lg shadow-primary/20"
+                            className="bg-primary/90 px-4 py-2 rounded-xl flex-row items-center shadow-lg shadow-primary/20"
                         >
                             {mutation.isLoading ? (
                                 <ActivityIndicator size="small" color="#0f353b" />
@@ -187,8 +202,8 @@ const ReceiptsScreen = () => {
     return (
         <View className="flex-1 bg-background">
             <View 
-                className="absolute top-0 w-full z-50 flex-row justify-between items-center px-6 h-24 bg-neutral-950/60"
-                style={{ paddingTop: Platform.OS === 'ios' ? 40 : 0 }}
+                className="absolute top-0 w-full z-50 flex-row justify-between items-center px-6 h-24 bg-neutral-950/80"
+                style={{ paddingTop: Platform.OS === 'ios' ? 44 : 34 }}
             >
                 <LinearGradient 
                     colors={['rgba(54, 89, 95, 0.15)', 'transparent']} 
@@ -300,10 +315,21 @@ const ReceiptsScreen = () => {
                                         </View>
                                     )
                                 ) : (
-                                    <View className="p-10 items-center">
-                                        <FileText color="#edc062" size={64} style={{ marginBottom: 20, opacity: 0.5 }} />
-                                        <Text className="text-on-surface font-display font-black text-xl mb-4 text-center">Documento PDF</Text>
-                                        <Text className="text-on-surface-variant text-center mb-10 text-sm">Este documento PDF debe ser visualizado externamente en dispositivos móviles.</Text>
+                                    <View className="p-10 items-center justify-center flex-1">
+                                        <View className="bg-primary/10 p-8 rounded-[40px] mb-8">
+                                            <FileText color="#a8cdd4" size={80} strokeWidth={1} />
+                                        </View>
+                                        <Text className="text-on-surface font-display font-black text-2xl mb-4 text-center">Documento PDF</Text>
+                                        <Text className="text-on-surface-variant text-center mb-10 text-sm leading-relaxed px-6">
+                                            Para una mejor experiencia, los documentos PDF deben visualizarse con el lector nativo de tu dispositivo.
+                                        </Text>
+                                        <TouchableOpacity 
+                                            onPress={handleDownload}
+                                            className="bg-primary px-8 py-4 rounded-2xl flex-row items-center gap-3"
+                                        >
+                                            <Download color="#0f353b" size={20} />
+                                            <Text className="text-[#0f353b] font-black text-sm uppercase tracking-widest">Abrir Documento</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 )
                             ) : (
