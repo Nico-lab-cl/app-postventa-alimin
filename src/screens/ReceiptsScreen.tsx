@@ -24,11 +24,19 @@ const ReceiptsScreen = () => {
     const { userToken } = useAuth();
 
     const getFileConfig = (url: string) => {
-        if (!url) return { url: '', type: 'image' as const };
+        if (!url) return { url: '', type: 'image' as const, isBase64: false };
+        
+        // Check if it's Base64
+        const isBase64 = url.startsWith('data:');
+        if (isBase64) {
+            const type = url.includes('application/pdf') ? 'pdf' : 'image';
+            return { url, type: type as 'pdf' | 'image', isBase64: true };
+        }
+
         const baseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
         const absoluteUrl = url.startsWith('http') ? url : `${baseUrl}${url.startsWith('/') ? url.substring(1) : url}`;
         const isPdf = absoluteUrl.toLowerCase().split('?')[0].endsWith('.pdf');
-        return { url: absoluteUrl, type: (isPdf ? 'pdf' : 'image') as const };
+        return { url: absoluteUrl, type: (isPdf ? 'pdf' : 'image') as const, isBase64: false };
     };
 
     React.useEffect(() => {
@@ -57,19 +65,17 @@ const ReceiptsScreen = () => {
 
     const handleDownload = async () => {
         if (Platform.OS === 'web') {
-            // ... (keep web logic)
             try {
                 setViewerConfig(prev => ({...prev, isLoading: true}));
-                const response = await apiClient.get(viewerConfig.url, { responseType: 'blob' });
-                const blob = response.data;
-                const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
-                link.href = url;
-                link.download = `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
+                link.href = viewerConfig.url;
+                const extension = viewerConfig.url.includes('application/pdf') ? 'pdf' : 
+                                 viewerConfig.url.includes('msword') || viewerConfig.url.includes('officedocument.wordprocessingml') ? 'docx' :
+                                 viewerConfig.url.includes('ms-excel') || viewerConfig.url.includes('officedocument.spreadsheetml') ? 'xlsx' : 'jpg';
+                link.download = `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${extension}`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                window.URL.revokeObjectURL(url);
             } catch (e) {
                 Alert.alert('Error', 'No se pudo descargar el archivo.');
             } finally {
@@ -78,46 +84,61 @@ const ReceiptsScreen = () => {
             return;
         }
 
-        // On Mobile, we'll try to open in browser as a more reliable way
         try {
-            const urlWithToken = viewerConfig.url.includes('?') 
-                ? `${viewerConfig.url}&token=${userToken}` 
-                : `${viewerConfig.url}?token=${userToken}`;
+            setViewerConfig(prev => ({...prev, isLoading: true}));
             
-            Alert.alert(
-                'Descargar Archivo',
-                '¿Deseas abrir el archivo en el navegador para descargarlo o visualizarlo?',
-                [
-                    { text: 'Cancelar', style: 'cancel' },
-                    { 
-                        text: 'Abrir en Navegador', 
-                        onPress: () => Linking.openURL(urlWithToken) 
-                    },
-                    { 
-                        text: 'Compartir/Guardar', 
-                        onPress: async () => {
-                            try {
-                                setViewerConfig(prev => ({...prev, isLoading: true}));
-                                const fileUri = FileSystem.documentDirectory + `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${viewerConfig.type === 'pdf' ? 'pdf' : 'jpg'}`;
-                                const { uri } = await FileSystem.downloadAsync(
-                                    viewerConfig.url, 
-                                    fileUri,
-                                    { headers: userToken ? { 'Authorization': `Bearer ${userToken}` } : {} }
-                                );
-                                if (await Sharing.isAvailableAsync()) {
-                                    await Sharing.shareAsync(uri);
+            const isBase64 = viewerConfig.url.startsWith('data:');
+            const extension = viewerConfig.url.includes('application/pdf') ? 'pdf' : 
+                             viewerConfig.url.includes('msword') || viewerConfig.url.includes('officedocument.wordprocessingml') ? 'docx' :
+                             viewerConfig.url.includes('ms-excel') || viewerConfig.url.includes('officedocument.spreadsheetml') ? 'xlsx' : 'jpg';
+            
+            const fileUri = FileSystem.documentDirectory + `Alimin_${viewerConfig.title.replace(/\s+/g, '_')}.${extension}`;
+
+            if (isBase64) {
+                // Remove prefix if exists for writing to file
+                const base64Data = viewerConfig.url.split(',')[1] || viewerConfig.url;
+                await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
+                
+                if (await Sharing.isAvailableAsync()) {
+                    await Sharing.shareAsync(fileUri);
+                }
+            } else {
+                // Traditional URL download
+                const urlWithToken = viewerConfig.url.includes('?') 
+                    ? `${viewerConfig.url}&token=${userToken}` 
+                    : `${viewerConfig.url}?token=${userToken}`;
+                
+                Alert.alert(
+                    'Descargar Archivo',
+                    '¿Cómo deseas procesar este archivo?',
+                    [
+                        { text: 'Cancelar', style: 'cancel' },
+                        { text: 'Abrir en Navegador', onPress: () => Linking.openURL(urlWithToken) },
+                        { 
+                            text: 'Compartir/Guardar', 
+                            onPress: async () => {
+                                try {
+                                    const { uri } = await FileSystem.downloadAsync(
+                                        viewerConfig.url, 
+                                        fileUri,
+                                        { headers: userToken ? { 'Authorization': `Bearer ${userToken}` } : {} }
+                                    );
+                                    if (await Sharing.isAvailableAsync()) {
+                                        await Sharing.shareAsync(uri);
+                                    }
+                                } catch (e) {
+                                    Alert.alert('Error', 'No se pudo procesar la descarga.');
                                 }
-                            } catch (e) {
-                                Alert.alert('Error', 'No se pudo procesar la descarga local.');
-                            } finally {
-                                setViewerConfig(prev => ({...prev, isLoading: false}));
                             }
                         }
-                    }
-                ]
-            );
+                    ]
+                );
+            }
         } catch (e) {
-            Alert.alert('Error', 'No se pudo iniciar la descarga.');
+            console.error('Download error:', e);
+            Alert.alert('Error', 'No se pudo procesar el archivo.');
+        } finally {
+            setViewerConfig(prev => ({...prev, isLoading: false}));
         }
     };
     
@@ -193,7 +214,7 @@ const ReceiptsScreen = () => {
                                 visible: true, 
                                 url: config.url, 
                                 type: config.type, 
-                                title: `Origen Lote ${item.lotNumber}`, 
+                                title: `Lote ${item.lotNumber}`, 
                                 isLoading: false 
                             });
                         }}
@@ -367,32 +388,44 @@ const ReceiptsScreen = () => {
                                 )
                             ) : (
                                 <View className="flex-1 w-full h-full items-center justify-center p-4">
-                                    <Image 
-                                        key={viewerConfig.url}
-                                        source={{ 
-                                            uri: viewerConfig.url,
-                                            headers: userToken ? { 'Authorization': `Bearer ${userToken}` } : {}
-                                        }} 
-                                        className="w-full h-full"
-                                        resizeMode="contain" 
-                                        style={{ flex: 1, width: '100%', height: '100%' }}
-                                        onError={(e) => {
-                                            console.error('Image load error:', e.nativeEvent.error);
-                                            Alert.alert(
-                                                'Error de Carga',
-                                                'No se pudo previsualizar la imagen. Puedes intentar abrirla directamente en el navegador.',
-                                                [
-                                                    { text: 'Cancelar', style: 'cancel' },
-                                                    { text: 'Abrir en Navegador', onPress: () => {
-                                                        const urlWithToken = viewerConfig.url.includes('?') 
-                                                            ? `${viewerConfig.url}&token=${userToken}` 
-                                                            : `${viewerConfig.url}?token=${userToken}`;
-                                                        Linking.openURL(urlWithToken);
-                                                    }}
-                                                ]
-                                            );
-                                        }}
-                                    />
+                                    {viewerConfig.url.includes('officedocument') || viewerConfig.url.includes('ms-excel') || viewerConfig.url.includes('msword') ? (
+                                        <View className="items-center justify-center">
+                                            <FileText color="#a8cdd4" size={80} strokeWidth={1} />
+                                            <Text className="text-on-surface font-display font-black text-2xl mt-6 text-center">Documento de Office</Text>
+                                            <Text className="text-on-surface-variant text-center mt-2 mb-10 text-sm">Este tipo de archivo debe descargarse para ser visualizado.</Text>
+                                            <TouchableOpacity 
+                                                onPress={handleDownload}
+                                                className="bg-primary px-8 py-4 rounded-2xl flex-row items-center gap-3"
+                                            >
+                                                <Download color="#0f353b" size={20} />
+                                                <Text className="text-[#0f353b] font-black text-sm uppercase tracking-widest">Descargar y Abrir</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    ) : (
+                                        <Image 
+                                            key={viewerConfig.url}
+                                            source={{ 
+                                                uri: viewerConfig.url,
+                                                headers: !viewerConfig.url.startsWith('data:') && userToken ? { 'Authorization': `Bearer ${userToken}` } : {}
+                                            }} 
+                                            className="w-full h-full"
+                                            resizeMode="contain" 
+                                            style={{ flex: 1, width: '100%', height: '100%' }}
+                                            onError={(e) => {
+                                                console.error('Image load error:', e.nativeEvent.error);
+                                                if (!viewerConfig.url.startsWith('data:')) {
+                                                    Alert.alert(
+                                                        'Error de Carga',
+                                                        'No se pudo previsualizar la imagen. Puedes intentar abrirla directamente en el navegador.',
+                                                        [
+                                                            { text: 'Cancelar', style: 'cancel' },
+                                                            { text: 'Abrir en Navegador', onPress: () => Linking.openURL(viewerConfig.url) }
+                                                        ]
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                    )}
                                 </View>
                             )}
                         </View>
