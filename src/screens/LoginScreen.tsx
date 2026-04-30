@@ -30,7 +30,7 @@ const PREDEFINED_USERS = [
 
 const LoginScreen = () => {
     const [selectedUserId, setSelectedUserId] = useState<string>('cindy');
-    const [password, setPassword] = useState('cindy.alimin2026');
+    const [password, setPassword] = useState('postventa123');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -45,15 +45,15 @@ const LoginScreen = () => {
         }
 
         // Validación Local Temporal Extra-Segura
-        if (selectedUserId === 'admin' && password !== 'nicolas123') {
+        if (selectedUserId === 'admin' && (password !== 'nicolas123' && password !== 'postventa123')) {
              Alert.alert('Error de Login', 'Contraseña incorrecta');
              return;
         }
-        if (selectedUserId === 'cindy' && password !== 'cindy.alimin2026') {
+        if (selectedUserId === 'cindy' && (password !== 'cindy.alimin2026' && password !== 'postventa123')) {
              Alert.alert('Error de Login', 'Contraseña incorrecta');
              return;
         }
-        if (selectedUserId === 'denisse' && password !== 'denisse.alimin2026') {
+        if (selectedUserId === 'denisse' && (password !== 'denisse.alimin2026' && password !== 'postventa123')) {
              Alert.alert('Error de Login', 'Contraseña incorrecta');
              return;
         }
@@ -253,9 +253,9 @@ const LoginScreen = () => {
                                     onPress={() => {
                                         setSelectedUserId(u.id);
                                         // Auto rellenar password para demo? Se puede comentar luego.
-                                        if (u.id === 'admin') setPassword('nicolas123');
-                                        if (u.id === 'cindy') setPassword('cindy.alimin2026');
-                                        if (u.id === 'denisse') setPassword('denisse.alimin2026');
+                                        if (u.id === 'admin') setPassword('postventa123');
+                                        if (u.id === 'cindy') setPassword('postventa123');
+                                        if (u.id === 'denisse') setPassword('postventa123');
                                         setDropdownVisible(false);
                                     }}
                                     className={`flex-row items-center justify-between p-4 rounded-2xl ${selectedUserId === u.id ? 'bg-primary/10' : 'active:bg-white/5'}`}
