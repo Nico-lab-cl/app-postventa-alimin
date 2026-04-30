@@ -8,6 +8,9 @@ import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { getInstallmentDueDate, calculateTotalInterest } from '../lib/financials';
+import { Expo, ExpoPushMessage } from 'expo-server-sdk';
+
+const expo = new Expo();
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -46,6 +49,52 @@ app.post('/api/mobile/auth/login', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
+
+// Register Push Token
+app.post('/api/mobile/user/push-token', authenticate, async (req: Request, res: Response) => {
+    const { pushToken } = req.body;
+    const userId = (req as any).user.id;
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: { pushToken }
+        });
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: 'Failed to save token' });
+    }
+});
+
+// Helper to send notifications
+async function sendNotification(userIds: string[], title: string, body: string, data?: any) {
+    const users = await prisma.user.findMany({
+        where: { id: { in: userIds }, pushToken: { not: null } },
+        select: { pushToken: true }
+    });
+
+    const messages: ExpoPushMessage[] = users
+        .filter(u => Expo.isExpoPushToken(u.pushToken!))
+        .map(u => ({
+            to: u.pushToken!,
+            sound: 'default',
+            title,
+            body,
+            data: data || {},
+            priority: 'high',
+            channelId: 'default'
+        }));
+
+    if (messages.length > 0) {
+        try {
+            const chunks = expo.chunkPushNotifications(messages);
+            for (let chunk of chunks) {
+                await expo.sendPushNotificationsAsync(chunk);
+            }
+        } catch (error) {
+            console.error('Error sending notification:', error);
+        }
+    }
+}
 
 // Ledger (Mapa de Inventario)
 app.get('/api/mobile/postventa/ledger', authenticate, async (req: any, res: any) => {
@@ -361,6 +410,20 @@ app.post('/api/mobile/postventa/payments/upload', authenticate, async (req: Requ
         });
 
         res.json({ success: true, receiptId: newReceipt.id });
+
+        // Notify Admins and Sellers
+        const staff = await prisma.user.findMany({
+            where: { role: { in: ['ADMIN', 'SELLER'] } },
+            select: { id: true }
+        });
+        const staffIds = staff.map(s => s.id);
+        const lotNumber = lotId;
+        sendNotification(
+            staffIds,
+            '🔔 Nuevo Pago Recibido',
+            `Se ha subido un comprobante de $${parseInt(amount).toLocaleString('es-CL')} para el Lote ${lotNumber}.`,
+            { receiptId: newReceipt.id, lotId }
+        );
     } catch (e) {
         console.error('Error uploading payment receipt:', e);
         res.status(500).json({ error: 'Error al subir comprobante de pago' });
@@ -608,6 +671,19 @@ app.patch('/api/mobile/receipt/:id', authenticate, async (req: Request, res: Res
             });
             
             console.log(`✅ Pago aprobado para ${receipt.reservation.name}. Siguiente cuota nominal: ${nominalNumber}`);
+
+            // Notify User
+            const user = await prisma.user.findFirst({
+                where: { email: receipt.reservation.email.toLowerCase() }
+            });
+            if (user) {
+                sendNotification(
+                    [user.id],
+                    '✅ Pago Aprobado',
+                    `Tu pago por ${receipt.scope === 'PIE' ? 'el Pie' : 'cuota(s)'} ha sido aprobado con éxito.`,
+                    { receiptId: id }
+                );
+            }
         } else {
             if (!reason) return res.status(400).json({ error: 'El motivo de rechazo es obligatorio para auditoría.' });
 

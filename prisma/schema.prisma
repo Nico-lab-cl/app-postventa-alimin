@@ -237,6 +237,7 @@ model User {
   role               Role      @default(SELLER)
   mustChangePassword Boolean   @default(false)
   createdAt          DateTime  @default(now())
+  pushToken          String?   // For Firebase/Expo Push Notifications
 
   // Relations
   sales         Reservation[]  @relation("SellerReservations")

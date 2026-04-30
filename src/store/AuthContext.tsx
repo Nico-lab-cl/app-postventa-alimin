@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { storage } from '../utils/storage';
+import { registerForPushNotificationsAsync } from '../utils/notifications';
 
 export interface UserProfile {
   id: string;
@@ -44,6 +45,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (savedProject) {
           setActiveProject(savedProject);
         }
+
+        // Register notifications if already logged in
+        if (token && userData) {
+          const parsedUser = JSON.parse(userData);
+          registerForPushNotificationsAsync(parsedUser.id);
+        }
       } catch (e) {
         console.error('Failed to load token or user data', e);
       } finally {
@@ -62,6 +69,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(userProfile);
       setActiveProject(null); // Resetea el proyecto al iniciar sesión
       await storage.removeItem('activeProject');
+      
+      // Register for push notifications
+      registerForPushNotificationsAsync(userProfile.id);
     } catch (e) {
       console.error('Failed to save token or user data', e);
     }
