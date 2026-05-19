@@ -46,7 +46,8 @@ app.post('/api/mobile/auth/login', async (req: Request, res: Response) => {
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
     res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
   } catch (e) {
-    res.status(500).json({ error: 'Error en el servidor' });
+    console.error('Login error in server:', e);
+    res.status(500).json({ error: 'Error en el servidor', details: e instanceof Error ? e.message : String(e) });
   }
 });
 
